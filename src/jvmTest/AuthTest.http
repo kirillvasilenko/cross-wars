@@ -1,0 +1,7 @@
+GET http://localhost:9090/auth
+Cookie: USER_SESSION=userId%3D%2523sda399a0b%2Dd42d%2D4e2c%2D8fe4%2D6ac8eca05c1e;
+
+###
+
+PUT http://localhost:9090/auth
+Cookie: USER_SESSION=userId%3D%2523s9754431b%2D7cdf%2D4921%2Dbccb%2D73892a55c8c0;
