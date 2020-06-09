@@ -7,6 +7,7 @@ import io.ktor.auth.authentication
 import io.ktor.http.HttpStatusCode
 import io.ktor.response.respondText
 import io.ktor.util.pipeline.PipelineContext
+import io.ktor.websocket.WebSocketServerSession
 import model.UserFaultException
 
 fun PipelineContext<Unit, ApplicationCall>.getUserId(): Int {
@@ -23,6 +24,20 @@ fun PipelineContext<Unit, ApplicationCall>.getFromParams(name: String) : String 
         ?: throw UserFaultException("Missing param $name")
 
 suspend fun PipelineContext<Unit, ApplicationCall>.badRequest(e: Exception){
+    call.respondText(
+        e.message!!,
+        status = HttpStatusCode.BadRequest
+    )
+}
+
+// web sockets
+
+fun WebSocketServerSession.getUserId(): Int {
+    val idAsString = (call.authentication.principal as UserIdPrincipal).name
+    return idAsString.toInt()
+}
+
+suspend fun WebSocketServerSession.badRequest(e: Exception){
     call.respondText(
         e.message!!,
         status = HttpStatusCode.BadRequest

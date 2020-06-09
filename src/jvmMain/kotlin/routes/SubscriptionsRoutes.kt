@@ -1,34 +1,51 @@
 package routes
 
-import io.ktor.http.cio.websocket.CloseReason
-import io.ktor.http.cio.websocket.Frame
-import io.ktor.http.cio.websocket.close
-import io.ktor.http.cio.websocket.readText
+import io.ktor.application.call
+import io.ktor.response.respond
 import io.ktor.routing.Route
+import io.ktor.routing.delete
+import io.ktor.routing.put
+import io.ktor.routing.route
 import io.ktor.websocket.webSocket
-import kotlinx.coroutines.channels.ReceiveChannel
-import kotlinx.coroutines.channels.SendChannel
-import log
+import model.GamesService
+import model.SubscriptionsService
+import model.UserFaultException
 
-class Connector(val incoming: ReceiveChannel<Frame>, val outgoing: SendChannel<Frame>){
-
+fun Route.webSocketConnection() {
+    webSocket("/ws") {
+        try {
+            SubscriptionsService.connect(getUserId(), incoming, outgoing)
+        }
+        catch(e: UserFaultException){
+            badRequest(e)
+        }
+    }
 }
 
-fun Route.connectionRouting() {
-    webSocket("/ws") {
-        val connector = Connector(incoming, outgoing)
-        for (frame in incoming) {
-            when (frame) {
-                is Frame.Text -> {
-                    val text = frame.readText()
-                    log.debug("Received from ws: $text")
-                }
-                else -> log.debug("Received from ws: $frame")
+fun Route.subscribeOnCommonEvents(){
+    route("/subscriptions/common"){
+        put{
+            try {
+                SubscriptionsService.subscribeOnCommonEvents(getUserId())
+                call.respond("Success")
+            }
+            catch(e: UserFaultException){
+                badRequest(e)
+            }
+        }
+        delete{
+            try {
+                SubscriptionsService.unsubscribeFromCommonEvents(getUserId())
+                call.respond("Success")
+            }
+            catch(e: UserFaultException){
+                badRequest(e)
             }
         }
     }
 }
 
 fun Route.registerSubscriptions() {
-    connectionRouting()
+    webSocketConnection()
+    subscribeOnCommonEvents()
 }

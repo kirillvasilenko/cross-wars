@@ -63,6 +63,9 @@ kotlin {
 
                 implementation("com.github.javafaker:javafaker:1.0.2")
                 implementation("org.litote.kmongo:kmongo-coroutine-serialization:3.12.2")
+
+                implementation("org.jetbrains.kotlin:kotlin-test")
+                implementation("org.jetbrains.kotlin:kotlin-test-junit")
             }
         }
 

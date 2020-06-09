@@ -42,7 +42,7 @@ fun Route.startNewGame() {
 
 fun Route.joinGame() {
     route("/games/{id}/join") {
-        post {
+        put {
             try {
                 val newGame = GamesService.joinGame(getUserId(), getIntFromParams("id"))
                 call.respond(newGame)
