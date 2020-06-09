@@ -18,6 +18,10 @@ fun PipelineContext<Unit, ApplicationCall>.getIntFromParams(name: String) : Int 
     call.parameters[name]?.toIntOrNull()
         ?: throw UserFaultException("Missing or malformed $name")
 
+fun PipelineContext<Unit, ApplicationCall>.getFromParams(name: String) : String =
+    call.parameters[name]
+        ?: throw UserFaultException("Missing param $name")
+
 suspend fun PipelineContext<Unit, ApplicationCall>.badRequest(e: Exception){
     call.respondText(
         e.message!!,

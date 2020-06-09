@@ -35,7 +35,7 @@ class User(val id: Int, val name: String){
         }
     }
 
-    fun leaveCurrentGame(): Unit{
+    fun leaveCurrentGame(){
         lock.write{
             if(currentGame == null) return
             currentGame!!.leave(this)
@@ -43,9 +43,22 @@ class User(val id: Int, val name: String){
         }
     }
 
+    fun makeMove(x: Int, y: Int){
+        lock.write{
+            checkCurrentGameIsNotNull("User must join a game for making move.")
+            currentGame!!.makeMove(this, x, y)
+        }
+    }
+
+    private fun checkCurrentGameIsNotNull(reason: String): Unit{
+        if(currentGame == null) throw IncorrectUserActionException(reason)
+    }
+
     private fun checkCurrentGameIsNull(reason: String): Unit{
         if(currentGame != null) throw IncorrectUserActionException(reason)
     }
+
+
 
 }
 

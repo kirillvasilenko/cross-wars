@@ -13,10 +13,10 @@ import model.UserSession
 fun Route.authRouting() {
     route("/auth") {
         put{
-            val session: UserSession? = call.sessions.get<UserSession>()
+            var session: UserSession? = call.sessions.get<UserSession>()
             if(session == null
                 || !AuthService.validate(session)){
-                val session = AuthService.authenticateNewUser()
+                session = AuthService.authenticateNewUser()
                 call.sessions.set(session)
                 call.respond("New session set!")
             }

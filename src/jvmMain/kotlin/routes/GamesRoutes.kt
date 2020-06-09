@@ -2,11 +2,9 @@ package routes
 
 import io.ktor.application.call
 import io.ktor.response.respond
+import io.ktor.routing.*
+import log
 import model.GamesService
-import io.ktor.routing.Route
-import io.ktor.routing.get
-import io.ktor.routing.post
-import io.ktor.routing.route
 import model.UserFaultException
 
 
@@ -58,9 +56,25 @@ fun Route.joinGame() {
 
 fun Route.leaveGame() {
     route("/games/leave") {
-        post {
+        put {
             try {
                 GamesService.leaveCurrentGame(getUserId())
+                call.respond("Success")
+            }
+            catch(e: UserFaultException){
+                badRequest(e)
+            }
+        }
+    }
+}
+
+fun Route.makeMove(){
+    route("/games/move"){
+        put{
+            try {
+                val x = getIntFromParams("x")
+                val y = getIntFromParams("y")
+                GamesService.makeMove(getUserId(), x, y)
                 call.respond("Success")
             }
             catch(e: UserFaultException){
@@ -75,4 +89,5 @@ fun Route.registerGamesRoutes() {
     startNewGame()
     joinGame()
     leaveGame()
+    makeMove()
 }

@@ -1,7 +1,12 @@
 GET http://localhost:9090/auth
-Cookie: USER_SESSION=userId%3D%2523sda399a0b%2Dd42d%2D4e2c%2D8fe4%2D6ac8eca05c1e;
+Cookie: USER_SESSION=userId%3D%2523i1%26workSession%3D%2523s560cd70e%2De125%2D4483%2D8e80%2D0e87cfe05ff8;
 
 ###
 
 PUT http://localhost:9090/auth
-Cookie: USER_SESSION=userId%3D%2523s9754431b%2D7cdf%2D4921%2Dbccb%2D73892a55c8c0;
+Cookie: USER_SESSION=userId%3D%2523i1%26workSession%3D%2523sc1cce126%2D7027%2D44f2%2Da89d%2Ddf4b9a137b67;
+
+###
+
+PUT http://localhost:9090/games/move?x=1&y=2
+Cookie: USER_SESSION=userId%3D%2523i1%26workSession%3D%2523s3fdc676a%2D66f9%2D41f7%2D8978%2Dc56d24db6a23;
