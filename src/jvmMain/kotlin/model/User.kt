@@ -63,6 +63,8 @@ class User(val id: Int, val name: String){
         wsConnection!!.runSendingEvents()
         wsConnection!!.listen()
         mutex.withLock{
+            unsubscribeFromCommonEventsImpl()
+            unsubscribeFromCurrentGameEventsImpl()
             SubscriptionsHub.deleteConnection(id)
             wsConnection = null
         }
@@ -74,14 +76,44 @@ class User(val id: Int, val name: String){
                 "Trying to subscribe without set ws connection. Set wsConnection and try again."
             )
             SubscriptionsHub.subscribeOnCommonEvents(id)
+            for(game in GamesStorage.getGames()){
+                game.onSubscribed(id)
+            }
         }
     }
 
     suspend fun unsubscribeFromCommonEvents() {
         mutex.withLock {
-            if(wsConnection == null) return
-            SubscriptionsHub.unsubscribeFromCommonEvents(id)
+            unsubscribeFromCommonEventsImpl()
         }
+    }
+
+    suspend fun subscribeOnCurrentGameEvents() {
+        mutex.withLock {
+            if(currentGame == null) userFault(
+                "Trying to subscribe on current game without current game. Join to some game and try again."
+            )
+            if(wsConnection == null) userFault(
+                "Trying to subscribe without set ws connection. Set wsConnection and try again."
+            )
+            currentGame!!.subscribe(this)
+        }
+    }
+
+    suspend fun unsubscribeFromCurrentGameEvents() {
+        mutex.withLock {
+            if(wsConnection == null) return
+            unsubscribeFromCommonEventsImpl()
+        }
+    }
+
+    private fun unsubscribeFromCommonEventsImpl(){
+        SubscriptionsHub.unsubscribeFromCommonEvents(id)
+    }
+
+    private suspend  fun unsubscribeFromCurrentGameEventsImpl(){
+        if(currentGame == null) return
+        currentGame!!.unsubscribe(this)
     }
 
     private fun checkCurrentGameIsNull(errorMessage: String){

@@ -7,7 +7,6 @@ import io.ktor.routing.delete
 import io.ktor.routing.put
 import io.ktor.routing.route
 import io.ktor.websocket.webSocket
-import model.GamesService
 import model.SubscriptionsService
 import model.UserFaultException
 
@@ -36,6 +35,29 @@ fun Route.subscribeOnCommonEvents(){
         delete{
             try {
                 SubscriptionsService.unsubscribeFromCommonEvents(getUserId())
+                call.respond("Success")
+            }
+            catch(e: UserFaultException){
+                badRequest(e)
+            }
+        }
+    }
+}
+
+fun Route.subscribeOnGameEvents(){
+    route("/subscriptions/current"){
+        put(){
+            try {
+                SubscriptionsService.subscribeOnCurrentGameEvents(getUserId())
+                call.respond("Success")
+            }
+            catch(e: UserFaultException){
+                badRequest(e)
+            }
+        }
+        delete{
+            try {
+                SubscriptionsService.unsubscribeFromCurrentGameEvents(getUserId())
                 call.respond("Success")
             }
             catch(e: UserFaultException){

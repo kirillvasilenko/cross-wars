@@ -100,8 +100,30 @@ class Game(val id: Int){
         }
     }
 
-    fun toDto(): GameDto {
-        return GameDto(id)
+    suspend fun subscribe(user: User) {
+        mutex.withLock {
+            if(!users.any { it.id == user.id }) userFault("Join to game $id for subscribing on its events.")
+            subscribeImpl(user)
+        }
+    }
+
+    suspend fun unsubscribe(user: User) {
+        mutex.withLock {
+            if(!users.any { it.id == user.id }) return
+            unsubscribeImpl(user)
+        }
+    }
+
+    suspend fun onSubscribed(userId: Int) {
+        mutex.withLock{
+            onSubscribeImpl(userId)
+        }
+    }
+
+    suspend fun toDto(): GameDto {
+        mutex.withLock {
+            return toDtoImpl()
+        }
     }
 
     //endregion public
@@ -201,6 +223,7 @@ class Game(val id: Int){
         lastUsedSymbol++
         users.add(UserInGame(user.id, lastUsedSymbol))
         eventsListener(UserJoined(id, user.id))
+        subscribeImpl(user)
     }
 
     private suspend fun leaveImpl(user: User){
@@ -208,9 +231,23 @@ class Game(val id: Int){
             return
         }
         eventsListener(UserLeaved(id, user.id))
+        unsubscribeImpl(user)
         if(users.isEmpty()){
             archive()
         }
+    }
+
+    private suspend fun subscribeImpl(user: User){
+        SubscriptionsHub.subscribeOnGameEvents(user.id, id)
+        onSubscribeImpl(user.id)
+    }
+
+    private suspend fun onSubscribeImpl(userId: Int){
+        eventsListener(UserSubscribedOnGameEvents(id, userId, toDtoImpl()))
+    }
+
+    private fun unsubscribeImpl(user: User){
+        SubscriptionsHub.unsubscribeFromGameEvents(user.id, id)
     }
 
     private suspend fun archive(){
@@ -218,5 +255,7 @@ class Game(val id: Int){
         eventsListener(GameStateChanged(id, ARCHIVED))
         eventsListener = {}
     }
+
+    private fun toDtoImpl() = GameDto(id)
 
 }

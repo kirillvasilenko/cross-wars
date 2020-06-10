@@ -15,6 +15,32 @@ class WsConnection(val userId: Int, val incoming: ReceiveChannel<Frame>, val out
     private var eventsChannel = Channel<GameEvent>(Channel.UNLIMITED)
 
     suspend fun listen(){
+        try {
+            listenImpl()
+        }
+        catch(e: Throwable){
+            log.warn(e.message)
+        }
+    }
+
+    suspend fun runSendingEvents() = coroutineScope {
+        launch {
+            try{
+                for (event in eventsChannel) {
+                    sendEventImpl(event)
+                }
+            }
+            catch(e: Throwable){
+                log.warn(e.message)
+            }
+        }
+    }
+
+    suspend fun send(event: GameEvent) {
+        eventsChannel.send(event)
+    }
+
+    private suspend fun listenImpl(){
         for (frame in incoming) {
             when (frame) {
                 is Frame.Text -> {
@@ -24,18 +50,6 @@ class WsConnection(val userId: Int, val incoming: ReceiveChannel<Frame>, val out
                 else -> log.debug("Received from user=$userId through ws: $frame")
             }
         }
-    }
-
-    suspend fun runSendingEvents() = coroutineScope {
-        launch {
-            for (event in eventsChannel) {
-                sendEventImpl(event)
-            }
-        }
-    }
-
-    suspend fun send(event: GameEvent) {
-        eventsChannel.send(event)
     }
 
     private suspend fun sendEventImpl(event: GameEvent){
@@ -52,7 +66,7 @@ open class SubscriptionsHubInMemory{
 
     private val commonEventsSubscribers : MutableSet<WsConnection> = ConcurrentHashMap.newKeySet()
 
-    private val certainGameEventsSubscribers: Map<Int, Set<WsConnection>> =  ConcurrentHashMap<Int, Set<WsConnection>>()
+    private val certainGameEventsSubscribers: MutableMap<Int, MutableSet<WsConnection>> =  ConcurrentHashMap<Int, MutableSet<WsConnection>>()
 
     fun createConnection(userId: Int, incoming: ReceiveChannel<Frame>, outgoing: SendChannel<Frame>) : WsConnection {
         val connection = WsConnection(userId, incoming, outgoing)
@@ -62,11 +76,11 @@ open class SubscriptionsHubInMemory{
 
     fun deleteConnection(userId: Int) {
         connectionsByUserId.remove(userId)
+
     }
 
     fun subscribeOnCommonEvents(userId: Int) {
-        val connection = connectionsByUserId[userId]
-            ?: throw ConnectionNotFoundException("ws connection for user $userId not found.")
+        val connection = getConnection(userId)
         commonEventsSubscribers.add(connection)
     }
 
@@ -76,20 +90,57 @@ open class SubscriptionsHubInMemory{
         commonEventsSubscribers.remove(connection)
     }
 
-    suspend fun handleGameEvent(event: GameEvent){
-        if(event is CommonGameEvent)
-            sendCommonEvent(event)
-        if(event is CertainGameEvent)
-            sendCertainGameEvent(event)
+    fun subscribeOnGameEvents(userId: Int, gameId: Int) {
+        val connection = getConnection(userId)
+
+        var gameSubscribers = certainGameEventsSubscribers[gameId]
+        if(gameSubscribers == null){
+            gameSubscribers = ConcurrentHashMap.newKeySet()
+            certainGameEventsSubscribers[gameId] = gameSubscribers
+        }
+
+        gameSubscribers!!.add(connection)
     }
 
-    private suspend fun sendCommonEvent(event: CommonGameEvent){
-        for(connection in commonEventsSubscribers){
-            connection.send(event)
+    fun unsubscribeFromGameEvents(userId: Int, gameId: Int) {
+        val connection = connectionsByUserId[userId]
+            ?: return
+        val gameSubscribers = certainGameEventsSubscribers[gameId]
+            ?: return
+        gameSubscribers.remove(connection)
+    }
+
+    suspend fun handleGameEvent(event: GameEvent){
+        if(event is CommonGameEvent)
+            handleCommonEvent(event)
+        if(event is CertainGameEvent)
+            handleCertainGameEvent(event)
+        if(event is SpecificUserOnlyEvent) {
+            handleSpecificUserOnlyEvent(event)
         }
     }
 
-    private suspend fun sendCertainGameEvent(event: CertainGameEvent){
+    private fun getConnection(userId: Int): WsConnection =
+        connectionsByUserId[userId]
+            ?: throw ConnectionNotFoundException("ws connection for user $userId not found.")
+
+    private suspend fun handleSpecificUserOnlyEvent(event: SpecificUserOnlyEvent){
+        val connection = connectionsByUserId[event.userId]
+            ?: return
+        connection.send(event)
+    }
+
+    private suspend fun handleCommonEvent(event: CommonGameEvent){
+        for(connection in commonEventsSubscribers){
+            connection.send(event)
+        }
+        if(event is GameStateChanged
+            && event.actualState == GameState.ARCHIVED){
+            handleGameArchived(event.gameId)
+        }
+    }
+
+    private suspend fun handleCertainGameEvent(event: CertainGameEvent){
         val subscribers = certainGameEventsSubscribers[event.gameId]
             ?: return
 
@@ -98,9 +149,9 @@ open class SubscriptionsHubInMemory{
         }
     }
 
-
-
-
+    private fun handleGameArchived(gameId: Int){
+        certainGameEventsSubscribers.remove(gameId)
+    }
 }
 
 object SubscriptionsHub:SubscriptionsHubInMemory()
@@ -120,6 +171,16 @@ open class SubscriptionsServiceInMemory{
     suspend fun unsubscribeFromCommonEvents(userId: Int) {
         val user = UsersStorage.getUser(userId)
         user.unsubscribeFromCommonEvents()
+    }
+
+    suspend fun subscribeOnCurrentGameEvents(userId: Int) {
+        val user = UsersStorage.getUser(userId)
+        user.subscribeOnCurrentGameEvents()
+    }
+
+    suspend fun unsubscribeFromCurrentGameEvents(userId: Int) {
+        val user = UsersStorage.getUser(userId)
+        user.unsubscribeFromCurrentGameEvents()
     }
 }
 

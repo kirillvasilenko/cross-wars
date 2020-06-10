@@ -19,6 +19,11 @@ sealed class GameEvent {
 }
 
 @Serializable
+sealed class SpecificUserOnlyEvent():GameEvent(){
+    abstract val userId: Int
+}
+
+@Serializable
 sealed class CertainGameEvent:GameEvent()
 
 @Serializable
@@ -43,3 +48,6 @@ class UserMoved(override val gameId: Int, val userId: Int, val time: Long, val x
 @Serializable
 class UserWon(override val gameId: Int, val userId: Int, val winLine: Collection<Field>):
     CertainGameEvent()
+
+@Serializable
+class UserSubscribedOnGameEvents(override val gameId: Int, override val userId: Int, val game: GameDto):SpecificUserOnlyEvent()

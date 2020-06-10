@@ -23,7 +23,7 @@ fun PipelineContext<Unit, ApplicationCall>.getFromParams(name: String) : String 
     call.parameters[name]
         ?: throw UserFaultException("Missing param $name")
 
-suspend fun PipelineContext<Unit, ApplicationCall>.badRequest(e: Exception){
+suspend fun PipelineContext<Unit, ApplicationCall>.badRequest(e: Throwable){
     call.respondText(
         e.message!!,
         status = HttpStatusCode.BadRequest
@@ -37,7 +37,7 @@ fun WebSocketServerSession.getUserId(): Int {
     return idAsString.toInt()
 }
 
-suspend fun WebSocketServerSession.badRequest(e: Exception){
+suspend fun WebSocketServerSession.badRequest(e: Throwable){
     call.respondText(
         e.message!!,
         status = HttpStatusCode.BadRequest
