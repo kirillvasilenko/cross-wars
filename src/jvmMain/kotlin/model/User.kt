@@ -6,6 +6,8 @@ import kotlinx.coroutines.channels.SendChannel
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 
+data class UserDto(val id: Int, val name: String, val currentGameId: Int?)
+
 class User(val id: Int, val name: String){
 
     private val mutex: Mutex =
@@ -104,6 +106,12 @@ class User(val id: Int, val name: String){
         mutex.withLock {
             if(wsConnection == null) return
             unsubscribeFromCommonEventsImpl()
+        }
+    }
+
+    suspend fun toDto(): UserDto{
+        mutex.withLock{
+            return UserDto(id, name, currentGame?.id)
         }
     }
 

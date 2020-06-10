@@ -1,19 +1,13 @@
 package model
 
-import kotlinx.serialization.Serializable
-import java.util.concurrent.ConcurrentHashMap
-import java.util.concurrent.atomic.AtomicInteger
-
-
-
 
 open class GamesServiceInMemory{
 
-    fun getGames(): Collection<GameDto>{
+    suspend fun getGames(): Collection<GameDto>{
         return GamesStorage.getGames().map{ it.toDto() }
     }
 
-    fun getGame(id: Int): GameDto
+    suspend fun getGame(id: Int): GameDto
             = GamesStorage.getGame(id).toDto()
 
     suspend fun startNewGame(userId: Int): GameDto{

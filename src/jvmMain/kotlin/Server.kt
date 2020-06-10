@@ -1,9 +1,9 @@
-import routes.registerAuthRoutes
 import io.ktor.application.*
 import io.ktor.auth.*
 import io.ktor.features.*
 import io.ktor.http.*
 import io.ktor.response.respond
+import io.ktor.routing.route
 import io.ktor.routing.routing
 import io.ktor.serialization.*
 import io.ktor.server.engine.*
@@ -12,9 +12,7 @@ import io.ktor.sessions.*
 import io.ktor.websocket.*
 import model.AuthService
 import model.UserSession
-import routes.registerGamesRoutes
-import routes.registerStaticRoutes
-import routes.registerSubscriptions
+import routes.*
 
 
 fun main() {
@@ -54,11 +52,15 @@ fun main() {
 
         routing {
             registerStaticRoutes()
-            registerAuthRoutes()
 
-            authenticate{
-                registerSubscriptions()
-                registerGamesRoutes()
+            route("api"){
+                registerAuthRoutes()
+
+                authenticate{
+                    registerSubscriptions()
+                    registerGamesRoutes()
+                    registerUsersRoutes()
+                }
             }
         }
 

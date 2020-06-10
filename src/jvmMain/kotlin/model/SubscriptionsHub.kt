@@ -1,72 +1,20 @@
 package model
 
 import io.ktor.http.cio.websocket.Frame
-import io.ktor.http.cio.websocket.readText
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.channels.SendChannel
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.launch
-import log
 import java.util.concurrent.ConcurrentHashMap
-
-class WsConnection(val userId: Int, val incoming: ReceiveChannel<Frame>, val outgoing: SendChannel<Frame>){
-
-    private var eventsChannel = Channel<GameEvent>(Channel.UNLIMITED)
-
-    suspend fun listen(){
-        try {
-            listenImpl()
-        }
-        catch(e: Throwable){
-            log.warn(e.message)
-        }
-    }
-
-    suspend fun runSendingEvents() = coroutineScope {
-        launch {
-            try{
-                for (event in eventsChannel) {
-                    sendEventImpl(event)
-                }
-            }
-            catch(e: Throwable){
-                log.warn(e.message)
-            }
-        }
-    }
-
-    suspend fun send(event: GameEvent) {
-        eventsChannel.send(event)
-    }
-
-    private suspend fun listenImpl(){
-        for (frame in incoming) {
-            when (frame) {
-                is Frame.Text -> {
-                    val text = frame.readText()
-                    log.debug("Received from user=$userId through ws: $text")
-                }
-                else -> log.debug("Received from user=$userId through ws: $frame")
-            }
-        }
-    }
-
-    private suspend fun sendEventImpl(event: GameEvent){
-        val message = EventsSerializer.stringify(event)
-        outgoing.send(Frame.Text(message))
-        log.debug("Sent $message to $userId through ws.")
-    }
-}
-
 
 open class SubscriptionsHubInMemory{
 
-    private val connectionsByUserId = ConcurrentHashMap<Int, WsConnection>()
+    private val connectionsByUserId =
+        ConcurrentHashMap<Int, WsConnection>()
 
-    private val commonEventsSubscribers : MutableSet<WsConnection> = ConcurrentHashMap.newKeySet()
+    private val commonEventsSubscribers : MutableSet<WsConnection> =
+        ConcurrentHashMap.newKeySet()
 
-    private val certainGameEventsSubscribers: MutableMap<Int, MutableSet<WsConnection>> =  ConcurrentHashMap<Int, MutableSet<WsConnection>>()
+    private val certainGameEventsSubscribers: MutableMap<Int, MutableSet<WsConnection>> =
+        ConcurrentHashMap<Int, MutableSet<WsConnection>>()
 
     fun createConnection(userId: Int, incoming: ReceiveChannel<Frame>, outgoing: SendChannel<Frame>) : WsConnection {
         val connection = WsConnection(userId, incoming, outgoing)
@@ -135,7 +83,8 @@ open class SubscriptionsHubInMemory{
             connection.send(event)
         }
         if(event is GameStateChanged
-            && event.actualState == GameState.ARCHIVED){
+            && event.actualState == GameState.ARCHIVED
+        ){
             handleGameArchived(event.gameId)
         }
     }
@@ -156,34 +105,4 @@ open class SubscriptionsHubInMemory{
 
 object SubscriptionsHub:SubscriptionsHubInMemory()
 
-open class SubscriptionsServiceInMemory{
-
-    suspend fun connect(userId: Int, incoming: ReceiveChannel<Frame>, outgoing: SendChannel<Frame>){
-        val user = UsersStorage.getUser(userId)
-        user.connect(incoming, outgoing)
-    }
-
-    suspend fun subscribeOnCommonEvents(userId: Int) {
-        val user = UsersStorage.getUser(userId)
-        user.subscribeOnCommonEvents()
-    }
-
-    suspend fun unsubscribeFromCommonEvents(userId: Int) {
-        val user = UsersStorage.getUser(userId)
-        user.unsubscribeFromCommonEvents()
-    }
-
-    suspend fun subscribeOnCurrentGameEvents(userId: Int) {
-        val user = UsersStorage.getUser(userId)
-        user.subscribeOnCurrentGameEvents()
-    }
-
-    suspend fun unsubscribeFromCurrentGameEvents(userId: Int) {
-        val user = UsersStorage.getUser(userId)
-        user.unsubscribeFromCurrentGameEvents()
-    }
-}
-
-object SubscriptionsService:SubscriptionsServiceInMemory()
-
-open class ConnectionNotFoundException(message: String):Exception(message)
+open class ConnectionNotFoundException(message: String):Throwable(message)
