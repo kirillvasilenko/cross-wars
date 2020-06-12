@@ -1,69 +1,75 @@
-import io.ktor.application.*
-import io.ktor.auth.*
-import io.ktor.features.*
-import io.ktor.http.*
+import io.ktor.application.Application
+import io.ktor.application.call
+import io.ktor.application.install
+import io.ktor.auth.Authentication
+import io.ktor.auth.UserIdPrincipal
+import io.ktor.auth.authenticate
+import io.ktor.auth.session
+import io.ktor.features.CORS
+import io.ktor.features.Compression
+import io.ktor.features.ContentNegotiation
+import io.ktor.features.gzip
+import io.ktor.http.HttpMethod
+import io.ktor.http.HttpStatusCode
 import io.ktor.response.respond
 import io.ktor.routing.route
 import io.ktor.routing.routing
-import io.ktor.serialization.*
-import io.ktor.server.engine.*
-import io.ktor.server.netty.*
-import io.ktor.sessions.*
-import io.ktor.websocket.*
+import io.ktor.serialization.json
+import io.ktor.sessions.Sessions
+import io.ktor.sessions.cookie
+import io.ktor.websocket.WebSockets
 import model.AuthService
 import model.UserSession
 import routes.*
 
+fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
 
-fun main() {
-    embeddedServer(Netty, 9090) {
-        install(ContentNegotiation) {
-            json()
-        }
-        install(CORS) {
-            method(HttpMethod.Get)
-            method(HttpMethod.Post)
-            method(HttpMethod.Put)
-            method(HttpMethod.Delete)
-            anyHost()
-        }
-        install(Compression) {
-            gzip()
-        }
-        install(WebSockets)
-        install(Sessions) {
-            cookie<UserSession>("USER_SESSION")
-        }
-        install(Authentication) {
-            session<UserSession>{
-                validate { userSession ->
-                    if(AuthService.validate(userSession)){
-                        UserIdPrincipal(userSession.userId.toString())
-                    }
-                    else{
-                        null
-                    }
+fun Application.module() {
+    install(ContentNegotiation) {
+        json()
+    }
+    install(CORS) {
+        method(HttpMethod.Get)
+        method(HttpMethod.Post)
+        method(HttpMethod.Put)
+        method(HttpMethod.Delete)
+        anyHost()
+    }
+    install(Compression) {
+        gzip()
+    }
+    install(WebSockets)
+    install(Sessions) {
+        cookie<UserSession>("USER_SESSION")
+    }
+    install(Authentication) {
+        session<UserSession>{
+            validate { userSession ->
+                if(AuthService.validate(userSession)){
+                    UserIdPrincipal(userSession.userId.toString())
                 }
-                challenge {
-                    call.respond(HttpStatusCode.Unauthorized)
+                else{
+                    null
                 }
             }
-        }
-
-        routing {
-            registerStaticRoutes()
-
-            route("api"){
-                registerAuthRoutes()
-
-                authenticate{
-                    registerSubscriptions()
-                    registerGamesRoutes()
-                    registerUsersRoutes()
-                }
+            challenge {
+                call.respond(HttpStatusCode.Unauthorized)
             }
         }
+    }
 
-    }.start(wait = true)
+    routing {
+        registerStaticRoutes()
+
+        route("api"){
+            registerAuthRoutes()
+
+            authenticate{
+                registerSubscriptions()
+                registerGamesRoutes()
+                registerUsersRoutes()
+            }
+        }
+    }
 }
 

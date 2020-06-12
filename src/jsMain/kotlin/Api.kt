@@ -3,6 +3,9 @@ import io.ktor.client.*
 import io.ktor.client.request.*
 import io.ktor.client.features.json.JsonFeature
 import io.ktor.client.features.json.serializer.KotlinxSerializer
+import io.ktor.client.features.websocket.webSocket
+import model.GameDto
+import model.UserDto
 
 import kotlin.browser.window
 
@@ -12,17 +15,73 @@ val jsonClient = HttpClient {
     install(JsonFeature) { serializer = KotlinxSerializer() }
 }
 
-suspend fun getShoppingList(): List<ShoppingListItem> {
-    return jsonClient.get(endpoint + ShoppingListItem.path)
+object Api{
+    val auth = AuthApi()
+    val users = UsersApi()
+    val subscriptions = SubscriptionsApi()
+    val games = GamesApi()
 }
 
-suspend fun addShoppingListItem(shoppingListItem: ShoppingListItem) {
-    jsonClient.post<Unit>(endpoint + ShoppingListItem.path) {
-        contentType(ContentType.Application.Json)
-        body = shoppingListItem
+
+class AuthApi{
+    suspend fun auth(): UserDto {
+        return jsonClient.put("$endpoint/api/auth")
     }
 }
 
-suspend fun deleteShoppingListItem(shoppingListItem: ShoppingListItem) {
-    jsonClient.delete<Unit>(endpoint + ShoppingListItem.path + "/${shoppingListItem.id}")
+class UsersApi{
+    suspend fun getUser(userId: Int): UserDto {
+        return jsonClient.get("$endpoint/api/users/$userId")
+    }
 }
+
+class SubscriptionsApi{
+    suspend fun subscribeOnCommonEvents(){
+        jsonClient.put<Unit>("/subscriptions/common")
+    }
+
+    suspend fun unsubscribeFromCommonEvents(){
+        jsonClient.delete<Unit>("/subscriptions/common")
+    }
+
+    suspend fun subscribeOnCurrentGameEvents(){
+        jsonClient.put<Unit>("/subscriptions/current")
+    }
+
+    suspend fun unsubscribeFromCurrentGameEvents(){
+        jsonClient.delete<Unit>("/subscriptions/current")
+    }
+}
+
+class GamesApi{
+
+    suspend fun getGame(gameId: Int): GameDto {
+        return jsonClient.get("$endpoint/api/games/$gameId")
+    }
+
+    suspend fun getGames(): List<GameDto> {
+        return jsonClient.get("$endpoint/api/games")
+    }
+
+    suspend fun startNewGame(): GameDto {
+        return jsonClient.post("$endpoint/api/games/start-new")
+    }
+
+    suspend fun joinGame(gameId: Int): GameDto {
+        return jsonClient.put("$endpoint/games/$gameId/join")
+    }
+
+    suspend fun leaveCurrentGame() {
+        jsonClient.put<Unit>("$endpoint/games/leave")
+    }
+
+    suspend fun makeMove(x: Int, y: Int) {
+        jsonClient.put<Unit>("$endpoint/games/move?x=$x&y=$y")
+    }
+
+}
+
+
+
+
+

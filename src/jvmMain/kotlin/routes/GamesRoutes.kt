@@ -43,8 +43,8 @@ fun Route.joinGame() {
     route("/games/{id}/join") {
         put {
             try {
-                val newGame = GamesService.joinGame(getUserId(), getIntFromParams("id"))
-                call.respond(newGame)
+                val game = GamesService.joinGame(getUserId(), getIntFromParams("id"))
+                call.respond(game)
             }
             catch(e: UserFaultException){
                 badRequest(e)
@@ -53,7 +53,7 @@ fun Route.joinGame() {
     }
 }
 
-fun Route.leaveGame() {
+fun Route.leaveCurrentGame() {
     route("/games/leave") {
         put {
             try {
@@ -87,6 +87,6 @@ fun Route.registerGamesRoutes() {
     gettingGames()
     startNewGame()
     joinGame()
-    leaveGame()
+    leaveCurrentGame()
     makeMove()
 }

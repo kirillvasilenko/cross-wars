@@ -1,10 +1,10 @@
-GET http://localhost:9090/auth
+GET http://localhost:8080/api/auth
 Cookie: USER_SESSION=userId%3D%2523i1%26workSession%3D%2523s560cd70e%2De125%2D4483%2D8e80%2D0e87cfe05ff8;
 
 ###
 
-PUT http://localhost:9090/auth
-Cookie: USER_SESSION=userId%3D%2523i1%26workSession%3D%2523sc1cce126%2D7027%2D44f2%2Da89d%2Ddf4b9a137b67;
+PUT http://localhost:8080/api/auth
+Cookie: USER_SESSION=userId%3D%2523i2%26workSession%3D%2523s0917c0c5%2Db6ab%2D4259%2D82ad%2Deb041ddeb476;
 
 ###
 

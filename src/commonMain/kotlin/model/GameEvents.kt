@@ -19,15 +19,15 @@ sealed class GameEvent {
 }
 
 @Serializable
-sealed class SpecificUserOnlyEvent():GameEvent(){
+sealed class SpecificUserOnlyEvent(): GameEvent(){
     abstract val userId: Int
 }
 
 @Serializable
-sealed class CertainGameEvent:GameEvent()
+sealed class CertainGameEvent: GameEvent()
 
 @Serializable
-sealed class CommonGameEvent:CertainGameEvent()
+sealed class CommonGameEvent: CertainGameEvent()
 
 @Serializable
 data class GameStateChanged(override val gameId: Int, val actualState: GameState):
@@ -50,4 +50,5 @@ class UserWon(override val gameId: Int, val userId: Int, val winLine: Collection
     CertainGameEvent()
 
 @Serializable
-class UserSubscribedOnGameEvents(override val gameId: Int, override val userId: Int, val game: GameDto):SpecificUserOnlyEvent()
+class UserSubscribedOnGameEvents(override val gameId: Int, override val userId: Int, val game: GameDto):
+    SpecificUserOnlyEvent()

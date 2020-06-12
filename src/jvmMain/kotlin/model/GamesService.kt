@@ -4,20 +4,20 @@ package model
 open class GamesServiceInMemory{
 
     suspend fun getGames(): Collection<GameDto>{
-        return GamesStorage.getGames().map{ it.toDto() }
+        return GamesStorage.getGames().map{ it.snapshot() }
     }
 
     suspend fun getGame(id: Int): GameDto
-            = GamesStorage.getGame(id).toDto()
+            = GamesStorage.getGame(id).snapshot()
 
     suspend fun startNewGame(userId: Int): GameDto{
         val user = UsersStorage.getUser(userId)
-        return user.startNewGame().toDto()
+        return user.startNewGame().snapshot()
     }
 
     suspend fun joinGame(userId: Int, gameId: Int): GameDto{
         val user = UsersStorage.getUser(userId)
-        return user.joinGame(gameId).toDto()
+        return user.joinGame(gameId).snapshot()
     }
 
     suspend fun leaveCurrentGame(userId: Int){

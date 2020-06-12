@@ -14,6 +14,10 @@ group = "org.example"
 version = "1.0-SNAPSHOT"
 
 repositories {
+
+    maven { setUrl("https://dl.bintray.com/kotlin/kotlin-dev") }
+    maven { setUrl("https://dl.bintray.com/kotlin/kotlinx") }
+
     maven { setUrl("https://dl.bintray.com/kotlin/kotlin-eap") }
     mavenCentral()
     jcenter()
@@ -62,7 +66,6 @@ kotlin {
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-runtime:$serializationVersion") // JVM dependency
 
                 implementation("com.github.javafaker:javafaker:1.0.2")
-                implementation("org.litote.kmongo:kmongo-coroutine-serialization:3.12.2")
 
                 implementation("org.jetbrains.kotlin:kotlin-test")
                 implementation("org.jetbrains.kotlin:kotlin-test-junit")
@@ -83,16 +86,19 @@ kotlin {
                 implementation(npm("bufferutil")) //TODO: Uncomment this and stuff breaks. WHY?
                 implementation(npm("utf-8-validate"))
 
-                //ktor client js json
                 implementation("io.ktor:ktor-client-json-js:$ktorVersion")
                 implementation("io.ktor:ktor-client-serialization-js:$ktorVersion")
                 implementation(npm("fs"))
 
-                //React, React DOM + Wrappers (chapter 3)
                 implementation("org.jetbrains:kotlin-react:16.13.0-pre.93-kotlin-1.3.70")
                 implementation("org.jetbrains:kotlin-react-dom:16.13.0-pre.93-kotlin-1.3.70")
                 implementation(npm("react", "16.13.0"))
                 implementation(npm("react-dom", "16.13.0"))
+
+                implementation("org.jetbrains:kotlin-styled:1.0.0-pre.94-kotlin-1.3.70")
+                implementation(npm("styled-components"))
+                implementation(npm("inline-style-prefixer"))
+
             }
         }
     }

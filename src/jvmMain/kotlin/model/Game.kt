@@ -2,35 +2,13 @@ package model
 
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
-import kotlinx.serialization.Serializable
 import model.GameState.*
-import java.time.LocalDateTime
-import java.time.ZoneId
-import java.util.concurrent.locks.ReentrantReadWriteLock
-import kotlin.concurrent.write
 import kotlin.math.min
-import kotlin.time.Duration
-import kotlin.time.TimeMark
 
 
 const val BOARD_SIZE = 10
 
 const val WIN_LINE_LENGTH = 6
-
-enum class GameState{
-    CREATED, ACTIVE, COMPLETED, ARCHIVED
-}
-
-
-@Serializable
-data class Field(val x: Int, val y: Int)
-
-@Serializable
-data class UserInGame(val id: Int, val symbol: Int)
-
-@Serializable
-data class GameDto(val id: Int)
-
 
 class Game(val id: Int){
 
@@ -40,7 +18,7 @@ class Game(val id: Int){
 
     private val users = mutableListOf<UserInGame>()
 
-    private val board : Array<Array<UserInGame?>>
+    private val board : List<MutableList<UserInGame?>>
 
     private var lastMovedUserId = -1
 
@@ -52,8 +30,8 @@ class Game(val id: Int){
 
     init{
         state = CREATED
-        board = Array(BOARD_SIZE){
-            Array<UserInGame?>(BOARD_SIZE) { null }
+        board = List(BOARD_SIZE){
+            MutableList<UserInGame?>(BOARD_SIZE) { null }
         }
     }
 
@@ -120,14 +98,15 @@ class Game(val id: Int){
         }
     }
 
-    suspend fun toDto(): GameDto {
+    suspend fun snapshot(): GameDto {
         mutex.withLock {
-            return toDtoImpl()
+            return snapshotImpl()
         }
     }
 
     //endregion public
 
+    //region private
 
     private suspend fun makeMoveImpl(user: User, x: Int, y: Int){
         if(board[x][y]?.id == user.id) return
@@ -243,7 +222,7 @@ class Game(val id: Int){
     }
 
     private suspend fun onSubscribeImpl(userId: Int){
-        eventsListener(UserSubscribedOnGameEvents(id, userId, toDtoImpl()))
+        eventsListener(UserSubscribedOnGameEvents(id, userId, snapshotImpl()))
     }
 
     private fun unsubscribeImpl(user: User){
@@ -256,6 +235,9 @@ class Game(val id: Int){
         eventsListener = {}
     }
 
-    private fun toDtoImpl() = GameDto(id)
+    private fun snapshotImpl() =
+        GameDto(id, lastMovedTime, users.toMutableList(), board.map{it.toMutableList()})
+
+    //endregion private
 
 }
