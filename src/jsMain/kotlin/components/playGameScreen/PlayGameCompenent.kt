@@ -2,11 +2,15 @@ package components.playGameScreen
 
 import components.VMComponent
 import components.VmProps
+import kotlinx.coroutines.launch
 import kotlinx.css.*
+import kotlinx.html.js.onClickFunction
+import mainScope
 import react.RBuilder
 import react.ReactElement
 import styled.css
 import styled.styledDiv
+import viewModels.playGameScreen.LeaveGameVm
 import viewModels.playGameScreen.LegendVm
 import viewModels.playGameScreen.PlayGameVm
 
@@ -44,10 +48,31 @@ class PlayGameScreen(props: VmProps<PlayGameVm>): VMComponent<PlayGameVm>(props)
                     backgroundColor = Color.yellow
                     margin = "auto 0px"
                 }
-                legend{
-                    pVm = vm.legendVm
+                legend{ pVm = vm.legendVm }
+                leaveGameButton { pVm = vm.leaveGameVm }
+            }
+        }
+    }
+}
+
+fun RBuilder.leaveGameButton(handler: VmProps<LeaveGameVm>.() -> Unit): ReactElement {
+    return child(LeaveGameButton::class) {
+        this.attrs(handler)
+    }
+}
+
+class LeaveGameButton(props: VmProps<LeaveGameVm>): VMComponent<LeaveGameVm>(props) {
+
+    override fun RBuilder.render() {
+        styledDiv {
+            attrs{
+                onClickFunction = {
+                    mainScope.launch{
+                        vm.execute()
+                    }
                 }
             }
+            +"Leave"
         }
     }
 }

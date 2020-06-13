@@ -31,8 +31,6 @@ class StartNewGameComponent(props: VmProps<StartNewGameVm>): VMComponent<StartNe
                 justifyContent = JustifyContent.center
                 alignItems = Align.center
                 fontSize = 150.px
-
-                userSelect = UserSelect.none
             }
 
             attrs{

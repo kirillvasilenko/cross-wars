@@ -16,12 +16,24 @@ class AppVm: ViewModel() {
 
     override suspend fun init(){
         user = Api.auth.auth()
-        openMainScreen()
+        if(user.currentGameId != null){
+            val game = Api.games.getGame(user.currentGameId!!)
+            startPlaying(game)
+        }
+        else{
+            openMainScreen()
+        }
     }
 
     private fun startPlaying(game: GameDto){
-        currentVm = PlayGameVm(game)
+        currentVm = PlayGameVm(game).apply {
+            onLeaveGame = ::leaveFromGame
+        }
         raiseChanged()
+    }
+
+    private fun leaveFromGame(){
+        openMainScreen()
     }
 
     private fun openMainScreen(){

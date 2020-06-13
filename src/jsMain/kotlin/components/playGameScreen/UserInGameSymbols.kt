@@ -51,13 +51,13 @@ fun RBuilder.circleSymbol(color: Color, glowable: Boolean = true, filter:String 
     custom("circle") {
         if(glowable)
         {
-            attrs["class"] = "glowable"
+            attrs["className"] = "glowable"
         }
         attrs["cx"] = 50
         attrs["cy"] = 50
         attrs["r"] = 40
         attrs["fill"] = "transparent"
-        attrs["stroke-width"] = GlobalStyle.symbolStrokeWidth
+        attrs["strokeWidth"] = GlobalStyle.symbolStrokeWidth
         attrs["stroke"] = color.toString()
         attrs["filter"] = "url(#$filter)"
     }
@@ -69,11 +69,11 @@ fun RBuilder.rhombusSymbol(color: Color, glowable: Boolean = true, filter:String
     custom("polyline") {
         if(glowable)
         {
-            attrs["class"] = "glowable"
+            attrs["className"] = "glowable"
         }
         attrs["points"] = "10,50 50,10 90,50 50,90 10,50 50,10"
         attrs["fill"] = "transparent"
-        attrs["stroke-width"] = GlobalStyle.symbolStrokeWidth
+        attrs["strokeWidth"] = GlobalStyle.symbolStrokeWidth
         attrs["stroke"] = color.toString()
         attrs["filter"] = "url(#$filter)"
     }
@@ -83,11 +83,11 @@ fun RBuilder.plusSymbol(color: Color, glowable: Boolean = true, filter:String = 
     custom("polyline") {
         if(glowable)
         {
-            attrs["class"] = "glowable"
+            attrs["className"] = "glowable"
         }
         attrs["points"] = "10,50 90,50 50,50 50,10 50,90"
         attrs["fill"] = "transparent"
-        attrs["stroke-width"] = GlobalStyle.symbolStrokeWidth
+        attrs["strokeWidth"] = GlobalStyle.symbolStrokeWidth
         attrs["stroke"] = color.toString()
         attrs["filter"] = "url(#$filter)"
     }
@@ -98,26 +98,26 @@ fun RBuilder.crossSymbol(color: Color, glowable: Boolean = true, filter:String =
     custom("line") {
         if(glowable)
         {
-            attrs["class"] = "glowable"
+            attrs["className"] = "glowable"
         }
         attrs["x1"] = 10
         attrs["y1"] = 10
         attrs["x2"] = 90
         attrs["y2"] = 90
-        attrs["stroke-width"] = GlobalStyle.symbolStrokeWidth
+        attrs["strokeWidth"] = GlobalStyle.symbolStrokeWidth
         attrs["stroke"] = color.toString()
         attrs["filter"] = "url(#$filter)"
     }
     custom("line") {
         if(glowable)
         {
-            attrs["class"] = "glowable"
+            attrs["className"] = "glowable"
         }
         attrs["x1"] = 90
         attrs["y1"] = 10
         attrs["x2"] = 10
         attrs["y2"] = 90
-        attrs["stroke-width"] = GlobalStyle.symbolStrokeWidth
+        attrs["strokeWidth"] = GlobalStyle.symbolStrokeWidth
         attrs["stroke"] = color.toString()
         attrs["filter"] = "url(#$filter)"
     }

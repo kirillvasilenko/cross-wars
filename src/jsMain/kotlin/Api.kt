@@ -37,19 +37,19 @@ class UsersApi{
 
 class SubscriptionsApi{
     suspend fun subscribeOnCommonEvents(){
-        jsonClient.put<Unit>("/subscriptions/common")
+        jsonClient.put<Unit>("/api/subscriptions/common")
     }
 
     suspend fun unsubscribeFromCommonEvents(){
-        jsonClient.delete<Unit>("/subscriptions/common")
+        jsonClient.delete<Unit>("/api/subscriptions/common")
     }
 
     suspend fun subscribeOnCurrentGameEvents(){
-        jsonClient.put<Unit>("/subscriptions/current")
+        jsonClient.put<Unit>("/api/subscriptions/current")
     }
 
     suspend fun unsubscribeFromCurrentGameEvents(){
-        jsonClient.delete<Unit>("/subscriptions/current")
+        jsonClient.delete<Unit>("/api/subscriptions/current")
     }
 }
 
@@ -68,15 +68,15 @@ class GamesApi{
     }
 
     suspend fun joinGame(gameId: Int): GameDto {
-        return jsonClient.put("$endpoint/games/$gameId/join")
+        return jsonClient.put("$endpoint/api/games/$gameId/join")
     }
 
     suspend fun leaveCurrentGame() {
-        jsonClient.put<Unit>("$endpoint/games/leave")
+        jsonClient.put<Unit>("$endpoint/api/games/leave")
     }
 
     suspend fun makeMove(x: Int, y: Int) {
-        jsonClient.put<Unit>("$endpoint/games/move?x=$x&y=$y")
+        jsonClient.put<Unit>("$endpoint/api/games/move?x=$x&y=$y")
     }
 
 }
