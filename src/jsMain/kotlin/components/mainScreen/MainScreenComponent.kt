@@ -1,6 +1,8 @@
-package components
+package components.mainScreen
 
-import viewModels.MainScreenVm
+import components.VMComponent
+import components.VmProps
+import viewModels.mainScreen.MainScreenVm
 import react.*
 import styled.styledDiv
 

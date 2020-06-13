@@ -2,11 +2,15 @@ package viewModels
 
 import Api
 import model.GameDto
+import model.SideOfTheForce
 import model.UserDto
+import viewModels.mainScreen.LoadScreenVm
+import viewModels.mainScreen.MainScreenVm
+import viewModels.playGameScreen.PlayGameVm
 
 class AppVm: ViewModel() {
 
-    var user = UserDto(-1, "...", null)
+    var user = UserDto(-1, "...", null, SideOfTheForce.Light, 0)
 
     var currentVm:ViewModel = LoadScreenVm()
 

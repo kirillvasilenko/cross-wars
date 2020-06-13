@@ -1,7 +1,5 @@
 
-import components.App
 import components.app
-import components.startNewGameButton
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import react.dom.render

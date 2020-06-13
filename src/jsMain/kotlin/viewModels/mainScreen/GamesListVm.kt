@@ -1,4 +1,6 @@
-package viewModels
+package viewModels.mainScreen
+
+import viewModels.ViewModel
 
 class GamesListVm: ViewModel(){
 

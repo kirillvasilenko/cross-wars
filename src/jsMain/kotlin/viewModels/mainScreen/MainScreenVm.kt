@@ -1,8 +1,8 @@
-package viewModels
+package viewModels.mainScreen
 
-import Api
 import model.GameDto
 import model.UserDto
+import viewModels.ViewModel
 
 class MainScreenVm(val user: UserDto): ViewModel(){
 

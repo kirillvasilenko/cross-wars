@@ -1,34 +1,47 @@
 package components
 
-import kotlinx.coroutines.launch
-import mainScope
-import react.RComponent
+import kotlinx.css.Color
+import kotlinx.css.px
+import kotlinx.html.HTMLTag
+import model.SideOfTheForce
+import react.RBuilder
 import react.RProps
 import react.RState
-import react.setState
+import react.ReactElement
+import react.dom.RDOMBuilder
+import react.dom.tag
 import viewModels.ViewModel
 
-external interface VmProps<T>: RProps where T: ViewModel {
-    var pVm: T
+object GlobalStyle{
+    val fontSize = 22.px
+    val userSymbolSize = 28.px
+    val symbolStrokeWidth = 5
 }
 
-external interface VmState<T>: RState where T: ViewModel {
-    var vm: T
-}
-
-
-abstract class VMComponent<T>(props: VmProps<T>): RComponent<VmProps<T>, VmState<T>>(props) where T: ViewModel{
-
-    protected val vm: T
-        get() = state.vm
-
-    override fun VmState<T>.init(props: VmProps<T>) {
-        vm = props.pVm
-        vm.onChanged = {
-            setState{ vm = vm}
-        }
-        mainScope.launch {
-            vm.init()
-        }
+fun getUserColor(sideOfTheForce: SideOfTheForce, swordColor: Int): Color {
+    val colorId = swordColor % 3
+    return when(sideOfTheForce) {
+        SideOfTheForce.Light ->
+            when (colorId) {
+                0 -> Color.limeGreen
+                1 -> Color.dodgerBlue
+                2 -> Color.whiteSmoke
+                else -> Color.yellow
+            }
+        SideOfTheForce.Dark ->
+            when (colorId) {
+                0 -> Color.red
+                1 -> Color.coral
+                2 -> Color.darkViolet
+                else -> Color.yellow
+            }
     }
 }
+
+inline fun RBuilder.custom(tagName: String, block: RDOMBuilder<HTMLTag>.() -> Unit): ReactElement = tag(block) {
+    HTMLTag(tagName, it, mapOf(), null, true, false)
+}
+
+
+
+

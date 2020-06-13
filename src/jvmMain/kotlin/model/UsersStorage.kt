@@ -3,6 +3,7 @@ package model
 import com.github.javafaker.Faker
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicInteger
+import kotlin.random.Random
 
 open class UsersStorageInMemory{
 
@@ -14,7 +15,7 @@ open class UsersStorageInMemory{
         usersById[userId] ?: throw UserNotFoundException(userId)
 
     fun makeUser(): User {
-        val user = User(idCounter.incrementAndGet(), generateUserName())
+        val user = generateUser(idCounter.incrementAndGet())
         usersById[user.id] = user
         return user
     }
@@ -24,9 +25,14 @@ open class UsersStorageInMemory{
 
 object UsersStorage: UsersStorageInMemory()
 
-fun generateUserName(): String{
+fun generateUser(id: Int): User{
     val faker = Faker()
-    return faker.gameOfThrones().character()
+    val name = faker.gameOfThrones().character()
+    val side =
+            if(Random.nextInt(2) == 0) SideOfTheForce.Light
+            else SideOfTheForce.Dark
+    val swordColor = Random.nextInt(3)
+    return User(id, name, side, swordColor)
 }
 
 class UserNotFoundException(userId: Int): UserFaultException("No user with id=$userId")

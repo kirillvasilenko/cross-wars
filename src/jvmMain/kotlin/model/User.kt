@@ -6,7 +6,7 @@ import kotlinx.coroutines.channels.SendChannel
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 
-class User(val id: Int, val name: String){
+class User(val id: Int, val name: String, val sideOfTheForce: SideOfTheForce, val swordColor: Int){
 
     private val mutex: Mutex =
         Mutex()
@@ -109,7 +109,7 @@ class User(val id: Int, val name: String){
 
     suspend fun snapshot(): UserDto{
         mutex.withLock{
-            return UserDto(id, name, currentGame?.id)
+            return UserDto(id, name, currentGame?.id, sideOfTheForce, swordColor)
         }
     }
 

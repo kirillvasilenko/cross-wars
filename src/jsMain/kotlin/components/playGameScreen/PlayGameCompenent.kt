@@ -1,15 +1,14 @@
-package components
+package components.playGameScreen
 
+import components.VMComponent
+import components.VmProps
 import kotlinx.css.*
 import react.RBuilder
 import react.ReactElement
-import react.dom.p
-import styled.StyledComponents.css
 import styled.css
 import styled.styledDiv
-import viewModels.LegendVm
-import viewModels.MainScreenVm
-import viewModels.PlayGameVm
+import viewModels.playGameScreen.LegendVm
+import viewModels.playGameScreen.PlayGameVm
 
 fun RBuilder.playGameScreen(handler: VmProps<PlayGameVm>.() -> Unit): ReactElement {
     return child(PlayGameScreen::class) {
@@ -22,9 +21,11 @@ class PlayGameScreen(props: VmProps<PlayGameVm>): VMComponent<PlayGameVm>(props)
     override fun RBuilder.render() {
         styledDiv {
             css{
-                display = Display.grid
-                gridTemplateColumns = GridTemplateColumns(20.vw, 60.vw, 20.vw)
                 height = 100.vh
+                width = 100.vw
+
+                display = Display.grid
+                gridTemplateColumns = GridTemplateColumns(1.fr, 100.vh, 1.fr)
             }
             styledDiv{
                 css{
@@ -41,31 +42,24 @@ class PlayGameScreen(props: VmProps<PlayGameVm>): VMComponent<PlayGameVm>(props)
             styledDiv{
                 css{
                     backgroundColor = Color.yellow
+                    margin = "auto 0px"
                 }
-                +"right"
-            }
-        }
-    }
-}
-
-fun RBuilder.legend(handler: VmProps<LegendVm>.() -> Unit): ReactElement {
-    return child(Legend::class) {
-        this.attrs(handler)
-    }
-}
-
-class Legend(props: VmProps<LegendVm>): VMComponent<LegendVm>(props) {
-
-    override fun RBuilder.render() {
-        styledDiv {
-            css{
-
-            }
-            vm.users.forEach {
-                p{
-
+                legend{
+                    pVm = vm.legendVm
                 }
             }
         }
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+

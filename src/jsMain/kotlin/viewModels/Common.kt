@@ -1,6 +1,10 @@
 package viewModels
 
 abstract class ViewModel{
+
+    var initialized = true
+        protected set
+
     var onChanged: () -> Unit = {}
 
     protected fun raiseChanged(){

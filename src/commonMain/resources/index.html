@@ -13,6 +13,17 @@
             color: green;
             font-family: "JetBrainsMono";
         }
+
+        .glowable{
+            animation-name: glow;
+            animation-duration: 4s;
+            animation-iteration-count: infinite;
+        }
+        @keyframes glow {
+            0%   {opacity:100%;}
+            50%  {opacity:70%;}
+            100% {opacity:100%;}
+        }
     </style>
 </head>
 <body>

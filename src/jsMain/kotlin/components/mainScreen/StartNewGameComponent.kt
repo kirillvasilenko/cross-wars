@@ -1,6 +1,8 @@
-package components
+package components.mainScreen
 
-import viewModels.StartNewGameVm
+import components.VMComponent
+import components.VmProps
+import viewModels.mainScreen.StartNewGameVm
 import kotlinx.coroutines.launch
 import kotlinx.css.*
 import kotlinx.html.js.onClickFunction
@@ -8,7 +10,6 @@ import mainScope
 import react.*
 import styled.css
 import styled.styledDiv
-import kotlin.browser.window
 
 fun RBuilder.startNewGameButton(handler: VmProps<StartNewGameVm>.() -> Unit): ReactElement {
     return child(StartNewGameComponent::class) {

@@ -1,6 +1,6 @@
-package components
+package components.mainScreen
 
-import viewModels.GamePreviewVm
+import viewModels.mainScreen.GamePreviewVm
 import kotlinx.css.*
 import kotlinx.html.js.onClickFunction
 import react.*

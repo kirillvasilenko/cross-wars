@@ -1,4 +1,4 @@
-package components
+package components.mainScreen
 
 import kotlinx.css.*
 import react.*

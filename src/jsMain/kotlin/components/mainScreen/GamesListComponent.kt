@@ -1,5 +1,7 @@
-package components
+package components.mainScreen
 
+import components.VMComponent
+import components.VmProps
 import kotlinx.css.Display
 import kotlinx.css.FlexWrap
 import kotlinx.css.display
@@ -8,7 +10,7 @@ import react.RBuilder
 import react.ReactElement
 import styled.css
 import styled.styledDiv
-import viewModels.GamesListVm
+import viewModels.mainScreen.GamesListVm
 
 fun RBuilder.gamesList(handler: VmProps<GamesListVm>.() -> Unit): ReactElement {
     return child(GamesList::class) {
