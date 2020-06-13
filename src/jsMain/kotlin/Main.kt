@@ -1,15 +1,24 @@
 
-import Components.App
+import components.App
+import components.app
+import components.startNewGameButton
 import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
 import react.dom.render
+import viewModels.AppVm
 import kotlin.browser.document
-import kotlin.browser.window
 
 val mainScope = MainScope()
 
 
 fun main() {
+    val appVm = AppVm()
     render(document.getElementById("root")) {
-        child(App::class){}
+        app{
+            pVm = appVm
+        }
+    }
+    mainScope.launch {
+        appVm.init()
     }
 }

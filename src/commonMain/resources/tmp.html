@@ -2,25 +2,93 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Components.Game of Crosses</title>
+    <title>components.Game of Crosses</title>
     <style>
         * {
             margin: 0;
             padding: 0;
         }
+
+        .playGameScreen{
+            background: brown;
+            height: 100vh;
+            width: 100vw;
+            display: grid;
+            grid-template-columns: auto 100vh auto;
+
+        }
+
+
+        /*center*/
+        .centerPanel{
+            background-color: purple;
+        }
+        .gameBoard{
+            background-color: darkgray;
+            height: 100vh;
+            width: 100vh;
+        }
+
+        /*left*/
+        .leftPanel{
+            background-color: chocolate;
+            margin: auto 0px
+        }
+        .legend{
+
+        }
+        .userInLegend{
+            background-color: aqua;
+            overflow: hidden;
+        }
+        .userName{
+            background-color: blue;
+            float: left;
+        }
+        .symbol{
+            background-color: chocolate;
+            float: right;
+        }
+        .leaveButton{
+            background-color: darkblue;
+        }
+
+
     </style>
 </head>
 <body style="background:green">
 
-<div id="root" style="background: brown">
-    <div id="app" style="background:green">
-        <div id="header" style="background:yellow;overflow: hidden">
-            <div id="title" style="background:red;float: left">Game of Crosses</div>
-            <div id="userName" style="background:red;float: right">Obi Van</div>
+<div class="playGameScreen">
+
+    <div>Right panel</div>
+
+    <div class="centerPanel">
+        <div class="gameBoard">
+
         </div>
-        <div id="games" style="background:blue">
-            <div id="game1" style="background:purple;height: 60px; width: 60px">Game1</div>
-            <div id="game2" style="background:purple;height: 60px; width: 60px">Game2</div>
+    </div>
+
+    <div class="leftPanel">
+        <div class="legend">
+            <div class="userInLegend">
+                <div class="userName">hello</div>
+                <div class="symbol">+</div>
+            </div>
+            <div class="userInLegend">
+                <div class="userName">hello</div>
+                <div class="symbol">+</div>
+            </div>
+            <div class="userInLegend">
+                <div class="userName">hello</div>
+                <div class="symbol">+</div>
+            </div>
+            <div class="userInLegend">
+                <div class="userName">hello</div>
+                <div class="symbol">+</div>
+            </div>
+        </div>
+        <div class="leaveButton">
+            Leave
         </div>
     </div>
 

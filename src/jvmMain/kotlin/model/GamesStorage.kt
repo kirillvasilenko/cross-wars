@@ -13,6 +13,8 @@ open class GamesStorageInMemory{
 
     fun getGames() : Collection<Game> {
         return gamesById.values
+                .filter{ it.state != GameState.ARCHIVED }
+                .sortedByDescending { it.createdTime }
     }
 
     fun makeGame(): Game {

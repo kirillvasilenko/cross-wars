@@ -1,4 +1,4 @@
-package Components
+package components
 
 import kotlinx.css.*
 import react.*

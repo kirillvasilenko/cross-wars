@@ -83,8 +83,7 @@ open class SubscriptionsHubInMemory{
             connection.send(event)
         }
         if(event is GameStateChanged
-            && event.actualState == GameState.ARCHIVED
-        ){
+            && event.actualState == GameState.ARCHIVED){
             handleGameArchived(event.gameId)
         }
     }

@@ -5,7 +5,6 @@ import kotlinx.coroutines.sync.withLock
 import model.GameState.*
 import kotlin.math.min
 
-
 const val BOARD_SIZE = 10
 
 const val WIN_LINE_LENGTH = 6
@@ -14,7 +13,9 @@ class Game(val id: Int){
 
     private val mutex = Mutex()
 
-    private var state: GameState
+    var state: GameState = CREATED
+        private set
+
 
     private val users = mutableListOf<UserInGame>()
 
@@ -25,6 +26,8 @@ class Game(val id: Int){
     private var lastMovedTime: Long = 0
 
     private var lastUsedSymbol = -1
+
+    val createdTime: Long = nowUtcMills()
 
     var eventsListener: suspend (GameEvent) -> Unit = {}
 
@@ -115,7 +118,7 @@ class Game(val id: Int){
         val userInGame = users.first { it.id == user.id }
         board[x][y] = userInGame
         lastMovedUserId = user.id
-        lastMovedTime = System.currentTimeMillis()
+        lastMovedTime = nowUtcMills()
         eventsListener(UserMoved(id, user.id, lastMovedTime, x, y))
 
         // if user win, raise event
@@ -202,7 +205,6 @@ class Game(val id: Int){
         lastUsedSymbol++
         users.add(UserInGame(user.id, lastUsedSymbol))
         eventsListener(UserJoined(id, user.id))
-        subscribeImpl(user)
     }
 
     private suspend fun leaveImpl(user: User){

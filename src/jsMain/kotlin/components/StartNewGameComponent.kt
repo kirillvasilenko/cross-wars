@@ -1,31 +1,23 @@
-package Components
+package components
 
-import ViewModels.GameVm
+import viewModels.StartNewGameVm
+import kotlinx.coroutines.launch
 import kotlinx.css.*
-import kotlinx.css.properties.LineHeight
 import kotlinx.html.js.onClickFunction
-import kotlinx.html.onClick
-import model.GameDto
+import mainScope
 import react.*
-import react.dom.p
 import styled.css
 import styled.styledDiv
-import styled.styledP
 import kotlin.browser.window
-import kotlin.js.Date
 
-external interface StartNewGameProps: RProps {
-    var onStartNewGame: () -> Unit
-}
-
-
-fun RBuilder.startNewGame(handler: StartNewGameProps.() -> Unit): ReactElement {
+fun RBuilder.startNewGameButton(handler: VmProps<StartNewGameVm>.() -> Unit): ReactElement {
     return child(StartNewGameComponent::class) {
         this.attrs(handler)
     }
 }
 
-class StartNewGameComponent: RComponent<StartNewGameProps, RState>() {
+class StartNewGameComponent(props: VmProps<StartNewGameVm>): VMComponent<StartNewGameVm>(props) {
+
     override fun RBuilder.render() {
         styledDiv {
             css{
@@ -38,16 +30,18 @@ class StartNewGameComponent: RComponent<StartNewGameProps, RState>() {
                 justifyContent = JustifyContent.center
                 alignItems = Align.center
                 fontSize = 150.px
+
+                userSelect = UserSelect.none
             }
 
             attrs{
                 onClickFunction = {
-                    window.alert("Start new Game!")
-                    props.onStartNewGame()
+                    mainScope.launch{
+                        vm.execute()
+                    }
                 }
             }
             +"+"
-
         }
     }
 }
