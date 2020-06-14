@@ -13,9 +13,14 @@ import react.dom.tag
 import viewModels.ViewModel
 
 object GlobalStyle{
+
+    val mainColor = Color.green
+
     val fontSize = 22.px
     val userSymbolSize = 28.px
     val symbolStrokeWidth = 5
+
+    val borderWidth = 2.px
 }
 
 fun getUserColor(sideOfTheForce: SideOfTheForce, swordColor: Int): Color {

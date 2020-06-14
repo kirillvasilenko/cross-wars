@@ -16,7 +16,4 @@ fun main() {
             pVm = appVm
         }
     }
-    mainScope.launch {
-        appVm.init()
-    }
 }

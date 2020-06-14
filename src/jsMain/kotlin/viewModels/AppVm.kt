@@ -7,6 +7,7 @@ import model.UserDto
 import viewModels.mainScreen.LoadScreenVm
 import viewModels.mainScreen.MainScreenVm
 import viewModels.playGameScreen.PlayGameVm
+import kotlin.browser.window
 
 class AppVm: ViewModel() {
 
@@ -25,10 +26,11 @@ class AppVm: ViewModel() {
         }
     }
 
-    private fun startPlaying(game: GameDto){
-        currentVm = PlayGameVm(game).apply {
+    private suspend fun startPlaying(game: GameDto){
+        currentVm = PlayGameVm(user, game).apply {
             onLeaveGame = ::leaveFromGame
         }
+        currentVm.init()
         raiseChanged()
     }
 

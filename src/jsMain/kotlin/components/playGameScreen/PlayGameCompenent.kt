@@ -1,17 +1,15 @@
 package components.playGameScreen
 
+import components.GlobalStyle
 import components.VMComponent
 import components.VmProps
-import kotlinx.coroutines.launch
 import kotlinx.css.*
-import kotlinx.html.js.onClickFunction
-import mainScope
 import react.RBuilder
 import react.ReactElement
 import styled.css
 import styled.styledDiv
-import viewModels.playGameScreen.LeaveGameVm
-import viewModels.playGameScreen.LegendVm
+import viewModels.playGameScreen.BoardFieldVm
+import viewModels.playGameScreen.GameBoardVm
 import viewModels.playGameScreen.PlayGameVm
 
 fun RBuilder.playGameScreen(handler: VmProps<PlayGameVm>.() -> Unit): ReactElement {
@@ -31,18 +29,25 @@ class PlayGameScreen(props: VmProps<PlayGameVm>): VMComponent<PlayGameVm>(props)
                 display = Display.grid
                 gridTemplateColumns = GridTemplateColumns(1.fr, 100.vh, 1.fr)
             }
+            // left
             styledDiv{
                 css{
                     backgroundColor = Color.red
                 }
                 +"left"
             }
+
+            // center
             styledDiv{
                 css{
                     backgroundColor = Color.blue
+                    height = 100.vh;
+                    width = 100.vh;
                 }
-                +"center"
+                gameBoard { pVm = vm.gameBoardVm }
             }
+
+            // right
             styledDiv{
                 css{
                     backgroundColor = Color.yellow
@@ -55,27 +60,6 @@ class PlayGameScreen(props: VmProps<PlayGameVm>): VMComponent<PlayGameVm>(props)
     }
 }
 
-fun RBuilder.leaveGameButton(handler: VmProps<LeaveGameVm>.() -> Unit): ReactElement {
-    return child(LeaveGameButton::class) {
-        this.attrs(handler)
-    }
-}
-
-class LeaveGameButton(props: VmProps<LeaveGameVm>): VMComponent<LeaveGameVm>(props) {
-
-    override fun RBuilder.render() {
-        styledDiv {
-            attrs{
-                onClickFunction = {
-                    mainScope.launch{
-                        vm.execute()
-                    }
-                }
-            }
-            +"Leave"
-        }
-    }
-}
 
 
 

@@ -2,28 +2,52 @@ package viewModels.playGameScreen
 
 import Api
 import model.GameDto
-import viewModels.CommandVm
+import model.UserDto
 import viewModels.ViewModel
 
-class LeaveGameVm: CommandVm<Unit>(){
-    override suspend fun executeImpl() {
-        Api.games.leaveCurrentGame()
-    }
-}
+class PlayGameVm(val currentUser: UserDto, game: GameDto): ViewModel(){
 
-class PlayGameVm(game: GameDto): ViewModel(){
+    var game: GameDto = game
+        private set
 
     var onLeaveGame: () -> Unit = {}
 
-    val legendVm = LegendVm(game.users)
-
     val leaveGameVm = LeaveGameVm()
 
+    lateinit var users: MutableList<UserInGameVm>
+        private set
+
+    lateinit var legendVm: LegendVm
+        private set
+
+    lateinit var gameBoardVm: GameBoardVm
+        private set
+
     init{
+        initialized = false
         leaveGameVm.onExecuted = {
             onLeaveGame()
         }
     }
+
+    private suspend fun loadData(){
+        users = game.users
+                .map { userInGame ->
+                    val userDto = Api.users.getUser(userInGame.id)
+                    UserInGameVm(userDto, userInGame)
+                }.toMutableList()
+        legendVm = LegendVm(currentUser, users)
+        gameBoardVm = GameBoardVm(currentUser, users, game.board)
+    }
+
+    override suspend fun init() {
+        if(initialized) return
+        loadData()
+        initialized = true
+        raiseChanged()
+    }
+
+
 
 }
 

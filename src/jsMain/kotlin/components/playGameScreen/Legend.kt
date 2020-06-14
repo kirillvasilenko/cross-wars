@@ -9,8 +9,7 @@ import react.ReactElement
 import styled.css
 import styled.styledDiv
 import viewModels.playGameScreen.LegendVm
-import viewModels.playGameScreen.UserInLegendVm
-import kotlin.Float
+import viewModels.playGameScreen.UserInGameVm
 
 fun RBuilder.legend(handler: VmProps<LegendVm>.() -> Unit): ReactElement {
     return child(Legend::class) {
@@ -31,13 +30,13 @@ class Legend(props: VmProps<LegendVm>): VMComponent<LegendVm>(props) {
     }
 }
 
-fun RBuilder.userInLegend(handler: VmProps<UserInLegendVm>.() -> Unit): ReactElement {
+fun RBuilder.userInLegend(handler: VmProps<UserInGameVm>.() -> Unit): ReactElement {
     return child(UserInLegend::class) {
         this.attrs(handler)
     }
 }
 
-class UserInLegend(props: VmProps<UserInLegendVm>): VMComponent<UserInLegendVm>(props) {
+class UserInLegend(props: VmProps<UserInGameVm>): VMComponent<UserInGameVm>(props) {
 
     override fun RBuilder.render() {
         styledDiv {

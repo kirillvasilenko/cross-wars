@@ -18,7 +18,7 @@ abstract class CommandVm<T>: ViewModel() {
 
     private var executing = false
 
-    var onExecuted: (T) -> Unit = {}
+    var onExecuted: suspend (T) -> Unit = {}
 
     suspend fun execute(){
         if(executing) return

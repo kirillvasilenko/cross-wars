@@ -1,10 +1,7 @@
 package components.playGameScreen
 
 import components.*
-import kotlinx.css.Color
-import kotlinx.css.LinearDimension
-import kotlinx.css.height
-import kotlinx.css.width
+import kotlinx.css.*
 import react.RBuilder
 import react.ReactElement
 import styled.css
@@ -22,8 +19,8 @@ class UserInGameSymbol(props: VmProps<UserInGameSymbolVm>): VMComponent<UserInGa
     override fun RBuilder.render() {
         styledSvg {
             css{
-                width = LinearDimension.available
-                height = LinearDimension.available
+                width = 100.pct
+                height = 100.pct
             }
             attrs["viewBox"] = "0 0 100 100"
 
