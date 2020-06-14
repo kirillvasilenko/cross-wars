@@ -4,7 +4,7 @@ package model
 open class GamesServiceInMemory{
 
     suspend fun getGames(): Collection<GameDto>{
-        return GamesStorage.getGames().map{ it.snapshot() }
+        return GamesStorage.getActiveGames().map{ it.snapshot() }
     }
 
     suspend fun getGame(id: Int): GameDto

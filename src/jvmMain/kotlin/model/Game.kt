@@ -21,7 +21,7 @@ class Game(val id: Int){
 
     private val board : List<MutableList<UserInGame?>>
 
-    private var lastMovedUserId = -1
+    private var lastMovedUser = UserInGame(-1, 0)
 
     private var lastMovedTime: Long = 0
 
@@ -117,7 +117,7 @@ class Game(val id: Int){
         // make move
         val userInGame = users.first { it.id == user.id }
         board[x][y] = userInGame
-        lastMovedUserId = user.id
+        lastMovedUser = userInGame
         lastMovedTime = nowUtcMills()
         eventsListener(UserMoved(id, user.id, lastMovedTime, x, y))
 
@@ -192,7 +192,7 @@ class Game(val id: Int){
         if(state != ACTIVE) userFault(
             "Trying to make move in $state game."
         )
-        if(lastMovedUserId == user.id) userFault("Trying to make move several times in a row. Wait your turn.")
+        if(lastMovedUser.id == user.id) userFault("Trying to make move several times in a row. Wait your turn.")
         if(x !in 0 until BOARD_SIZE || y !in 0 until BOARD_SIZE) userFault(
             "x=$x or y=$y are out of board. Board size=$BOARD_SIZE."
         )
@@ -238,7 +238,7 @@ class Game(val id: Int){
     }
 
     private fun snapshotImpl() =
-        GameDto(id, lastMovedTime, users.toMutableList(), board.map{it.toMutableList()})
+        GameDto(id, lastMovedTime, lastMovedUser, users.toMutableList(), board.map{it.toMutableList()})
 
     //endregion private
 

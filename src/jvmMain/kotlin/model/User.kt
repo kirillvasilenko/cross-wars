@@ -11,7 +11,8 @@ class User(val id: Int, val name: String, val sideOfTheForce: SideOfTheForce, va
     private val mutex: Mutex =
         Mutex()
 
-    private var currentGame: Game? = null
+    var currentGame: Game? = null
+        private set
 
     private var wsConnection: WsConnection? = null
 
@@ -76,7 +77,7 @@ class User(val id: Int, val name: String, val sideOfTheForce: SideOfTheForce, va
                 "Trying to subscribe without set ws connection. Set wsConnection and try again."
             )
             SubscriptionsHub.subscribeOnCommonEvents(id)
-            for(game in GamesStorage.getGames()){
+            for(game in GamesStorage.getActiveGames()){
                 game.onSubscribed(id)
             }
         }

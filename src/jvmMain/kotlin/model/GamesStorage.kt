@@ -11,9 +11,9 @@ open class GamesStorageInMemory{
     fun getGame(id: Int): Game
             = gamesById[id] ?: throw GameNotFoundException(id)
 
-    fun getGames() : Collection<Game> {
+    fun getActiveGames() : Collection<Game> {
         return gamesById.values
-                .filter{ it.state != GameState.ARCHIVED }
+                .filter{ it.state == GameState.ACTIVE }
                 .sortedByDescending { it.createdTime }
     }
 

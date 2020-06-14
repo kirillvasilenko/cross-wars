@@ -18,8 +18,11 @@ import io.ktor.serialization.json
 import io.ktor.sessions.Sessions
 import io.ktor.sessions.cookie
 import io.ktor.websocket.WebSockets
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 import model.AuthService
 import model.UserSession
+import model.UsersStorage
 import routes.*
 
 fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
@@ -71,5 +74,14 @@ fun Application.module() {
             }
         }
     }
+    launch{
+        runTestPlayers()
+    }
 }
+
+
+
+
+
+
 
