@@ -39,6 +39,7 @@ fun Route.subscribeOnCommonEvents(){
                 call.respond("Success")
             }
             catch(e: UserFaultException){
+                log("error on subscribeOnCommonEvents: ${e.message}")
                 badRequest(e)
             }
         }

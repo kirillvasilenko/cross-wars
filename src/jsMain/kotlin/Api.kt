@@ -3,6 +3,7 @@ import io.ktor.client.*
 import io.ktor.client.request.*
 import io.ktor.client.features.json.JsonFeature
 import io.ktor.client.features.json.serializer.KotlinxSerializer
+import io.ktor.client.features.websocket.DefaultClientWebSocketSession
 import io.ktor.client.features.websocket.WebSockets
 import io.ktor.client.features.websocket.ws
 import io.ktor.http.cio.websocket.CloseReason
@@ -44,50 +45,33 @@ class UsersApi{
     }
 }
 
-data class OpenWsArgs(
-        val handleText: suspend (String) -> Unit,
-    val onConnectionSet: suspend () -> Unit
-)
 
 class SubscriptionsApi{
 
-    suspend fun openWsConnection(args: OpenWsArgs){
+    suspend fun openWsConnection(block: suspend DefaultClientWebSocketSession.() -> Unit){
         client.ws(
                 method = HttpMethod.Get,
                 host = hostname,
                 port = port.toInt(),
-                path = "/api/ws"
-        ) {
-            //args.onConnectionSet()
-            /*val closeFrame = Frame.Close(CloseReason(CloseReason.Codes.INTERNAL_ERROR, "Ping timeout"))
-            outgoing.send(closeFrame)*/
-            //this.close()
-            /*println("open ws connection")
-            outgoing.send(Frame.Text("hello"))*/
-            println("Sent hello through ws.")
-            for(frame in incoming){
-                when(frame){
-                    is Frame.Text -> println("ws received ${frame.readText()}")//args.handleText(frame.readText())
-                    else -> println("ws received ${frame.frameType}")
-                }
-            }
-        }
+                path = "/api/ws",
+                block = block
+        )
     }
 
     suspend fun subscribeOnCommonEvents(){
-        client.put<Unit>("/api/subscriptions/common")
+        client.put<Unit>("$endpoint/api/subscriptions/common")
     }
 
     suspend fun unsubscribeFromCommonEvents(){
-        client.delete<Unit>("/api/subscriptions/common")
+        client.delete<Unit>("$endpoint/api/subscriptions/common")
     }
 
     suspend fun subscribeOnCurrentGameEvents(){
-        client.put<Unit>("/api/subscriptions/current")
+        client.put<Unit>("$endpoint/api/subscriptions/current")
     }
 
     suspend fun unsubscribeFromCurrentGameEvents(){
-        client.delete<Unit>("/api/subscriptions/current")
+        client.delete<Unit>("$endpoint/api/subscriptions/current")
     }
 }
 

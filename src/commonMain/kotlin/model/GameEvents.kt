@@ -38,17 +38,17 @@ data class UserJoined(override val gameId: Int, val userId: Int):
     CommonGameEvent()
 
 @Serializable
-class UserLeaved(override val gameId: Int, val userId: Int):
+data class UserLeaved(override val gameId: Int, val userId: Int):
     CommonGameEvent()
 
 @Serializable
-class UserMoved(override val gameId: Int, val userId: Int, val time: Long, val x: Int, val y: Int):
+data class UserMoved(override val gameId: Int, val userId: Int, val time: Long, val x: Int, val y: Int):
     CertainGameEvent()
 
 @Serializable
-class UserWon(override val gameId: Int, val userId: Int, val winLine: Collection<Field>):
+data class UserWon(override val gameId: Int, val userId: Int, val winLine: Collection<Field>):
     CertainGameEvent()
 
 @Serializable
-class UserSubscribedOnGameEvents(override val gameId: Int, override val userId: Int, val game: GameDto):
+data class UserSubscribedOnGameEvents(override val gameId: Int, override val userId: Int, val game: GameDto):
     SpecificUserOnlyEvent()

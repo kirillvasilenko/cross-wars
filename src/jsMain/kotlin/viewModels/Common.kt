@@ -1,5 +1,9 @@
 package viewModels
 
+fun log(message:String?){
+    println(message)
+}
+
 abstract class ViewModel{
 
     var initialized = true
