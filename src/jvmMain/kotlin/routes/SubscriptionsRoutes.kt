@@ -7,13 +7,10 @@ import io.ktor.routing.Route
 import io.ktor.routing.delete
 import io.ktor.routing.put
 import io.ktor.routing.route
-import io.ktor.websocket.pinger
 import io.ktor.websocket.webSocket
-import kotlinx.coroutines.launch
 import log
 import model.SubscriptionsService
 import model.UserFaultException
-import kotlin.time.toKotlinDuration
 
 fun Route.webSocketConnection() {
     webSocket("/ws") {
@@ -31,11 +28,11 @@ fun Route.webSocketConnection() {
     }
 }
 
-fun Route.subscribeOnCommonEvents(){
-    route("/subscriptions/common"){
+fun Route.subscribeOnGameStartedEvents(){
+    route("/games/started-subscription"){
         put{
             try {
-                SubscriptionsService.subscribeOnCommonEvents(getUserId())
+                SubscriptionsService.subscribeOnGameStartedEvents(getUserId())
                 call.respond("Success")
             }
             catch(e: UserFaultException){
@@ -45,7 +42,7 @@ fun Route.subscribeOnCommonEvents(){
         }
         delete{
             try {
-                SubscriptionsService.unsubscribeFromCommonEvents(getUserId())
+                SubscriptionsService.unsubscribeFromGameStartedEvents(getUserId())
                 call.respond("Success")
             }
             catch(e: UserFaultException){
@@ -56,10 +53,10 @@ fun Route.subscribeOnCommonEvents(){
 }
 
 fun Route.subscribeOnGameEvents(){
-    route("/subscriptions/current"){
+    route("/games/{id}/subscription"){
         put(){
             try {
-                SubscriptionsService.subscribeOnCurrentGameEvents(getUserId())
+                SubscriptionsService.subscribeOnGameEvents(getUserId(), getIntFromParams("id"))
                 call.respond("Success")
             }
             catch(e: UserFaultException){
@@ -68,7 +65,7 @@ fun Route.subscribeOnGameEvents(){
         }
         delete{
             try {
-                SubscriptionsService.unsubscribeFromCurrentGameEvents(getUserId())
+                SubscriptionsService.unsubscribeFromGameEvents(getUserId(), getIntFromParams("id"))
                 call.respond("Success")
             }
             catch(e: UserFaultException){
@@ -80,5 +77,6 @@ fun Route.subscribeOnGameEvents(){
 
 fun Route.registerSubscriptions() {
     webSocketConnection()
-    subscribeOnCommonEvents()
+    subscribeOnGameStartedEvents()
+    subscribeOnGameEvents()
 }

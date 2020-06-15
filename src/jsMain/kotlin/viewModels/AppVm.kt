@@ -27,22 +27,27 @@ class AppVm: ViewModel() {
     }
 
     private suspend fun startPlaying(game: GameDto){
-        currentVm = PlayGameVm(user, game).apply {
+        val newVm = PlayGameVm(user, game).apply {
             onLeaveGame = ::leaveFromGame
         }
-        currentVm.init()
-        raiseChanged()
+        newVm.init() // todo remove from here. Everybody init on react component invocation.
+        changeCurrentVm(newVm)
     }
 
-    private fun leaveFromGame(){
+    private suspend fun leaveFromGame(){
         openMainScreen()
     }
 
-    private fun openMainScreen(){
-        currentVm = MainScreenVm(user).apply{
+    private suspend fun openMainScreen(){
+        val newVm = MainScreenVm(user).apply{
             onJoinedGame = ::startPlaying
         }
-        raiseChanged()
+        changeCurrentVm(newVm)
     }
 
+    private suspend fun changeCurrentVm(newVm: ViewModel){
+        currentVm.dispose()
+        currentVm = newVm
+        raiseChanged()
+    }
 }

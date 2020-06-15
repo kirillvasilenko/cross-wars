@@ -2,6 +2,7 @@ package viewModels.mainScreen
 
 import Api
 import model.GameDto
+import model.GameState
 import model.UserInGame
 import viewModels.CommandVm
 import kotlin.js.Date

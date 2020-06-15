@@ -10,7 +10,7 @@ class PlayGameVm(val currentUser: UserDto, game: GameDto): ViewModel(){
     var game: GameDto = game
         private set
 
-    var onLeaveGame: () -> Unit = {}
+    var onLeaveGame: suspend () -> Unit = {}
 
     val leaveGameVm = LeaveGameVm()
 

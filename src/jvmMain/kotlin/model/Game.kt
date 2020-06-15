@@ -84,21 +84,17 @@ class Game(val id: Int){
 
     suspend fun subscribe(user: User) {
         mutex.withLock {
-            if(!isUserInGame(user.id)) userFault("Join to game $id for subscribing on its events.")
-            subscribeImpl(user)
+            // can ignore it, cause there will no any events
+            if(state == ARCHIVED) return
+
+            SubscriptionsHub.subscribeOnGameEvents(user.id, id)
+            raiseEvent(UserSubscribedOnGameEvents(id, user.id, snapshotImpl()))
         }
     }
 
     suspend fun unsubscribe(user: User) {
         mutex.withLock {
-            if(!isUserInGame(user.id)) return
             unsubscribeImpl(user)
-        }
-    }
-
-    suspend fun onSubscribed(userId: Int) {
-        mutex.withLock{
-            onSubscribeImpl(userId)
         }
     }
 
@@ -225,19 +221,10 @@ class Game(val id: Int){
         val userInGame = users.first{ it.id == user.id }
         userInGame.active = false
         raiseEvent(UserLeaved(id, user.id))
-        unsubscribeImpl(user)
+
         if(users.isEmpty()){
             archive()
         }
-    }
-
-    private suspend fun subscribeImpl(user: User){
-        SubscriptionsHub.subscribeOnGameEvents(user.id, id)
-        onSubscribeImpl(user.id)
-    }
-
-    private suspend fun onSubscribeImpl(userId: Int){
-        raiseEvent(UserSubscribedOnGameEvents(id, userId, snapshotImpl()))
     }
 
     private fun unsubscribeImpl(user: User){
@@ -253,7 +240,7 @@ class Game(val id: Int){
     }
 
     private fun snapshotImpl() =
-        GameDto(id, lastMovedTime, lastMovedUser, users.toMutableList(), board.map{it.toMutableList()})
+        GameDto(id, state, lastMovedTime, lastMovedUser, users.toMutableList(), board.map{it.toMutableList()})
 
     private suspend fun raiseEvent(event: GameEvent){
         eventsListener(event)

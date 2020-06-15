@@ -4,7 +4,11 @@ fun log(message:String?){
     println(message)
 }
 
-abstract class ViewModel{
+interface Disposable{
+    suspend fun dispose()
+}
+
+abstract class ViewModel:Disposable{
 
     var initialized = true
         protected set
@@ -16,6 +20,8 @@ abstract class ViewModel{
     }
 
     open suspend fun init(){}
+
+    override suspend fun dispose(){}
 }
 
 abstract class CommandVm<T>: ViewModel() {

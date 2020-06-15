@@ -58,20 +58,20 @@ class SubscriptionsApi{
         )
     }
 
-    suspend fun subscribeOnCommonEvents(){
-        client.put<Unit>("$endpoint/api/subscriptions/common")
+    suspend fun subscribeOnGameStartedEvents(){
+        client.put<Unit>("$endpoint/api/games/started-subscription")
     }
 
-    suspend fun unsubscribeFromCommonEvents(){
-        client.delete<Unit>("$endpoint/api/subscriptions/common")
+    suspend fun unsubscribeFromGameStartedEvents(){
+        client.delete<Unit>("$endpoint/api/games/started-subscription")
     }
 
-    suspend fun subscribeOnCurrentGameEvents(){
-        client.put<Unit>("$endpoint/api/subscriptions/current")
+    suspend fun subscribeOnGameEvents(gameId: Int){
+        client.put<Unit>("$endpoint/api/games/$gameId/subscription")
     }
 
-    suspend fun unsubscribeFromCurrentGameEvents(){
-        client.delete<Unit>("$endpoint/api/subscriptions/current")
+    suspend fun unsubscribeFromGameEvents(gameId: Int){
+        client.delete<Unit>("$endpoint/api/games/$gameId/subscription")
     }
 }
 
@@ -81,7 +81,7 @@ class GamesApi{
         return client.get("$endpoint/api/games/$gameId")
     }
 
-    suspend fun getGames(): List<GameDto> {
+    suspend fun getActiveGames(): List<GameDto> {
         return client.get("$endpoint/api/games")
     }
 

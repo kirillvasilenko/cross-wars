@@ -1,12 +1,12 @@
 package viewModels
 
+import Api
 import io.ktor.http.cio.websocket.Frame
 import io.ktor.http.cio.websocket.readText
 import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import mainScope
-import viewModels.log
 import kotlin.math.max
 
 class WsConnection{

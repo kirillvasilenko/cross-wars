@@ -14,4 +14,8 @@ class MainScreenVm(val user: UserDto): ViewModel(){
         gamesListVm.onJoinedGame = { onJoinedGame(it) }
     }
 
+    override suspend fun dispose() {
+        gamesListVm.dispose()
+    }
+
 }

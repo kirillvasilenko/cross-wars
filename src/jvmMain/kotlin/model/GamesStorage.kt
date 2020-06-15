@@ -17,6 +17,8 @@ open class GamesStorageInMemory{
                 .sortedByDescending { it.createdTime }
     }
 
+    fun contains(id: Int) = gamesById.containsKey(id)
+
     fun makeGame(): Game {
         val id = idCounter.incrementAndGet()
         val game = Game(id)

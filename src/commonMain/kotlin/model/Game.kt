@@ -16,6 +16,7 @@ data class UserInGame(val id: Int, val symbol: Int, var active:Boolean)
 @Serializable
 data class GameDto(
         val id: Int,
+        val state: GameState,
         val lastMovedDate: Long,
         val lastMovedUser: UserInGame?,
         val users: MutableList<UserInGame>,

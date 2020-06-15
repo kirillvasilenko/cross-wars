@@ -11,24 +11,24 @@ open class SubscriptionsServiceInMemory{
         user.connect(incoming, outgoing)
     }
 
-    suspend fun subscribeOnCommonEvents(userId: Int) {
+    suspend fun subscribeOnGameStartedEvents(userId: Int) {
         val user = UsersStorage.getUser(userId)
-        user.subscribeOnCommonEvents()
+        user.subscribeOnGameStartedEvents()
     }
 
-    suspend fun unsubscribeFromCommonEvents(userId: Int) {
+    suspend fun unsubscribeFromGameStartedEvents(userId: Int) {
         val user = UsersStorage.getUser(userId)
-        user.unsubscribeFromCommonEvents()
+        user.unsubscribeFromGameStartedEvents()
     }
 
-    suspend fun subscribeOnCurrentGameEvents(userId: Int) {
+    suspend fun subscribeOnGameEvents(userId: Int, gameId: Int) {
         val user = UsersStorage.getUser(userId)
-        user.subscribeOnCurrentGameEvents()
+        user.subscribeOnGameEvents(gameId)
     }
 
-    suspend fun unsubscribeFromCurrentGameEvents(userId: Int) {
+    suspend fun unsubscribeFromGameEvents(userId: Int, gameId: Int) {
         val user = UsersStorage.getUser(userId)
-        user.unsubscribeFromCurrentGameEvents()
+        user.unsubscribeFromGameEvents(gameId)
     }
 }
 

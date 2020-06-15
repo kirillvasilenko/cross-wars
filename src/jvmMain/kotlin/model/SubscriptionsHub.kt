@@ -10,11 +10,10 @@ open class SubscriptionsHubInMemory{
     private val connectionsByUserId =
         ConcurrentHashMap<Int, WsConnection>()
 
-    private val commonEventsSubscribers : MutableSet<WsConnection> =
-        ConcurrentHashMap.newKeySet()
-
-    private val certainGameEventsSubscribers: MutableMap<Int, MutableSet<WsConnection>> =
+    private val gameEventsSubscribers: MutableMap<Int, MutableSet<WsConnection>> =
         ConcurrentHashMap<Int, MutableSet<WsConnection>>()
+
+    private val startedGamesSubscribers: MutableSet<WsConnection> = ConcurrentHashMap.newKeySet()
 
     fun createConnection(userId: Int, incoming: ReceiveChannel<Frame>, outgoing: SendChannel<Frame>) : WsConnection {
         val connection = WsConnection(userId, incoming, outgoing)
@@ -24,27 +23,26 @@ open class SubscriptionsHubInMemory{
 
     fun deleteConnection(userId: Int) {
         connectionsByUserId.remove(userId)
-
     }
 
-    fun subscribeOnCommonEvents(userId: Int) {
+    fun subscribeOnGameStartedEvents(userId: Int) {
         val connection = getConnection(userId)
-        commonEventsSubscribers.add(connection)
+        startedGamesSubscribers.add(connection)
     }
 
-    fun unsubscribeFromCommonEvents(userId: Int) {
+    fun unsubscribeFromGameStartedEvents(userId: Int) {
         val connection = connectionsByUserId[userId]
             ?: return
-        commonEventsSubscribers.remove(connection)
+        startedGamesSubscribers.remove(connection)
     }
 
     fun subscribeOnGameEvents(userId: Int, gameId: Int) {
         val connection = getConnection(userId)
 
-        var gameSubscribers = certainGameEventsSubscribers[gameId]
+        var gameSubscribers = gameEventsSubscribers[gameId]
         if(gameSubscribers == null){
             gameSubscribers = ConcurrentHashMap.newKeySet()
-            certainGameEventsSubscribers[gameId] = gameSubscribers
+            gameEventsSubscribers[gameId] = gameSubscribers
         }
 
         gameSubscribers!!.add(connection)
@@ -53,18 +51,16 @@ open class SubscriptionsHubInMemory{
     fun unsubscribeFromGameEvents(userId: Int, gameId: Int) {
         val connection = connectionsByUserId[userId]
             ?: return
-        val gameSubscribers = certainGameEventsSubscribers[gameId]
+        val gameSubscribers = gameEventsSubscribers[gameId]
             ?: return
         gameSubscribers.remove(connection)
     }
 
     suspend fun handleGameEvent(event: GameEvent){
-        if(event is CommonGameEvent)
-            handleCommonEvent(event)
-        if(event is CertainGameEvent)
-            handleCertainGameEvent(event)
-        if(event is SpecificUserOnlyEvent) {
-            handleSpecificUserOnlyEvent(event)
+        when(event){
+            is GameStarted -> handleGameStarted(event)
+            is UserSubscribedOnGameEvents -> handleUserSubscribedOnGameEvents(event)
+            else -> handleGameEventImpl(event)
         }
     }
 
@@ -72,24 +68,25 @@ open class SubscriptionsHubInMemory{
         connectionsByUserId[userId]
             ?: throw ConnectionNotFoundException("ws connection for user $userId not found.")
 
-    private suspend fun handleSpecificUserOnlyEvent(event: SpecificUserOnlyEvent){
+    private suspend fun handleUserSubscribedOnGameEvents(event: UserSubscribedOnGameEvents){
         val connection = connectionsByUserId[event.userId]
             ?: return
         connection.send(event)
     }
 
-    private suspend fun handleCommonEvent(event: CommonGameEvent){
-        for(connection in commonEventsSubscribers){
+    private suspend fun handleGameStarted(event: GameStarted){
+        for(connection in startedGamesSubscribers){
             connection.send(event)
-        }
-        if(event is GameStateChanged
-            && event.actualState == GameState.ARCHIVED){
-            handleGameArchived(event.gameId)
         }
     }
 
-    private suspend fun handleCertainGameEvent(event: CertainGameEvent){
-        val subscribers = certainGameEventsSubscribers[event.gameId]
+    private suspend fun handleGameEventImpl(event: GameEvent){
+        if(event is GameStateChanged
+                && event.actualState == GameState.ARCHIVED){
+            handleGameArchived(event.gameId)
+        }
+
+        val subscribers = gameEventsSubscribers[event.gameId]
             ?: return
 
         for(connection in subscribers){
@@ -98,7 +95,7 @@ open class SubscriptionsHubInMemory{
     }
 
     private fun handleGameArchived(gameId: Int){
-        certainGameEventsSubscribers.remove(gameId)
+        gameEventsSubscribers.remove(gameId)
     }
 }
 
