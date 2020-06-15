@@ -1,23 +1,33 @@
 package routes
 
 import io.ktor.application.call
+import io.ktor.http.cio.websocket.*
 import io.ktor.response.respond
 import io.ktor.routing.Route
 import io.ktor.routing.delete
 import io.ktor.routing.put
 import io.ktor.routing.route
+import io.ktor.websocket.pinger
 import io.ktor.websocket.webSocket
+import kotlinx.coroutines.launch
+import log
 import model.SubscriptionsService
 import model.UserFaultException
+import kotlin.time.toKotlinDuration
 
 fun Route.webSocketConnection() {
     webSocket("/ws") {
         try {
+            log.debug("Open ws connection ${getUserId()}")
             SubscriptionsService.connect(getUserId(), incoming, outgoing)
         }
         catch(e: UserFaultException){
-            badRequest(e)
+            close(CloseReason(CloseReason.Codes.CANNOT_ACCEPT, e.message!!))
         }
+        catch(e: Throwable){
+            close(CloseReason(CloseReason.Codes.INTERNAL_ERROR, e.message ?: "internal server error"))
+        }
+        log.debug("Close ws connection ${getUserId()}")
     }
 }
 

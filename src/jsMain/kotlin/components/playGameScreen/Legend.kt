@@ -4,6 +4,8 @@ import components.GlobalStyle
 import components.VMComponent
 import components.VmProps
 import kotlinx.css.*
+import kotlinx.css.properties.TextDecoration
+import kotlinx.css.properties.TextDecorationLine
 import react.RBuilder
 import react.ReactElement
 import styled.css
@@ -43,19 +45,12 @@ class UserInLegend(props: VmProps<UserInGameVm>): VMComponent<UserInGameVm>(prop
             css{
                 overflow = Overflow.hidden
             }
-            if(!vm.initialized){
-                styledDiv{
-                    css{
-                        float = kotlinx.css.Float.left
-                    }
-                    +"..."
-                }
-                return@styledDiv
-            }
-
             styledDiv{
                 css{
                     float = kotlinx.css.Float.left
+                    if(!vm.active) {
+                        textDecoration = TextDecoration(setOf(TextDecorationLine.lineThrough))
+                    }
                 }
                 +vm.userName
             }

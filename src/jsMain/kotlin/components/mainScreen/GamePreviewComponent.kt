@@ -1,35 +1,25 @@
 package components.mainScreen
 
+import components.VMComponent
+import components.VmProps
+import kotlinx.coroutines.launch
 import viewModels.mainScreen.GamePreviewVm
 import kotlinx.css.*
 import kotlinx.html.js.onClickFunction
+import mainScope
 import react.*
 import react.dom.p
 import styled.css
 import styled.styledDiv
-import kotlin.browser.window
 
-external interface GamePreviewProps: RProps {
-    var gamePreviewVm: GamePreviewVm
-}
-
-external interface GamePreviewState: RState {
-    var gamePreviewVm: GamePreviewVm
-}
-
-fun RBuilder.gamePreview(handler: GamePreviewProps.() -> Unit): ReactElement {
+fun RBuilder.gamePreview(handler: VmProps<GamePreviewVm>.() -> Unit): ReactElement {
     return child(GamePreview::class) {
         this.attrs(handler)
     }
 }
 
 
-
-
-
-class GamePreview(props: GamePreviewProps): RComponent<GamePreviewProps, GamePreviewState>(props) {
-
-
+class GamePreview(props: VmProps<GamePreviewVm>): VMComponent<GamePreviewVm>(props) {
 
     override fun RBuilder.render() {
         styledDiv {
@@ -42,24 +32,19 @@ class GamePreview(props: GamePreviewProps): RComponent<GamePreviewProps, GamePre
 
             attrs{
                 onClickFunction = {
-                    window.alert("Clicked!!!")
-
+                    mainScope.launch{
+                        vm.execute()
+                    }
                 }
             }
 
-
-            val game = props.gamePreviewVm
             p{
-                +"Players: ${game.usersCount}"
+                +"Players: ${vm.activeUsersCount}"
             }
             p{
-                +"Last move: ${game.lastMovedTime}"
+                +"Last move: ${vm.lastMovedTime}"
             }
 
         }
-    }
-
-    override fun GamePreviewState.init(props: GamePreviewProps) {
-        gamePreviewVm = props.gamePreviewVm
     }
 }

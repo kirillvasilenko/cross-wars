@@ -11,6 +11,8 @@ import io.ktor.features.ContentNegotiation
 import io.ktor.features.gzip
 import io.ktor.http.HttpMethod
 import io.ktor.http.HttpStatusCode
+import io.ktor.http.cio.websocket.pingPeriod
+import io.ktor.http.cio.websocket.timeout
 import io.ktor.response.respond
 import io.ktor.routing.route
 import io.ktor.routing.routing
@@ -24,6 +26,8 @@ import model.AuthService
 import model.UserSession
 import model.UsersStorage
 import routes.*
+import java.time.Duration
+
 
 fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
 
@@ -41,7 +45,11 @@ fun Application.module() {
     install(Compression) {
         gzip()
     }
-    install(WebSockets)
+    install(WebSockets){
+        pingPeriod = Duration.ofSeconds(5)
+        timeout = Duration.ofSeconds(3)
+        maxFrameSize = Long.MAX_VALUE
+    }
     install(Sessions) {
         cookie<UserSession>("USER_SESSION")
     }

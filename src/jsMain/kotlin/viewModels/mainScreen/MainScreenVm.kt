@@ -8,12 +8,10 @@ class MainScreenVm(val user: UserDto): ViewModel(){
 
     val gamesListVm = GamesListVm()
 
-    var onStartedNewGame: suspend (GameDto) -> Unit = {}
+    var onJoinedGame: suspend (GameDto) -> Unit = {}
 
     init {
-        gamesListVm.startNewGameVm.onExecuted = { newGame ->
-            onStartedNewGame(newGame)
-        }
+        gamesListVm.onJoinedGame = { onJoinedGame(it) }
     }
 
 }

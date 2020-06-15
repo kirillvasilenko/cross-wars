@@ -2,36 +2,45 @@ package model
 
 import io.ktor.http.cio.websocket.Frame
 import io.ktor.http.cio.websocket.readText
+import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.channels.SendChannel
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.launch
 import log
+import org.slf4j.LoggerFactory
+import kotlin.coroutines.coroutineContext
 
 class WsConnection(val userId: Int, val incoming: ReceiveChannel<Frame>, val outgoing: SendChannel<Frame>){
+
+    private var log = LoggerFactory.getLogger("${javaClass.simpleName} userId=$userId")
 
     private var eventsChannel =
         Channel<GameEvent>(Channel.UNLIMITED)
 
     suspend fun listen(){
         try {
+            log.debug("start listening messages")
             listenImpl()
         }
         catch(e: Throwable){
-            log.warn(e.message)
+            log.warn("error in listening messages: ${e.message}")
         }
+        log.debug("stop listening messages")
     }
 
-    suspend fun runSendingEvents() = coroutineScope {
-        launch {
+    fun runSendingEvents(scope: CoroutineScope){
+        scope.launch {
+            log.debug("start sending messages")
             try {
                 for (event in eventsChannel) {
                     sendEventImpl(event)
                 }
-            } catch (e: Throwable) {
-                log.warn(e.message)
             }
+            catch(ignore: CancellationException){}
+            catch (e: Throwable) {
+                log.warn("error in sending messages: ${e.message}")
+            }
+            log.debug("stop sending messages")
         }
     }
 
@@ -54,6 +63,6 @@ class WsConnection(val userId: Int, val incoming: ReceiveChannel<Frame>, val out
     private suspend fun sendEventImpl(event: GameEvent){
         val message = EventsSerializer.stringify(event)
         outgoing.send(Frame.Text(message))
-        log.debug("Sent $message to $userId through ws.")
+        log.debug("Sent $message")
     }
 }

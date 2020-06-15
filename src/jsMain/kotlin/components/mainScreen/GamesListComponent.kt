@@ -33,7 +33,7 @@ class GamesList(props: VmProps<GamesListVm>): VMComponent<GamesListVm>(props) {
 
             vm.games.forEach {
                 gamePreview{
-                    gamePreviewVm = it
+                    pVm = it
                 }
             }
         }

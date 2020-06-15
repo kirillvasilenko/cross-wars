@@ -40,7 +40,7 @@ class AppVm: ViewModel() {
 
     private fun openMainScreen(){
         currentVm = MainScreenVm(user).apply{
-            onStartedNewGame = ::startPlaying
+            onJoinedGame = ::startPlaying
         }
         raiseChanged()
     }

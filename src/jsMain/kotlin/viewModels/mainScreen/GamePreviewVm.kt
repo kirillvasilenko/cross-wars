@@ -12,7 +12,7 @@ class GamePreviewVm(game: GameDto): CommandVm<GameDto>() {
 
     var users: MutableList<UserInGame> = game.users
 
-    val usersCount = users.size
+    val activeUsersCount = users.filter{ it.active }.size
 
     private var lastMovedDate = Date(game.lastMovedDate)
 

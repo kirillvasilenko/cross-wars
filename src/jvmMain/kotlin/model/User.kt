@@ -1,10 +1,13 @@
 package model
 
 import io.ktor.http.cio.websocket.Frame
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.channels.SendChannel
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import log
+import kotlin.coroutines.coroutineContext
 
 class User(val id: Int, val name: String, val sideOfTheForce: SideOfTheForce, val swordColor: Int){
 
@@ -20,7 +23,6 @@ class User(val id: Int, val name: String, val sideOfTheForce: SideOfTheForce, va
         mutex.withLock{
             checkCurrentGameIsNull("User must leave current game before starting new one.")
             val game = GamesStorage.makeGame()
-            game.eventsListener = SubscriptionsHub::handleGameEvent
             currentGame = game
             game.start(this)
             return game
@@ -34,6 +36,7 @@ class User(val id: Int, val name: String, val sideOfTheForce: SideOfTheForce, va
 
             val game = GamesStorage.getGame(gameId)
             game.join(this)
+            currentGame = game
             return game
         }
     }
@@ -61,7 +64,7 @@ class User(val id: Int, val name: String, val sideOfTheForce: SideOfTheForce, va
             val connection = SubscriptionsHub.createConnection(id, incoming, outgoing)
             wsConnection = connection
         }
-        wsConnection!!.runSendingEvents()
+        wsConnection!!.runSendingEvents(CoroutineScope(coroutineContext))
         wsConnection!!.listen()
         mutex.withLock{
             unsubscribeFromCommonEventsImpl()

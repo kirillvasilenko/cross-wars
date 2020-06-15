@@ -21,7 +21,7 @@ class Game(val id: Int){
 
     private val board : List<MutableList<UserInGame?>>
 
-    private var lastMovedUser = UserInGame(-1, 0)
+    private var lastMovedUser = UserInGame(-1, 0, false)
 
     private var lastMovedTime: Long = 0
 
@@ -46,7 +46,8 @@ class Game(val id: Int){
                 "Trying to start game that is in $state state. Only game is in $CREATED state can be started."
             )
             state = ACTIVE
-            eventsListener(GameStateChanged(id, ACTIVE))
+            eventsListener = SubscriptionsHub::handleGameEvent
+            raiseEvent(GameStateChanged(id, ACTIVE))
             joinImpl(user)
         }
     }
@@ -83,14 +84,14 @@ class Game(val id: Int){
 
     suspend fun subscribe(user: User) {
         mutex.withLock {
-            if(!users.any { it.id == user.id }) userFault("Join to game $id for subscribing on its events.")
+            if(!isUserInGame(user.id)) userFault("Join to game $id for subscribing on its events.")
             subscribeImpl(user)
         }
     }
 
     suspend fun unsubscribe(user: User) {
         mutex.withLock {
-            if(!users.any { it.id == user.id }) return
+            if(!isUserInGame(user.id)) return
             unsubscribeImpl(user)
         }
     }
@@ -119,16 +120,16 @@ class Game(val id: Int){
         board[x][y] = userInGame
         lastMovedUser = userInGame
         lastMovedTime = nowUtcMills()
-        eventsListener(UserMoved(id, user.id, lastMovedTime, x, y))
+        raiseEvent(UserMoved(id, user.id, lastMovedTime, x, y))
 
         // if user win, raise event
         val winLine = findWinLine(userInGame, x, y)
             ?: return
-        eventsListener(UserWon(id, user.id, winLine))
+        raiseEvent(UserWon(id, user.id, winLine))
 
         // and complete game
         state = COMPLETED
-        eventsListener(GameStateChanged(id, COMPLETED))
+        raiseEvent(GameStateChanged(id, COMPLETED))
     }
 
     private fun findWinLine(userInGame: UserInGame, x: Int, y:Int): Collection<Field>?{
@@ -188,7 +189,7 @@ class Game(val id: Int){
     }
 
     private fun checkIfCanMove(user: User, x: Int, y: Int){
-        if(!users.any { it.id == user.id }) userFault("Join to game $id for making move.")
+        if(!isUserInGame(user.id)) userFault("Join to game $id for making move.")
         if(state != ACTIVE) userFault(
             "Trying to make move in $state game."
         )
@@ -202,16 +203,28 @@ class Game(val id: Int){
 
 
     private suspend fun joinImpl(user: User){
-        lastUsedSymbol++
-        users.add(UserInGame(user.id, lastUsedSymbol))
-        eventsListener(UserJoined(id, user.id))
+        if(isUserInGame(user.id)) return
+
+        var userInGame = users.firstOrNull{ it.id == user.id }
+
+        if(userInGame == null){
+            lastUsedSymbol++
+            userInGame = UserInGame(user.id, lastUsedSymbol, true)
+            users.add(userInGame)
+        }
+        else{
+            userInGame.active = true
+        }
+
+        raiseEvent(UserJoined(id, user.id))
     }
 
     private suspend fun leaveImpl(user: User){
-        if(!users.removeIf { it.id == user.id }){
-            return
-        }
-        eventsListener(UserLeaved(id, user.id))
+        if(!isUserInGame(user.id)) return
+
+        val userInGame = users.first{ it.id == user.id }
+        userInGame.active = false
+        raiseEvent(UserLeaved(id, user.id))
         unsubscribeImpl(user)
         if(users.isEmpty()){
             archive()
@@ -224,21 +237,27 @@ class Game(val id: Int){
     }
 
     private suspend fun onSubscribeImpl(userId: Int){
-        eventsListener(UserSubscribedOnGameEvents(id, userId, snapshotImpl()))
+        raiseEvent(UserSubscribedOnGameEvents(id, userId, snapshotImpl()))
     }
 
     private fun unsubscribeImpl(user: User){
         SubscriptionsHub.unsubscribeFromGameEvents(user.id, id)
     }
 
+    private fun isUserInGame(userId: Int) = users.any { it.id == userId && it.active }
+
     private suspend fun archive(){
         state = ARCHIVED
-        eventsListener(GameStateChanged(id, ARCHIVED))
+        raiseEvent(GameStateChanged(id, ARCHIVED))
         eventsListener = {}
     }
 
     private fun snapshotImpl() =
         GameDto(id, lastMovedTime, lastMovedUser, users.toMutableList(), board.map{it.toMutableList()})
+
+    private suspend fun raiseEvent(event: GameEvent){
+        eventsListener(event)
+    }
 
     //endregion private
 

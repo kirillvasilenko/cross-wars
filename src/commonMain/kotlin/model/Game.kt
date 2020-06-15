@@ -7,12 +7,11 @@ enum class GameState{
     CREATED, ACTIVE, COMPLETED, ARCHIVED
 }
 
-
 @Serializable
 data class Field(val x: Int, val y: Int)
 
 @Serializable
-data class UserInGame(val id: Int, val symbol: Int)
+data class UserInGame(val id: Int, val symbol: Int, var active:Boolean)
 
 @Serializable
 data class GameDto(

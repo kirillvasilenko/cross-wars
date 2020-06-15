@@ -32,9 +32,7 @@ class PlayGameScreen(props: VmProps<PlayGameVm>): VMComponent<PlayGameVm>(props)
             // left
             styledDiv{
                 css{
-                    backgroundColor = Color.red
                 }
-                +"left"
             }
 
             // center
