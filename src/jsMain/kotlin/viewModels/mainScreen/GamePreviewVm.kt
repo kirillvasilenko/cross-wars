@@ -9,45 +9,6 @@ import model.*
 import viewModels.*
 import kotlin.js.Date
 import kotlin.math.roundToLong
-import kotlin.random.Random
-
-class LastMoveTimeVm(lastMoveDate: Long): ViewModel(){
-
-    private var lastMoveDate = lastMoveDate
-
-    private var updateTimeJob: Job? = null
-
-    val lastMoveWasTimeAgo: String
-        get(){
-            val ms = Date.now().roundToLong() - lastMoveDate
-            val sec = ms / 1000
-            if(sec < 60){
-                return "$sec sec."
-            }
-            val min = sec / 60
-            return "$min min."
-        }
-
-    override suspend fun initImpl() {
-        updateTimeJob = mainScope.launch{
-            while(true){
-                delay(1000)
-                raiseChanged()
-            }
-        }
-    }
-
-    override suspend fun dispose() {
-        if(updateTimeJob != null){
-            updateTimeJob!!.cancel()
-        }
-    }
-
-    fun setLastMoveDate(moveDate: Long){
-        lastMoveDate = moveDate
-    }
-
-}
 
 class GamePreviewVm(game: GameDto): CommandVm<GameDto>() {
 
@@ -63,20 +24,25 @@ class GamePreviewVm(game: GameDto): CommandVm<GameDto>() {
     val visible: Boolean
         get() = state == GameState.ACTIVE
 
+    /**
+     * Count fields that are occupied.
+     * */
+    var boardFilled: Int = game.board.flatten().filterNotNull().size
+        private set
 
     val lastMoveTimeVm = LastMoveTimeVm(game.lastMovedDate)
 
 
     override suspend fun initImpl() {
-        log("gameVm $gameId: init")
         SubscriptionHub.subscribeOnGameEvents(
                 gameId,
                 GameEventHandler(::handleGameEvent)
         )
     }
 
-    override suspend fun dispose() {
+    override suspend fun disposeImpl() {
         SubscriptionHub.unsubscribeFromGameEvents(gameId)
+        lastMoveTimeVm.dispose()
     }
 
     private suspend fun handleGameEvent(event: GameEvent){
@@ -84,8 +50,8 @@ class GamePreviewVm(game: GameDto): CommandVm<GameDto>() {
             is GameStateChanged -> onGameStateChanged(event)
             is UserJoined -> onUserJoined(event)
             is UserLeaved -> onUserLeaved(event)
-            is UserMoved -> onUserMoved(event)
-            is UserSubscribedOnGameEvents -> onUserSubscribedOnGameEvents(event)
+            is UserMoved -> onUserMoved()
+            is UserSubscribedOnGameEvents -> resetAll(event.game)
             else -> Unit // ignore
         }
     }
@@ -122,12 +88,9 @@ class GamePreviewVm(game: GameDto): CommandVm<GameDto>() {
         raiseChanged()
     }
 
-    private fun onUserMoved(event: UserMoved){
+    private fun onUserMoved() {
         lastMoveTimeVm.setLastMoveDate(Date.now().roundToLong())
-    }
-
-    private fun onUserSubscribedOnGameEvents(event: UserSubscribedOnGameEvents){
-        resetAll(event.game)
+        boardFilled++
         raiseChanged()
     }
 
@@ -135,10 +98,50 @@ class GamePreviewVm(game: GameDto): CommandVm<GameDto>() {
         users = game.users
         state = game.state
         lastMoveTimeVm.setLastMoveDate(game.lastMovedDate)
+        boardFilled = game.board.flatten().filterNotNull().size
+        raiseChanged()
     }
 
     override suspend fun executeImpl(): GameDto {
         return Api.games.joinGame(gameId)
+    }
+
+}
+
+class LastMoveTimeVm(private var lastMoveDate: Long): ViewModel(){
+
+    private var updateTimeJob: Job? = null
+
+    val lastMoveWasTimeAgo: String
+        get(){
+            if(lastMoveDate == 0L) return "--"
+
+            val ms = Date.now().roundToLong() - lastMoveDate
+            val sec = ms / 1000
+            if(sec < 60){
+                return "$sec sec."
+            }
+            val min = sec / 60
+            return "$min min."
+        }
+
+    override suspend fun initImpl() {
+        updateTimeJob = mainScope.launch{
+            while(true){
+                delay(1000)
+                raiseChanged()
+            }
+        }
+    }
+
+    override suspend fun disposeImpl() {
+        if(updateTimeJob != null){
+            updateTimeJob!!.cancel()
+        }
+    }
+
+    fun setLastMoveDate(moveDate: Long){
+        lastMoveDate = moveDate
     }
 
 }

@@ -35,7 +35,11 @@ object Api{
 
 class AuthApi{
     suspend fun auth(): UserDto {
-        return client.put("$endpoint/api/auth")
+        return client.put("$endpoint/api/auth"){
+            headers{
+                header("credentials", "same-origin")
+            }
+        }
     }
 }
 

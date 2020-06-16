@@ -20,6 +20,7 @@ class AppVm: ViewModel() {
             user = Api.auth.auth()
             // todo remove
             log(user.toString())
+
             val games = Api.games.getActiveGames()
         }
         catch(e:Throwable){
@@ -36,10 +37,9 @@ class AppVm: ViewModel() {
     }
 
     private suspend fun startPlaying(game: GameDto){
-        val newVm = PlayGameVm(user, game).apply {
+        val newVm = PlayGameVm(user, game.id).apply {
             onLeaveGame = ::leaveFromGame
         }
-        newVm.init() // todo remove from here. Everybody init on react component invocation.
         changeCurrentVm(newVm)
     }
 

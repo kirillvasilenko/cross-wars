@@ -24,7 +24,8 @@ class GamesListVm: ViewModel(){
         resetGamesAndSubscribe()
     }
 
-    override suspend fun dispose() {
+    override suspend fun disposeImpl() {
+        games.forEach { it.dispose() }
         SubscriptionHub.unsubscribeFromGameStartedEvents()
     }
 

@@ -12,6 +12,6 @@
     <logger name="default" level="trace"/>
 
     <!--subscriptions-->
-    <logger name="model.WsConnection" level="trace"/>
+    <logger name="model.WsConnection" level="info"/>
     <logger name="model.AuthService" level="trace"/>
 </configuration>

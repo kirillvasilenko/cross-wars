@@ -13,6 +13,9 @@ abstract class ViewModel:Disposable{
     var initialized = false
         private set
 
+    var disposed = false
+        private set
+
     var onChanged: () -> Unit = {}
 
     var version: Long = 0
@@ -29,9 +32,16 @@ abstract class ViewModel:Disposable{
         initImpl()
     }
 
+    override suspend fun dispose(){
+        if(disposed) return
+        disposed = true
+        disposeImpl()
+    }
+
     protected open suspend fun initImpl(){}
 
-    override suspend fun dispose(){}
+    protected open suspend fun disposeImpl(){}
+
 }
 
 abstract class CommandVm<T>: ViewModel() {

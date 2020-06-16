@@ -21,6 +21,10 @@ fun RBuilder.playGameScreen(handler: VmProps<PlayGameVm>.() -> Unit): ReactEleme
 class PlayGameScreen(props: VmProps<PlayGameVm>): VMComponent<PlayGameVm>(props) {
 
     override fun RBuilder.render() {
+        if(!vm.initialized){
+            return // todo loading screen
+        }
+
         styledDiv {
             css{
                 height = 100.vh
@@ -29,6 +33,8 @@ class PlayGameScreen(props: VmProps<PlayGameVm>): VMComponent<PlayGameVm>(props)
                 display = Display.grid
                 gridTemplateColumns = GridTemplateColumns(1.fr, 100.vh, 1.fr)
             }
+
+
             // left
             styledDiv{
                 css{

@@ -55,10 +55,10 @@ class GamePreview(props: VmProps<GamePreviewVm>): VMComponent<GamePreviewVm>(pro
                 +"state: ${vm.state}"
             }
             p{
-                +"version: ${state.version}"
+                +"Players: ${vm.activeUsersCount}"
             }
             p{
-                +"Players: ${vm.activeUsersCount}"
+                +"Filled: ${vm.boardFilled}%"
             }
             lastMoveTime { pVm = vm.lastMoveTimeVm }
 
