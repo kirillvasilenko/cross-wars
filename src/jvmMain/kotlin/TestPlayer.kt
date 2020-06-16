@@ -85,10 +85,6 @@ class TestPlayer(val user: User, val allTestUsers: List<User>, val maxDelaySec:I
             randomDelay()
 
             val snapshot = game.snapshot()
-            if(snapshot.users.size < 2
-                    || snapshot.lastMovedUser?.id == user.id){
-                continue
-            }
 
             val vacantFields = snapshot.board.mapIndexed { x, row ->
                 row.mapIndexed { y, userInGame ->
@@ -98,6 +94,11 @@ class TestPlayer(val user: User, val allTestUsers: List<User>, val maxDelaySec:I
             }.flatten().filterNotNull().toList()
 
             if(vacantFields.isEmpty()) break
+
+            if(snapshot.users.size < 2
+                    || snapshot.lastMovedUser?.id == user.id){
+                continue
+            }
 
             val randomField = vacantFields[Random.nextInt(vacantFields.size)]
             try {

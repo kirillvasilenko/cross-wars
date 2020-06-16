@@ -10,6 +10,7 @@ import react.RBuilder
 import react.ReactElement
 import styled.css
 import styled.styledDiv
+import viewModels.log
 import viewModels.mainScreen.GamesListVm
 
 fun RBuilder.gamesList(handler: VmProps<GamesListVm>.() -> Unit): ReactElement {
@@ -31,6 +32,7 @@ class GamesList(props: VmProps<GamesListVm>): VMComponent<GamesListVm>(props) {
                 pVm = vm.startNewGameVm
             }
 
+            log("gamesListComponent: render ${vm.games.size} games")
             vm.games.forEach {
                 gamePreview{
                     pVm = it

@@ -4,7 +4,7 @@ Cookie: USER_SESSION=userId%3D%2523i1%26workSession%3D%2523s560cd70e%2De125%2D44
 ###
 
 PUT http://localhost:8080/api/auth
-Cookie: USER_SESSION=userId%3D%2523i2%26workSession%3D%2523s0917c0c5%2Db6ab%2D4259%2D82ad%2Deb041ddeb476;
+
 
 ###
 

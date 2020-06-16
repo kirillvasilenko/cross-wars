@@ -7,27 +7,48 @@ import react.RProps
 import react.RState
 import react.setState
 import viewModels.ViewModel
+import viewModels.log
+import viewModels.mainScreen.GamePreviewVm
 
 external interface VmProps<T>: RProps where T: ViewModel {
     var pVm: T
 }
 
-external interface VmState<T>: RState where T: ViewModel {
-    var vm: T
+external interface VmState: RState {
+    var version: Long
 }
 
-abstract class VMComponent<T>(props: VmProps<T>): RComponent<VmProps<T>, VmState<T>>(props) where T: ViewModel {
+abstract class VMComponent<T>(props: VmProps<T>): RComponent<VmProps<T>, VmState>(props) where T: ViewModel {
 
     protected val vm: T
-        get() = state.vm
+        get() = props.pVm
 
-    override fun VmState<T>.init(props: VmProps<T>) {
-        vm = props.pVm
+    override fun componentDidMount() {
+        subscribeOnVmAndInit()
+    }
+
+    override fun componentDidUpdate(prevProps: VmProps<T>, prevState: VmState, snapshot: Any) {
+        unsubscribeFromVm(prevProps.pVm)
+        subscribeOnVmAndInit()
+    }
+
+    override fun VmState.init(props: VmProps<T>) {
+        version = vm.version
+    }
+
+    private fun subscribeOnVmAndInit(){
         vm.onChanged = {
-            setState{ vm = vm}
+            setState{
+                version = vm.version
+            }
         }
         mainScope.launch {
             vm.init()
         }
     }
+
+    private fun unsubscribeFromVm(prevVm: T){
+        prevVm.onChanged = {}
+    }
+
 }

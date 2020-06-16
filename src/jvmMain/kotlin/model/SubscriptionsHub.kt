@@ -3,9 +3,12 @@ package model
 import io.ktor.http.cio.websocket.Frame
 import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.channels.SendChannel
+import org.slf4j.LoggerFactory
 import java.util.concurrent.ConcurrentHashMap
 
 open class SubscriptionsHubInMemory{
+
+    private val log = LoggerFactory.getLogger(javaClass)
 
     private val connectionsByUserId =
         ConcurrentHashMap<Int, WsConnection>()
@@ -28,12 +31,14 @@ open class SubscriptionsHubInMemory{
     fun subscribeOnGameStartedEvents(userId: Int) {
         val connection = getConnection(userId)
         startedGamesSubscribers.add(connection)
+        log.debug("user=$userId subscribed on game started events")
     }
 
     fun unsubscribeFromGameStartedEvents(userId: Int) {
         val connection = connectionsByUserId[userId]
             ?: return
         startedGamesSubscribers.remove(connection)
+        log.debug("user=$userId unsubscribed from game started events")
     }
 
     fun subscribeOnGameEvents(userId: Int, gameId: Int) {
@@ -46,6 +51,7 @@ open class SubscriptionsHubInMemory{
         }
 
         gameSubscribers!!.add(connection)
+        log.debug("user=$userId subscribed on game=$gameId events")
     }
 
     fun unsubscribeFromGameEvents(userId: Int, gameId: Int) {
@@ -54,6 +60,7 @@ open class SubscriptionsHubInMemory{
         val gameSubscribers = gameEventsSubscribers[gameId]
             ?: return
         gameSubscribers.remove(connection)
+        log.debug("user=$userId unsubscribed from game=$gameId events")
     }
 
     suspend fun handleGameEvent(event: GameEvent){
@@ -81,16 +88,16 @@ open class SubscriptionsHubInMemory{
     }
 
     private suspend fun handleGameEventImpl(event: GameEvent){
-        if(event is GameStateChanged
-                && event.actualState == GameState.ARCHIVED){
-            handleGameArchived(event.gameId)
-        }
-
         val subscribers = gameEventsSubscribers[event.gameId]
             ?: return
 
         for(connection in subscribers){
             connection.send(event)
+        }
+
+        if(event is GameStateChanged
+                && event.actualState == GameState.ARCHIVED){
+            handleGameArchived(event.gameId)
         }
     }
 

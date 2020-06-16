@@ -10,16 +10,26 @@ interface Disposable{
 
 abstract class ViewModel:Disposable{
 
-    var initialized = true
-        protected set
+    var initialized = false
+        private set
 
     var onChanged: () -> Unit = {}
 
+    var version: Long = 0
+        private set
+
     protected fun raiseChanged(){
+        version++
         onChanged()
     }
 
-    open suspend fun init(){}
+    suspend fun init(){
+        if(initialized) return
+        initialized=true
+        initImpl()
+    }
+
+    protected open suspend fun initImpl(){}
 
     override suspend fun dispose(){}
 }

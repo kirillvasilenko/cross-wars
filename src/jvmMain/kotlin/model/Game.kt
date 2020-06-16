@@ -47,8 +47,9 @@ class Game(val id: Int){
             )
             state = ACTIVE
             eventsListener = SubscriptionsHub::handleGameEvent
-            raiseEvent(GameStateChanged(id, ACTIVE))
             joinImpl(user)
+            raiseEvent(GameStateChanged(id, ACTIVE))
+            raiseEvent(GameStarted(id))
         }
     }
 
@@ -212,7 +213,7 @@ class Game(val id: Int){
             userInGame.active = true
         }
 
-        raiseEvent(UserJoined(id, user.id))
+        raiseEvent(UserJoined(id, userInGame.copy()))
     }
 
     private suspend fun leaveImpl(user: User){
@@ -220,9 +221,9 @@ class Game(val id: Int){
 
         val userInGame = users.first{ it.id == user.id }
         userInGame.active = false
-        raiseEvent(UserLeaved(id, user.id))
+        raiseEvent(UserLeaved(id, userInGame.copy()))
 
-        if(users.isEmpty()){
+        if(!users.any{ it.active }){
             archive()
         }
     }

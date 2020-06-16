@@ -27,11 +27,11 @@ data class GameStateChanged(override val gameId: Int, val actualState: GameState
 
 
 @Serializable
-data class UserJoined(override val gameId: Int, val userId: Int):GameEvent()
+data class UserJoined(override val gameId: Int, val user: UserInGame):GameEvent()
 
 
 @Serializable
-data class UserLeaved(override val gameId: Int, val userId: Int):GameEvent()
+data class UserLeaved(override val gameId: Int, val user: UserInGame):GameEvent()
 
 
 @Serializable
@@ -41,6 +41,8 @@ data class UserMoved(override val gameId: Int, val userId: Int, val time: Long, 
 @Serializable
 data class UserWon(override val gameId: Int, val userId: Int, val winLine: Collection<Field>):GameEvent()
 
+@Serializable
+data class Draw(override val gameId: Int): GameEvent()
 
 @Serializable
 data class UserSubscribedOnGameEvents(override val gameId: Int, val userId: Int, val game: GameDto):GameEvent()

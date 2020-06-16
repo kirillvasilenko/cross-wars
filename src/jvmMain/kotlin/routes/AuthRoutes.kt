@@ -8,6 +8,7 @@ import io.ktor.routing.route
 import io.ktor.sessions.get
 import io.ktor.sessions.sessions
 import io.ktor.sessions.set
+import log
 import model.AuthService
 import model.UserSession
 import model.UsersService
@@ -18,8 +19,11 @@ fun Route.authRouting() {
             var session: UserSession? = call.sessions.get<UserSession>()
             if(session == null
                 || !AuthService.validate(session)){
+                log.debug("need to auth new user")
                 session = AuthService.authenticateNewUser()
+                log.debug("new session:$session")
                 call.sessions.set(session)
+                log.debug("session set to cookie")
             }
             val user = UsersService.getUser(session.userId)
             call.respond(user)

@@ -12,7 +12,7 @@ import kotlin.coroutines.coroutineContext
 
 class WsConnection(val userId: Int, val incoming: ReceiveChannel<Frame>, val outgoing: SendChannel<Frame>){
 
-    private var log = LoggerFactory.getLogger("${javaClass.simpleName} userId=$userId")
+    private var log = LoggerFactory.getLogger(javaClass)
 
     private var eventsChannel =
         Channel<GameEvent>(Channel.UNLIMITED)
@@ -61,6 +61,7 @@ class WsConnection(val userId: Int, val incoming: ReceiveChannel<Frame>, val out
     }
 
     private suspend fun sendEventImpl(event: GameEvent){
+        log.debug("sent $event")
         val message = EventsSerializer.stringify(event)
         outgoing.send(Frame.Text(message))
         log.debug("Sent $message")

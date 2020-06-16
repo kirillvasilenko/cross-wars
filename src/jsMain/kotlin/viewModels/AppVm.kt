@@ -15,8 +15,17 @@ class AppVm: ViewModel() {
 
     var currentVm:ViewModel = LoadScreenVm()
 
-    override suspend fun init(){
-        user = Api.auth.auth()
+    override suspend fun initImpl(){
+        try{
+            user = Api.auth.auth()
+            // todo remove
+            log(user.toString())
+            val games = Api.games.getActiveGames()
+        }
+        catch(e:Throwable){
+            log("error on authentication: ${e.message}")
+        }
+
         if(user.currentGameId != null){
             val game = Api.games.getGame(user.currentGameId!!)
             startPlaying(game)
