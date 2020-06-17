@@ -1,20 +1,17 @@
-import io.ktor.http.*
-import io.ktor.client.*
-import io.ktor.client.request.*
+import io.ktor.client.HttpClient
 import io.ktor.client.features.json.JsonFeature
 import io.ktor.client.features.json.serializer.KotlinxSerializer
 import io.ktor.client.features.websocket.DefaultClientWebSocketSession
 import io.ktor.client.features.websocket.WebSockets
 import io.ktor.client.features.websocket.ws
-import io.ktor.http.cio.websocket.CloseReason
-import io.ktor.http.cio.websocket.Frame
-import io.ktor.http.cio.websocket.close
-import io.ktor.http.cio.websocket.readText
+import io.ktor.client.request.delete
+import io.ktor.client.request.get
+import io.ktor.client.request.post
+import io.ktor.client.request.put
+import io.ktor.http.HttpMethod
 import model.GameDto
 import model.UserDto
-
 import kotlin.browser.window
-import kotlin.time.Duration
 
 val endpoint = window.location.origin // only needed until https://github.com/ktorio/ktor/issues/1695 is resolved
 val hostname = window.location.hostname
@@ -35,11 +32,7 @@ object Api{
 
 class AuthApi{
     suspend fun auth(): UserDto {
-        return client.put("$endpoint/api/auth"){
-            headers{
-                header("credentials", "same-origin")
-            }
-        }
+        return client.put("$endpoint/api/auth")
     }
 }
 
