@@ -7,8 +7,6 @@ import react.RProps
 import react.RState
 import react.setState
 import viewModels.ViewModel
-import viewModels.log
-import viewModels.mainScreen.GamePreviewVm
 
 external interface VmProps<T>: RProps where T: ViewModel {
     var pVm: T
@@ -37,7 +35,7 @@ abstract class VMComponent<T>(props: VmProps<T>): RComponent<VmProps<T>, VmState
     }
 
     private fun subscribeOnVmAndInit(){
-        vm.onChanged = {
+        vm.onStateChanged = {
             setState{
                 version = vm.version
             }
@@ -48,7 +46,7 @@ abstract class VMComponent<T>(props: VmProps<T>): RComponent<VmProps<T>, VmState
     }
 
     private fun unsubscribeFromVm(prevVm: T){
-        prevVm.onChanged = {}
+        prevVm.onStateChanged = {}
     }
 
 }

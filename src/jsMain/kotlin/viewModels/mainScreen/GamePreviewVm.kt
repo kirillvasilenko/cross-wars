@@ -10,7 +10,9 @@ import viewModels.*
 import kotlin.js.Date
 import kotlin.math.roundToLong
 
-class GamePreviewVm(game: GameDto): CommandVm<GameDto>() {
+class JoinedGame(source: ViewModel, val game:GameDto): VmEvent(source)
+
+class GamePreviewVm(game: GameDto): CommandVm() {
 
     val gameId: Int = game.id
 
@@ -30,7 +32,7 @@ class GamePreviewVm(game: GameDto): CommandVm<GameDto>() {
     var boardFilled: Int = game.board.flatten().filterNotNull().size
         private set
 
-    val lastMoveTimeVm = LastMoveTimeVm(game.lastMovedDate)
+    val lastMoveTimeVm = child(LastMoveTimeVm(game.lastMovedDate))
 
 
     override suspend fun initImpl() {
@@ -42,7 +44,6 @@ class GamePreviewVm(game: GameDto): CommandVm<GameDto>() {
 
     override suspend fun disposeImpl() {
         SubscriptionHub.unsubscribeFromGameEvents(gameId)
-        lastMoveTimeVm.dispose()
     }
 
     private suspend fun handleGameEvent(event: GameEvent){
@@ -60,7 +61,7 @@ class GamePreviewVm(game: GameDto): CommandVm<GameDto>() {
         if(state == event.actualState) return
         log(event.toString())
         state = event.actualState
-        raiseChanged()
+        raiseStateChanged()
     }
 
     private fun onUserJoined(event: UserJoined){
@@ -72,7 +73,7 @@ class GamePreviewVm(game: GameDto): CommandVm<GameDto>() {
         else{
             users.add(event.user)
         }
-        raiseChanged()
+        raiseStateChanged()
     }
 
     private fun onUserLeaved(event: UserLeaved){
@@ -85,13 +86,13 @@ class GamePreviewVm(game: GameDto): CommandVm<GameDto>() {
         if(!user.active) return
 
         user.active = false
-        raiseChanged()
+        raiseStateChanged()
     }
 
     private fun onUserMoved() {
         lastMoveTimeVm.setLastMoveDate(Date.now().roundToLong())
         boardFilled++
-        raiseChanged()
+        raiseStateChanged()
     }
 
     private fun resetAll(game:GameDto){
@@ -99,11 +100,12 @@ class GamePreviewVm(game: GameDto): CommandVm<GameDto>() {
         state = game.state
         lastMoveTimeVm.setLastMoveDate(game.lastMovedDate)
         boardFilled = game.board.flatten().filterNotNull().size
-        raiseChanged()
+        raiseStateChanged()
     }
 
-    override suspend fun executeImpl(): GameDto {
-        return Api.games.joinGame(gameId)
+    override suspend fun executeImpl(): VmEvent {
+        val game = Api.games.joinGame(gameId)
+        return JoinedGame(this, game)
     }
 
 }
@@ -129,7 +131,7 @@ class LastMoveTimeVm(private var lastMoveDate: Long): ViewModel(){
         updateTimeJob = mainScope.launch{
             while(true){
                 delay(1000)
-                raiseChanged()
+                raiseStateChanged()
             }
         }
     }

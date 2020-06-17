@@ -1,46 +1,33 @@
 package viewModels.mainScreen
 
 import Api
-import model.*
+import model.GameDto
+import model.GameStarted
 import viewModels.GameEventHandler
 import viewModels.SubscriptionHub
 import viewModels.ViewModel
-import viewModels.log
-import kotlin.browser.window
 
 class GamesListVm: ViewModel(){
 
-    val startNewGameVm = StartNewGameVm()
+    val startNewGameVm = child(StartNewGameVm())
 
     val games = mutableListOf<GamePreviewVm>()
-
-    var onJoinedGame: suspend (GameDto) -> Unit = {}
-
-    init{
-        startNewGameVm.onExecuted = ::raiseJoinedGame
-    }
 
     override suspend fun initImpl() {
         resetGamesAndSubscribe()
     }
 
     override suspend fun disposeImpl() {
-        games.forEach { it.dispose() }
         SubscriptionHub.unsubscribeFromGameStartedEvents()
     }
 
     private suspend fun resetGamesAndSubscribe(){
-        games.forEach { it.dispose() }
+        games.forEach{ removeChild(it) }
         games.clear()
         Api.games.getActiveGames()
-                .map {
-                    GamePreviewVm(it)
-                }
-                .forEach {
-                    it.onExecuted = ::raiseJoinedGame
-                    games.add(it)
-                }
-        onChanged()
+                .map { child(GamePreviewVm(it)) }
+                .forEach { games.add(it) }
+        onStateChanged()
         SubscriptionHub.subscribeOnGameStartedEvents(
                 GameEventHandler(::handleGameStarted, ::resetGamesAndSubscribe)
         )
@@ -51,18 +38,13 @@ class GamesListVm: ViewModel(){
     }
 
     private suspend fun handleGameStarted(event:GameStarted){
-        if(games.any{it.gameId == event.gameId}) return
+        if (games.any { it.gameId == event.gameId }) return
 
         val game = Api.games.getGame(event.gameId)
-        if(!filter(game)) return
+        if (!filter(game)) return
 
         games.add(GamePreviewVm(game))
-        log("gamesListVm: game started $event")
-        raiseChanged()
-    }
-
-    private suspend fun raiseJoinedGame(game: GameDto){
-        onJoinedGame(game)
+        raiseStateChanged()
     }
 }
 

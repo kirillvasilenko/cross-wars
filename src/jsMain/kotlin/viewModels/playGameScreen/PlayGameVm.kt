@@ -8,13 +8,9 @@ import viewModels.ViewModel
 
 class PlayGameVm(val currentUser: UserDto, val gameId: Int): ViewModel(){
 
-    var onLeaveGame: suspend () -> Unit = {}
+    val leaveGameVm = child(LeaveGameVm())
 
-
-    val leaveGameVm = LeaveGameVm()
-
-    lateinit var users: MutableList<UserInGameVm>
-        private set
+    private val users = mutableListOf<UserInGameVm>()
 
     lateinit var legendVm: LegendVm
         private set
@@ -22,12 +18,6 @@ class PlayGameVm(val currentUser: UserDto, val gameId: Int): ViewModel(){
     lateinit var gameBoardVm: GameBoardVm
         private set
 
-
-    init{
-        leaveGameVm.onExecuted = {
-            onLeaveGame()
-        }
-    }
 
     override suspend fun initImpl() {
         subscribe()
@@ -58,33 +48,33 @@ class PlayGameVm(val currentUser: UserDto, val gameId: Int): ViewModel(){
     }
 
     private suspend fun resetAll(game:GameDto){
-        users = game.users
-                .map { userInGame ->
-                    val userDto = Api.users.getUser(userInGame.id)
-                    UserInGameVm(userDto, userInGame)
-                }.toMutableList()
-        legendVm = LegendVm(currentUser, users)
-        gameBoardVm = GameBoardVm(currentUser, users, game.state, game.board)
+        users.forEach { removeChild(it) }
+        users.clear()
+        game.users.forEach { addUserVm(it) }
 
-        raiseChanged()
+        if(this::legendVm.isInitialized) removeChild(legendVm)
+        legendVm = child(LegendVm(currentUser, users))
+
+        if(this::gameBoardVm.isInitialized) removeChild(gameBoardVm)
+        gameBoardVm = child(GameBoardVm(currentUser, users, game.state, game.board))
+
+        raiseStateChanged()
     }
 
     private suspend fun setUserActivity(userInGame: UserInGame, active: Boolean) {
         val user = users.firstOrNull { it.userId == userInGame.id }
         if (user == null) {
             addUserVm(userInGame)
+            legendVm.usersChanged()
         } else {
             user.active = userInGame.active
         }
     }
 
-    private suspend fun addUserVm(userInGame: UserInGame): UserInGameVm {
+    private suspend fun addUserVm(userInGame: UserInGame) {
         val userDto = Api.users.getUser(userInGame.id)
-        var userVm = UserInGameVm(userDto, userInGame)
+        var userVm = child(UserInGameVm(userDto, userInGame))
         users.add(userVm)
-
-        legendVm.usersChanged()
-        return userVm
     }
 
 }

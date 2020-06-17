@@ -15,7 +15,7 @@ class UserInGameVm(user: UserDto, userInGame: UserInGame): ViewModel(){
         set(value) {
             if(value == field) return
             field = value
-            raiseChanged()
+            raiseStateChanged()
         }
 
     var userName: String = user.name

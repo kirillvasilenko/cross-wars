@@ -6,6 +6,7 @@ import model.UserInGame
 import model.UserMoved
 import viewModels.CommandVm
 import viewModels.ViewModel
+import viewModels.VmEvent
 
 class GameBoardVm(
         val user: UserDto,
@@ -35,10 +36,10 @@ class GameBoardVm(
                 val user = users.first { it.userId == userInGame.id }
                 BoardFieldVm(
                         x, y,
-                        UserInGameSymbolVm(
+                        child(UserInGameSymbolVm(
                                 user.userSymbol,
                                 user.sideOfTheForce,
-                                user.swordColor),
+                                user.swordColor)),
                         active
                 )
             }.toMutableList()
@@ -63,24 +64,29 @@ class GameBoardVm(
     }
 }
 
-class BoardFieldVm(val x: Int, val y: Int, currentState: UserInGameSymbolVm?, active: Boolean = true): CommandVm<Unit>(){
+class MoveMade(source: ViewModel, val x: Int, val y: Int): VmEvent(source)
+
+class BoardFieldVm(val x: Int, val y: Int, currentState: UserInGameSymbolVm?, active: Boolean = true): CommandVm(){
 
     var currentState: UserInGameSymbolVm? = currentState
         set(value){
             field = value
-            raiseChanged()
+            raiseStateChanged()
         }
 
     var active: Boolean = active
         set(value){
             if(field == value) return
             field = value
-            raiseChanged()
+            raiseStateChanged()
         }
 
-    override suspend fun executeImpl() {
-        if(currentState != null) return
+    override val canExecuted: Boolean
+        get() = super.canExecuted && currentState == null && active
+
+    override suspend fun executeImpl(): VmEvent {
         Api.games.makeMove(x, y)
+        return MoveMade(this, x, y)
     }
 
 }

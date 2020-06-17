@@ -6,16 +6,5 @@ import viewModels.ViewModel
 
 class MainScreenVm(val user: UserDto): ViewModel(){
 
-    val gamesListVm = GamesListVm()
-
-    var onJoinedGame: suspend (GameDto) -> Unit = {}
-
-    init {
-        gamesListVm.onJoinedGame = { onJoinedGame(it) }
-    }
-
-    override suspend fun disposeImpl() {
-        gamesListVm.dispose()
-    }
-
+    val gamesListVm = child(GamesListVm())
 }
