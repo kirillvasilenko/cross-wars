@@ -1,5 +1,6 @@
 package components.mainScreen
 
+import components.GlobalStyle
 import kotlinx.css.*
 import react.*
 import styled.css
@@ -22,22 +23,22 @@ class Header: RComponent<HeaderProps, RState>() {
         styledDiv {
             css {
                 overflow = Overflow.hidden
-                fontSize = 28.px
             }
             styledDiv{
                 css{
                     float = kotlinx.css.Float.left
-                    fontWeight = FontWeight.bold
+                    fontSize = GlobalStyle.headerFontSize
                     textAlign = TextAlign.center
                     padding = "14px 16px"
                 }
-                +"_Game of Crosses"
+                +"Cross Wars"
             }
             styledDiv{
                 css{
                     float = kotlinx.css.Float.right
                     textAlign = TextAlign.center
                     padding = "14px 16px"
+                    fontSize = GlobalStyle.headerFontSize
                 }
                 +"${props.userName}"
             }

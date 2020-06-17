@@ -6,7 +6,7 @@ import react.RComponent
 import react.RProps
 import react.RState
 import react.setState
-import viewModels.ViewModel
+import viewModels.common.ViewModel
 
 external interface VmProps<T>: RProps where T: ViewModel {
     var pVm: T

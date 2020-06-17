@@ -30,7 +30,7 @@ open class UsersStorageInMemory{
 
 object UsersStorage: UsersStorageInMemory()
 
-val namesOfHeroes = listOf(
+val namesOfHeroes = mutableListOf(
         "Java the Hutt",
         "Jav Jav Scripts",
         "Oba-Dva Kotlin",
@@ -45,7 +45,10 @@ val namesOfHeroes = listOf(
         "Rubacca")
 
 fun generateUser(id: Int): User{
-    val name = namesOfHeroes[Random.nextInt(namesOfHeroes.size)]
+    val name =
+            if (namesOfHeroes.size > 0)
+                namesOfHeroes.removeAt(Random.nextInt(namesOfHeroes.size))
+            else "R${Random.nextInt(100)}-D${Random.nextInt(100)}"
     val side =
             if(Random.nextInt(2) == 0) SideOfTheForce.Light
             else SideOfTheForce.Dark

@@ -1,11 +1,9 @@
 package components.mainScreen
 
+import components.GlobalStyle
 import components.VMComponent
 import components.VmProps
-import kotlinx.css.Display
-import kotlinx.css.FlexWrap
-import kotlinx.css.display
-import kotlinx.css.flexWrap
+import kotlinx.css.*
 import react.RBuilder
 import react.ReactElement
 import styled.css
@@ -29,12 +27,17 @@ class GamesList(props: VmProps<GamesListVm>): VMComponent<GamesListVm>(props) {
             }
 
             startNewGameButton {
+                css{
+                    margin = GlobalStyle.margin
+                }
                 pVm = vm.startNewGameVm
             }
 
-            log("gamesListComponent: render ${vm.games.size} games")
             vm.games.forEach {
                 gamePreview{
+                    css{
+                        margin = GlobalStyle.margin
+                    }
                     pVm = it
                 }
             }

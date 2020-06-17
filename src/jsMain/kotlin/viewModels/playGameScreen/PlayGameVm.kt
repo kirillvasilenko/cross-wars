@@ -4,7 +4,7 @@ import Api
 import model.*
 import viewModels.GameEventHandler
 import viewModels.SubscriptionHub
-import viewModels.ViewModel
+import viewModels.common.ViewModel
 
 class PlayGameVm(val currentUser: UserDto, val gameId: Int): ViewModel(){
 

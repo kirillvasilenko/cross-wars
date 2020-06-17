@@ -1,22 +1,29 @@
 package components
 
 import kotlinx.css.Color
+import kotlinx.css.margin
 import kotlinx.css.px
 import kotlinx.html.HTMLTag
 import model.SideOfTheForce
 import react.RBuilder
-import react.RProps
-import react.RState
 import react.ReactElement
 import react.dom.RDOMBuilder
 import react.dom.tag
-import viewModels.ViewModel
 
 object GlobalStyle{
 
     val mainColor = Color.green
+    val backgroundColor = Color.black
 
     val fontSize = 22.px
+    val headerFontSize = 30.px
+    val logoFontSize = 80.px
+    val loadingScreenFontSize = 100.px
+
+    val margin = "4px"
+
+    val gamePreviewSize = 250.px
+
     val userSymbolSize = 28.px
     val symbolStrokeWidth = 5
 

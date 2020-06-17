@@ -1,4 +1,14 @@
-package viewModels
+package viewModels.common
+
+open class VmEvent(val source: ViewModel){
+    var handled: Boolean = false
+}
+
+open class ErrorHappened(source: ViewModel, val cause: Throwable): VmEvent(source)
+
+interface Disposable{
+    suspend fun dispose()
+}
 
 abstract class ViewModel: Disposable {
 

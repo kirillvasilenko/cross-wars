@@ -1,27 +1,31 @@
 package viewModels.mainScreen
 
 import Api
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import mainScope
 import model.*
 import viewModels.*
+import viewModels.common.CommandVm
+import viewModels.common.ViewModel
+import viewModels.common.VmEvent
+import viewModels.playGameScreen.UserInGameVm
 import kotlin.js.Date
 import kotlin.math.roundToLong
 
 class JoinedGame(source: ViewModel, val game:GameDto): VmEvent(source)
 
-class GamePreviewVm(game: GameDto): CommandVm() {
+class GamePreviewVm(private var game: GameDto): CommandVm() {
 
-    val gameId: Int = game.id
+    private var state: GameState = game.state
 
-    var users: MutableList<UserInGame> = game.users
+    private val users = mutableListOf<UserInGameVm>()
 
-    var state = game.state
 
-    val activeUsersCount: Int
-        get() = users.filter { it.active }.size
+    val gameId: Int
+        get() = game.id
+
+    val activeUsers: List<UserInGameVm>
+        get() = users.filter{ it.active }
 
     val visible: Boolean
         get() = state == GameState.ACTIVE
@@ -36,14 +40,15 @@ class GamePreviewVm(game: GameDto): CommandVm() {
 
 
     override suspend fun initImpl() {
+        resetUsers()
         SubscriptionHub.subscribeOnGameEvents(
-                gameId,
+                game.id,
                 GameEventHandler(::handleGameEvent)
         )
     }
 
     override suspend fun disposeImpl() {
-        SubscriptionHub.unsubscribeFromGameEvents(gameId)
+        SubscriptionHub.unsubscribeFromGameEvents(game.id)
     }
 
     private suspend fun handleGameEvent(event: GameEvent){
@@ -64,23 +69,23 @@ class GamePreviewVm(game: GameDto): CommandVm() {
         raiseStateChanged()
     }
 
-    private fun onUserJoined(event: UserJoined){
-        val user = users.firstOrNull { it.id == event.user.id }
+    private suspend fun onUserJoined(event: UserJoined){
+        val user = users.firstOrNull { it.userId == event.user.id }
         if(user != null){
             if(user.active) return
             user.active = true
         }
         else{
-            users.add(event.user)
+            users.add(makeUserVm(event.user))
         }
         raiseStateChanged()
     }
 
-    private fun onUserLeaved(event: UserLeaved){
-        var user = users.firstOrNull { it.id == event.user.id }
+    private suspend fun onUserLeaved(event: UserLeaved){
+        var user = users.firstOrNull { it.userId == event.user.id }
         if (user == null){
-            user = event.user
-            users.add(event.user)
+            user = makeUserVm(event.user)
+            users.add(user)
         }
 
         if(!user.active) return
@@ -95,16 +100,30 @@ class GamePreviewVm(game: GameDto): CommandVm() {
         raiseStateChanged()
     }
 
-    private fun resetAll(game:GameDto){
-        users = game.users
+    private suspend fun resetAll(actualGame:GameDto){
+        game = actualGame
         state = game.state
+        resetUsers()
         lastMoveTimeVm.setLastMoveDate(game.lastMovedDate)
         boardFilled = game.board.flatten().filterNotNull().size
         raiseStateChanged()
     }
 
+    private suspend fun resetUsers(){
+        users.clear()
+        val defs = game.users.map{ userInGame ->
+            mainScope.async { makeUserVm(userInGame) }
+        }
+        users.addAll(defs.awaitAll())
+    }
+
+    private suspend fun makeUserVm(userInGame:UserInGame): UserInGameVm{
+        val userDto = Api.users.getUser(userInGame.id)
+        return UserInGameVm(userDto, userInGame)
+    }
+
     override suspend fun executeImpl(): VmEvent {
-        val game = Api.games.joinGame(gameId)
+        val game = Api.games.joinGame(game.id)
         return JoinedGame(this, game)
     }
 

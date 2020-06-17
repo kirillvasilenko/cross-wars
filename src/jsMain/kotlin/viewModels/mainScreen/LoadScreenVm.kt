@@ -1,5 +1,5 @@
 package viewModels.mainScreen
 
-import viewModels.ViewModel
+import viewModels.common.ViewModel
 
 class LoadScreenVm: ViewModel(){}

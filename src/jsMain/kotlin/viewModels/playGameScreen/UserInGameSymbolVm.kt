@@ -1,7 +1,7 @@
 package viewModels.playGameScreen
 
 import model.SideOfTheForce
-import viewModels.ViewModel
+import viewModels.common.ViewModel
 
 class UserInGameSymbolVm(
         val userSymbol: Int,

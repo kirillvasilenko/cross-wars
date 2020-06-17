@@ -1,5 +1,6 @@
-package components.mainScreen
+package components
 
+import components.mainScreen.HeaderProps
 import kotlinx.css.*
 import react.*
 import styled.css

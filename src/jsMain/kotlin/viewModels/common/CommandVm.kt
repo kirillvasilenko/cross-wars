@@ -1,23 +1,7 @@
-package viewModels
+package viewModels.common
 
 import io.ktor.client.features.ClientRequestException
 import io.ktor.http.HttpStatusCode
-
-fun log(message:String?){
-    println(message)
-}
-
-interface Disposable{
-    suspend fun dispose()
-}
-
-open class VmEvent(val source: ViewModel){
-    var handled: Boolean = false
-}
-
-class CommandExecuted(source: ViewModel): VmEvent(source){}
-
-open class ErrorHappened(source: ViewModel, val cause: Throwable): VmEvent(source)
 
 class Unauthorized(source: ViewModel, cause: Throwable): ErrorHappened(source, cause)
 

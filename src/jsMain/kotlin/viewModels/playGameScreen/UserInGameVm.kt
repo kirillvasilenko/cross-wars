@@ -3,7 +3,7 @@ package viewModels.playGameScreen
 import model.SideOfTheForce
 import model.UserDto
 import model.UserInGame
-import viewModels.ViewModel
+import viewModels.common.ViewModel
 
 class UserInGameVm(user: UserDto, userInGame: UserInGame): ViewModel(){
 

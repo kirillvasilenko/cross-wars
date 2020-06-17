@@ -4,9 +4,9 @@ import model.GameState
 import model.UserDto
 import model.UserInGame
 import model.UserMoved
-import viewModels.CommandVm
-import viewModels.ViewModel
-import viewModels.VmEvent
+import viewModels.common.CommandVm
+import viewModels.common.ViewModel
+import viewModels.common.VmEvent
 
 class GameBoardVm(
         val user: UserDto,

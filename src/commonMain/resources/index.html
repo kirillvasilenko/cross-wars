@@ -9,10 +9,11 @@
         * {
             margin: 0;
             padding: 0;
-            background-color: black;
-            color: green;
+            background-color: transparent;
+
             user-select: none;
             font-family: "JetBrainsMono";
+            font-size: 22px
         }
 
         .glowable{
@@ -20,6 +21,27 @@
             animation-duration: 4s;
             animation-iteration-count: infinite;
         }
+
+        .button {
+            background-color: transparent;
+            border: 2px solid green;
+            color: green;
+        }
+        .button:enabled{
+            cursor: pointer;
+        }
+        .button:enabled:hover {
+            background-color: green;
+            color: lightgray;
+        }
+        .button:disabled {
+            opacity: 0.7;
+        }
+
+        .root{
+            color: green;
+        }
+
         @keyframes glow {
             0%   {opacity:100%;}
             50%  {opacity:70%;}
@@ -27,8 +49,8 @@
         }
     </style>
 </head>
-<body>
-<div id="root"></div>
+<body style="background-color: black">
+<div id="root" class="root"></div>
 <script src="game-of-crosses.js"></script>
 </body>
 </html>

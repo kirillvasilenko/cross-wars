@@ -5,7 +5,7 @@ import model.GameDto
 import model.GameStarted
 import viewModels.GameEventHandler
 import viewModels.SubscriptionHub
-import viewModels.ViewModel
+import viewModels.common.ViewModel
 
 class GamesListVm: ViewModel(){
 

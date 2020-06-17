@@ -1,9 +1,9 @@
 package viewModels.playGameScreen
 
 import Api
-import viewModels.CommandVm
-import viewModels.ViewModel
-import viewModels.VmEvent
+import viewModels.common.CommandVm
+import viewModels.common.ViewModel
+import viewModels.common.VmEvent
 
 class LeavedGame(source: ViewModel): VmEvent(source)
 
