@@ -65,8 +65,6 @@ kotlin {
                 implementation(kotlin("stdlib", kotlinVersion)) // or "stdlib-jdk8"
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-runtime:$serializationVersion") // JVM dependency
 
-                implementation("com.github.javafaker:javafaker:1.0.2")
-
                 implementation("org.jetbrains.kotlin:kotlin-test")
                 implementation("org.jetbrains.kotlin:kotlin-test-junit")
             }

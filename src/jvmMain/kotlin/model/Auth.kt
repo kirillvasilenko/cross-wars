@@ -1,6 +1,7 @@
 package model
 
 import org.slf4j.LoggerFactory
+import java.awt.desktop.UserSessionEvent
 import java.util.*
 
 val workSession: UUID = UUID.randomUUID()
@@ -11,8 +12,13 @@ open class AuthServiceInMemory{
 
     private val log = LoggerFactory.getLogger(javaClass)
 
-    fun authenticateNewUser(): UserSession{
-        val user = UsersStorage.makeUser()
+    fun signUpNewAnonymous(): UserSession {
+        val user = UsersStorage.generateUser()
+        return UserSession(workSession, user.id)
+    }
+
+    fun signUpNewUser(data: SignUpData): UserSession{
+        val user = UsersStorage.makeUser(data.name, data.sideOfTheForce, data.swordColor)
         return UserSession(workSession, user.id)
     }
 

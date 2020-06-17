@@ -14,3 +14,10 @@ data class UserDto(
         val currentGameId: Int?,
         val sideOfTheForce: SideOfTheForce,
         val swordColor: Int)
+
+@Serializable
+data class SignUpData(
+        val name: String,
+        val sideOfTheForce: SideOfTheForce,
+        val swordColor: Int
+)

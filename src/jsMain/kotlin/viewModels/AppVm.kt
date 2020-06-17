@@ -1,13 +1,14 @@
 package viewModels
 
 import Api
+import io.ktor.client.features.ClientRequestException
+import io.ktor.http.HttpStatusCode
 import model.GameDto
 import model.SideOfTheForce
 import model.UserDto
 import viewModels.mainScreen.LoadScreenVm
 import viewModels.mainScreen.MainScreenVm
 import viewModels.playGameScreen.PlayGameVm
-import kotlin.browser.window
 
 class AppVm: ViewModel() {
 
@@ -17,14 +18,12 @@ class AppVm: ViewModel() {
 
     override suspend fun initImpl(){
         try{
-            user = Api.auth.auth()
-            // todo remove
-            log(user.toString())
-
-            val games = Api.games.getActiveGames()
+            user = Api.account.getCurrentUser()
         }
-        catch(e:Throwable){
-            log("error on authentication: ${e.message}")
+        catch(e:ClientRequestException){
+            if(e.response.status == HttpStatusCode.Unauthorized){
+                user = Api.auth.signUpAnonymous()
+            }
         }
 
         if(user.currentGameId != null){

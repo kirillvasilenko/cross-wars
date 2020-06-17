@@ -76,6 +76,7 @@ fun Application.module() {
             registerAuthRoutes()
 
             authenticate{
+                registerAccountRoutes()
                 registerSubscriptions()
                 registerGamesRoutes()
                 registerUsersRoutes()

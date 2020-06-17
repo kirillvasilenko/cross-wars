@@ -10,7 +10,7 @@ suspend fun runTestPlayers() = coroutineScope{
     val maxDelaySec = 5
 
     val testUsers = (1..usersCount).map{
-        UsersStorage.makeUser()
+        UsersStorage.generateUser()
     }
 
     val testPlayers = testUsers.map{

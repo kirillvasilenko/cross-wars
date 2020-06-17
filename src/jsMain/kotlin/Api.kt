@@ -8,8 +8,11 @@ import io.ktor.client.request.delete
 import io.ktor.client.request.get
 import io.ktor.client.request.post
 import io.ktor.client.request.put
+import io.ktor.http.ContentType
 import io.ktor.http.HttpMethod
+import io.ktor.http.contentType
 import model.GameDto
+import model.SignUpData
 import model.UserDto
 import kotlin.browser.window
 
@@ -24,6 +27,7 @@ val client = HttpClient {
 
 object Api{
     val auth = AuthApi()
+    val account = AccountApi()
     val users = UsersApi()
     val subscriptions = SubscriptionsApi()
     val games = GamesApi()
@@ -31,8 +35,21 @@ object Api{
 
 
 class AuthApi{
-    suspend fun auth(): UserDto {
-        return client.put("$endpoint/api/auth")
+    suspend fun signUpAnonymous(): UserDto {
+        return client.post("$endpoint/api/auth/sign-up/anonymous")
+    }
+
+    suspend fun signUp(data: SignUpData): UserDto {
+        return client.post("$endpoint/api/auth/sign-up"){
+            contentType(ContentType.Application.Json)
+            body = data
+        }
+    }
+}
+
+class AccountApi{
+    suspend fun getCurrentUser(): UserDto {
+        return client.get("$endpoint/api/account")
     }
 }
 

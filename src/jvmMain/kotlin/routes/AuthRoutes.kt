@@ -1,37 +1,50 @@
 package routes
 
 import io.ktor.application.call
+import io.ktor.request.ContentTransformationException
+import io.ktor.request.receive
 import io.ktor.response.respond
 import io.ktor.routing.Route
-import io.ktor.routing.put
+import io.ktor.routing.post
 import io.ktor.routing.route
 import io.ktor.sessions.get
 import io.ktor.sessions.sessions
 import io.ktor.sessions.set
-import log
 import model.AuthService
+import model.SignUpData
 import model.UserSession
 import model.UsersService
 
 fun Route.authRouting() {
-    route("/auth") {
-        put{
+    route("/auth/sign-up/anonymous") {
+        post{
             var session: UserSession? = call.sessions.get<UserSession>()
             if(session == null
                 || !AuthService.validate(session)){
-                log.debug("need to auth new user")
-                session = AuthService.authenticateNewUser()
-                log.debug("new session:$session")
+                session = AuthService.signUpNewAnonymous()
                 call.sessions.set(session)
-                log.debug("session set to cookie")
             }
             val user = UsersService.getUser(session.userId)
             call.respond(user)
         }
     }
+
+    route("/auth/sign-up") {
+        post{
+            try{
+                val signUpData = call.receive<SignUpData>()
+                val session = AuthService.signUpNewUser(signUpData)
+                call.sessions.set(session)
+                val user = UsersService.getUser(session.userId)
+                call.respond(user)
+            }
+            catch(e:ContentTransformationException){
+                badRequest(e)
+            }
+        }
+    }
 }
 
 fun Route.registerAuthRoutes() {
-
     authRouting()
 }
