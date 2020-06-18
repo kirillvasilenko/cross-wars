@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentScriptType="application/ecmascript" contentStyleType="text/css" height="381.5px" preserveAspectRatio="none" style="width:427px;height:381px;" version="1.1" viewBox="0 0 427 381" width="427px" zoomAndPan="magnify"><defs><filter height="300%" id="f13fl4l4lx0cq" width="300%" x="-1" y="-1"><feGaussianBlur result="blurOut" stdDeviation="3.5"/><feColorMatrix in="blurOut" result="blurOut2" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .4 0"/><feOffset dx="7.0" dy="7.0" in="blurOut2" result="blurOut3"/><feBlend in="SourceGraphic" in2="blurOut3" mode="normal"/></filter></defs><g><!--MD5=[4e13963c9dc916a21a8436ef39422b32]
+class Component--><rect fill="#FEFECE" filter="url(#f13fl4l4lx0cq)" height="106.3398" id="Component" style="stroke: #A80036; stroke-width: 2.625;" width="204.75" x="39.1687" y="14"/><text fill="#000000" font-family="sans-serif" font-size="21" lengthAdjust="spacingAndGlyphs" textLength="113.75" x="84.6687" y="44.5498">Component</text><line style="stroke: #A80036; stroke-width: 2.625;" x1="40.9187" x2="242.1687" y1="57.9141" y2="57.9141"/><text fill="#000000" font-family="sans-serif" font-size="19.25" lengthAdjust="spacingAndGlyphs" textLength="183.75" x="49.6687" y="84.8972">props.vm: ViewModel</text><text fill="#000000" font-family="sans-serif" font-size="19.25" lengthAdjust="spacingAndGlyphs" textLength="140" x="49.6687" y="109.1101">state.version: Int</text><!--MD5=[b1d46488418bc0cd55cf54b5fc017696]
+class ViewModel--><rect fill="#FEFECE" filter="url(#f13fl4l4lx0cq)" height="106.3398" id="ViewModel" style="stroke: #A80036; stroke-width: 2.625;" width="239.75" x="21.6686" y="257.25"/><text fill="#000000" font-family="sans-serif" font-size="21" lengthAdjust="spacingAndGlyphs" textLength="103.25" x="89.9186" y="287.7998">ViewModel</text><line style="stroke: #A80036; stroke-width: 2.625;" x1="23.4186" x2="259.6686" y1="301.1641" y2="301.1641"/><text fill="#000000" font-family="sans-serif" font-size="19.25" lengthAdjust="spacingAndGlyphs" textLength="218.75" x="32.1686" y="328.1472">version: Int - current state</text><text fill="#000000" font-family="sans-serif" font-size="19.25" lengthAdjust="spacingAndGlyphs" textLength="197.75" x="32.1686" y="352.3601">onStateChanged: event</text><!--MD5=[f5685dfc61a69cc6c9e8afbf258c5715]
+link Component to ViewModel--><path d="M57.1839,121.0965 C40.354,135.7352 24.9734,153.2248 15.5436,173.25 C2.0272,201.9544 17.6717,228.6886 41.997,250.7036 " fill="none" id="Component-&gt;ViewModel" style="stroke: #A80036; stroke-width: 1.75;"/><polygon fill="#A80036" points="49.0712,256.7856,41.6919,241.2097,42.4363,251.0811,32.5648,251.8255,49.0712,256.7856" style="stroke: #A80036; stroke-width: 1.75;"/><text fill="#000000" font-family="sans-serif" font-size="22.75" lengthAdjust="spacingAndGlyphs" textLength="168" x="17.2936" y="198.6165">use for rendering</text><!--MD5=[53bba5669d0830e4a6a31bf4fb8dfa74]
+link ViewModel to Component--><path d="M177.5545,257.1191 C190.6765,232.2616 200.8213,201.7435 194.0435,173.25 C190.5138,158.4083 184.5123,143.2813 177.8007,129.3233 " fill="none" id="ViewModel-&gt;Component" style="stroke: #A80036; stroke-width: 1.75;"/><polygon fill="#A80036" points="173.5459,120.7955,174.316,138.0138,177.4533,128.6246,186.8425,131.7619,173.5459,120.7955" style="stroke: #A80036; stroke-width: 1.75;"/><text fill="#000000" font-family="sans-serif" font-size="22.75" lengthAdjust="spacingAndGlyphs" textLength="210" x="197.5435" y="198.6165">notify about changes</text><!--MD5=[d880be7f85087984b51a5035abfc99f4]
+@startuml
+
+hide circle
+hide methods
+
+class Component{
+    props.vm: ViewModel
+    state.version: Int
+}
+
+class ViewModel{
+    version: Int - current state
+    onStateChanged: event
+}
+
+Component - -> ViewModel: use for rendering
+ViewModel - -> Component: notify about changes
+
+@enduml
+
+PlantUML version 1.2020.09(Sun May 10 13:51:06 MSK 2020)
+(GPL source distribution)
+Java Runtime: OpenJDK Runtime Environment
+JVM: OpenJDK 64-Bit Server VM
+Java Version: 11.0.7+10-b765.53
+Operating System: Windows 10
+Default Encoding: Cp1251
+Language: en
+Country: US
+--></g></svg>

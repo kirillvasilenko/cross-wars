@@ -1,0 +1,12 @@
+@startuml
+
+title States of game
+
+[*] --> Created : created by user
+Created --> Active: started by user
+Active --> Completed: user maked move: won or draw
+Active --> Active: \luser joined\luser leaved: users in game > 0\luser maked move: not won, not draw
+Completed -r-> Archived: user leaved: no users in game
+Active -r-> Archived: user leaved: no users in game
+
+@enduml

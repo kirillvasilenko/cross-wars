@@ -49,7 +49,7 @@ class GamesListVm(private val currentUserId: Int): ViewModel(){
         val game = Api.games.getGame(event.gameId)
         if (!filter(game)) return
 
-        games.add(GamePreviewVm(currentUserId, game))
+        games.add(child(GamePreviewVm(currentUserId, game)))
         raiseStateChanged()
     }
 }

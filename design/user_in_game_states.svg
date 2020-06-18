@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentScriptType="application/ecmascript" contentStyleType="text/css" height="383.25px" preserveAspectRatio="none" style="width:416px;height:383px;" version="1.1" viewBox="0 0 416 383" width="416.5px" zoomAndPan="magnify"><defs><filter height="300%" id="fbagp1xzbe5rn" width="300%" x="-1" y="-1"><feGaussianBlur result="blurOut" stdDeviation="3.5"/><feColorMatrix in="blurOut" result="blurOut2" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .4 0"/><feOffset dx="7.0" dy="7.0" in="blurOut2" result="blurOut3"/><feBlend in="SourceGraphic" in2="blurOut3" mode="normal"/></filter></defs><g><text fill="#000000" font-family="sans-serif" font-size="31.5" lengthAdjust="spacingAndGlyphs" textLength="185.5" x="121.625" y="32.6997">User in game</text><rect fill="#FEFECE" filter="url(#fbagp1xzbe5rn)" height="87.5" rx="21.875" ry="21.875" style="stroke: #A80036; stroke-width: 2.625;" width="176.75" x="10.5" y="53.6211"/><line style="stroke: #A80036; stroke-width: 2.625;" x1="10.5" x2="187.25" y1="101.9375" y2="101.9375"/><text fill="#000000" font-family="sans-serif" font-size="24.5" lengthAdjust="spacingAndGlyphs" textLength="141.75" x="28" y="87.8042">Hasn't joined</text><rect fill="#FEFECE" filter="url(#fbagp1xzbe5rn)" height="87.5" rx="21.875" ry="21.875" style="stroke: #A80036; stroke-width: 2.625;" width="101.5" x="48.125" y="277.6211"/><line style="stroke: #A80036; stroke-width: 2.625;" x1="48.125" x2="149.625" y1="325.9375" y2="325.9375"/><text fill="#000000" font-family="sans-serif" font-size="24.5" lengthAdjust="spacingAndGlyphs" textLength="66.5" x="65.625" y="311.8042">Active</text><rect fill="#FEFECE" filter="url(#fbagp1xzbe5rn)" height="87.5" rx="21.875" ry="21.875" style="stroke: #A80036; stroke-width: 2.625;" width="119" x="277.375" y="277.6211"/><line style="stroke: #A80036; stroke-width: 2.625;" x1="277.375" x2="396.375" y1="325.9375" y2="325.9375"/><text fill="#000000" font-family="sans-serif" font-size="24.5" lengthAdjust="spacingAndGlyphs" textLength="84" x="294.875" y="311.8042">Inactive</text><!--MD5=[5baa033fd40b552edbc8fdf6cab871f5]
+link HasNotJoint to Active--><path d="M98.875,141.6356 C98.875,177.7836 98.875,229.7918 98.875,268.261 " fill="none" id="HasNotJoint-&gt;Active" style="stroke: #A80036; stroke-width: 1.75;"/><polygon fill="#A80036" points="98.875,277.237,105.875,261.487,98.875,268.487,91.875,261.487,98.875,277.237" style="stroke: #A80036; stroke-width: 1.75;"/><text fill="#000000" font-family="sans-serif" font-size="22.75" lengthAdjust="spacingAndGlyphs" textLength="59.5" x="100.625" y="218.9875">joined</text><!--MD5=[5d4211fd6e1fe5891bc2a7c8d0161153]
+link Active to Inactive--><path d="M149.932,321.3711 C184.3261,321.3711 230.1075,321.3711 267.757,321.3711 " fill="none" id="Active-&gt;Inactive" style="stroke: #A80036; stroke-width: 1.75;"/><polygon fill="#A80036" points="276.6453,321.3711,260.8953,314.3711,267.8953,321.3711,260.8953,328.3711,276.6453,321.3711" style="stroke: #A80036; stroke-width: 1.75;"/><text fill="#000000" font-family="sans-serif" font-size="22.75" lengthAdjust="spacingAndGlyphs" textLength="63" x="182" y="309.9875">leaved</text><!--MD5=[4ffc3a14a91de6d344ba54252d3c01b8]
+link Inactive to Active--><path d="M277.0758,349.0497 C266.588,352.8094 255.6278,356.0744 245,358.1211 C217.5058,363.4161 209.3963,363.9069 182,358.1211 C174.0638,356.445 165.9628,353.9602 158.0836,351.059 " fill="none" id="Inactive-&gt;Active" style="stroke: #A80036; stroke-width: 1.75;"/><polygon fill="#A80036" points="149.639,347.7661,161.7696,360.0099,157.7911,350.9451,166.8559,346.9666,149.639,347.7661" style="stroke: #A80036; stroke-width: 1.75;"/><text fill="#000000" font-family="sans-serif" font-size="22.75" lengthAdjust="spacingAndGlyphs" textLength="59.5" x="183.75" y="351.9875">joined</text><!--MD5=[d3a68cf98240fd48220d2e1048849e00]
+@startuml
+
+title User in game
+
+state "Hasn't joined" as HasNotJoint
+state Active
+state Inactive
+
+HasNotJoint - -> Active: joined
+Active -r-> Inactive: leaved
+Inactive -r-> Active: joined
+
+
+@enduml
+
+PlantUML version 1.2020.09(Sun May 10 13:51:06 MSK 2020)
+(GPL source distribution)
+Java Runtime: OpenJDK Runtime Environment
+JVM: OpenJDK 64-Bit Server VM
+Java Version: 11.0.7+10-b765.53
+Operating System: Windows 10
+Default Encoding: Cp1251
+Language: en
+Country: US
+--></g></svg>

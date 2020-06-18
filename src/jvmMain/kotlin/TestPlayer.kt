@@ -6,8 +6,8 @@ import kotlin.random.Random
 
 suspend fun runTestPlayers() = coroutineScope{
 
-    val usersCount = 8
-    val maxDelaySec = 5
+    val usersCount = 12
+    val maxDelaySec = 3
 
     val testUsers = (1..usersCount).map{
         UsersStorage.generateUser()

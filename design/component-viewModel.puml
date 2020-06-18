@@ -1,0 +1,19 @@
+@startuml
+
+hide circle
+hide methods
+
+class Component{
+    props.vm: ViewModel
+    state.version: Int
+}
+
+class ViewModel{
+    version: Int - current state
+    onStateChanged: event
+}
+
+Component --> ViewModel: use for rendering
+ViewModel --> Component: notify about changes
+
+@enduml

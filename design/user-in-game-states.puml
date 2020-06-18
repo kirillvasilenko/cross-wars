@@ -1,0 +1,14 @@
+@startuml
+
+title User in game
+
+state "Hasn't joined" as HasNotJoint
+state Active
+state Inactive
+
+HasNotJoint --> Active: joined
+Active -r-> Inactive: leaved
+Inactive -r-> Active: joined
+
+
+@enduml

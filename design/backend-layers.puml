@@ -1,0 +1,6 @@
+@startuml
+
+[Ui (routes)] --> [App (app)]
+[App (app)] --> [Domain (model)]
+
+@enduml

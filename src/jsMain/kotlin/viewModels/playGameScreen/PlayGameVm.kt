@@ -73,7 +73,7 @@ class PlayGameVm(val currentUser: UserDto, val gameId: Int): ViewModel(){
         legendVm = child(LegendVm(currentUser, users))
 
         if(this::gameBoardVm.isInitialized) removeChild(gameBoardVm)
-        gameBoardVm = child(GameBoardVm(currentUser, users, game.state, game.board))
+        gameBoardVm = child(GameBoardVm(currentUser, users, game))
 
         raiseStateChanged()
     }

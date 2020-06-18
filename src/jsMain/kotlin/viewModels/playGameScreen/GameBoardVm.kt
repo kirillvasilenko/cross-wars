@@ -8,13 +8,12 @@ import viewModels.common.ViewModel
 class GameBoardVm(
         val currentUser: UserDto,
         val users: MutableList<UserInGameVm>,
-        state: GameState,
-        board: List<MutableList<UserInGame?>>)
+        game: GameDto)
     : ViewModel() {
 
     val board: List<MutableList<BoardFieldVm>>
 
-    var state:GameState = state
+    var state:GameState = game.state
         set(value){
             if(field == value) return
             field = value
@@ -25,7 +24,7 @@ class GameBoardVm(
         get() = state == GameState.ACTIVE
 
     init {
-        this.board = board.mapIndexed { x, row ->
+        this.board = game.board.mapIndexed { x, row ->
             row.mapIndexed { y, userInGame ->
                 if (userInGame == null)
                     BoardFieldVm(x, y, null, active)
@@ -40,6 +39,9 @@ class GameBoardVm(
                             active)
                 }
             }.toMutableList()
+        }
+        if(currentUser.id == game.lastMovedUser?.id){
+            setFieldsActive(false)
         }
     }
 

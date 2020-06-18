@@ -6,6 +6,7 @@ import kotlinx.html.InputType
 import kotlinx.html.classes
 import kotlinx.html.js.onChangeFunction
 import kotlinx.html.js.onClickFunction
+import kotlinx.html.spellCheck
 import mainScope
 import model.SideOfTheForce
 import org.w3c.dom.HTMLInputElement
@@ -64,6 +65,7 @@ class LoginForm(props: VmProps<LoginVm>) : VMComponent<LoginVm>(props) {
                     attrs{
                         type = InputType.text
                         autoFocus = true
+                        spellCheck = false
                         placeholder = "Tolya Vader"
                         onChangeFunction = {
                             vm.name = (it.target as HTMLInputElement).value

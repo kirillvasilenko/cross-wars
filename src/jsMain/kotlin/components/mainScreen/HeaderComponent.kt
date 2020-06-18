@@ -5,11 +5,18 @@ import kotlinx.css.*
 import react.*
 import styled.css
 import styled.styledDiv
+import viewModels.common.CommandVm
 
 external interface HeaderProps: RProps {
     var userName: String
 }
 
+class LogoutVm: CommandVm(){
+    override suspend fun executeImpl() {
+        TODO("Not yet implemented")
+    }
+
+}
 
 fun RBuilder.header(handler: HeaderProps.() -> Unit): ReactElement {
     return child(Header::class) {

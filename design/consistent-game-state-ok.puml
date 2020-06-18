@@ -1,0 +1,34 @@
+@startuml
+
+title Consistent game state on frontend
+
+User1 -> Backend: getGame()
+activate Backend
+Backend -> User1
+deactivate Backend
+note left: game:foo=1,bar=1
+
+User2 -> Backend: changeGame(bar=2)
+activate Backend
+note left: game:foo=1,bar=2
+Backend -> User2
+deactivate Backend
+
+
+User1 -> Backend: subscribeOnGame()
+activate Backend
+Backend --> User1: <font color="red><b>game.snapshot()</b>
+note left: game:foo=1,bar=2
+Backend -> User1
+deactivate Backend
+
+User2 -> Backend: changeGame(foo=2)
+activate Backend
+note left: game:foo=2,bar=2
+Backend --> User1: notifyGameChanged()
+note left: game:foo=2,bar=2
+Backend -> User2
+deactivate Backend
+
+
+@enduml
