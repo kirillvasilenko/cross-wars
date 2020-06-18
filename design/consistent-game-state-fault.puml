@@ -1,6 +1,6 @@
 @startuml
 
-title Consistent game state on frontend
+title Inconsistent game state on frontend
 
 User1 -> Backend: getGame()
 activate Backend
