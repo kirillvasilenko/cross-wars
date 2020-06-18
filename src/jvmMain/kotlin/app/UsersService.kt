@@ -1,4 +1,6 @@
-package model
+package app
+
+import model.UsersStorage
 
 open class UsersServiceInMemory{
 

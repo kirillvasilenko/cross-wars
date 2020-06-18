@@ -8,7 +8,11 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlin.coroutines.coroutineContext
 
-class User(val id: Int, val name: String, val sideOfTheForce: SideOfTheForce, val swordColor: Int){
+class User(
+        val id: Int,
+        val name: String,
+        val sideOfTheForce: SideOfTheForce,
+        val swordColor: Int){
 
     private val mutex: Mutex =
         Mutex()

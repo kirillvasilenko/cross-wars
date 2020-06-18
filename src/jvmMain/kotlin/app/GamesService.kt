@@ -1,4 +1,8 @@
-package model
+package app
+
+import model.GameDto
+import model.GamesStorage
+import model.UsersStorage
 
 
 open class GamesServiceInMemory{
@@ -10,12 +14,12 @@ open class GamesServiceInMemory{
     suspend fun getGame(id: Int): GameDto
             = GamesStorage.getGame(id).snapshot()
 
-    suspend fun startNewGame(userId: Int): GameDto{
+    suspend fun startNewGame(userId: Int): GameDto {
         val user = UsersStorage.getUser(userId)
         return user.startNewGame().snapshot()
     }
 
-    suspend fun joinGame(userId: Int, gameId: Int): GameDto{
+    suspend fun joinGame(userId: Int, gameId: Int): GameDto {
         val user = UsersStorage.getUser(userId)
         return user.joinGame(gameId).snapshot()
     }
@@ -32,4 +36,4 @@ open class GamesServiceInMemory{
 
 }
 
-object GamesService:GamesServiceInMemory()
+object GamesService: GamesServiceInMemory()

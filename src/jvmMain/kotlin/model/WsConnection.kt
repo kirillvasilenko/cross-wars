@@ -2,15 +2,18 @@ package model
 
 import io.ktor.http.cio.websocket.Frame
 import io.ktor.http.cio.websocket.readText
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.channels.SendChannel
-import log
+import kotlinx.coroutines.launch
 import org.slf4j.LoggerFactory
-import kotlin.coroutines.coroutineContext
 
-class WsConnection(val userId: Int, val incoming: ReceiveChannel<Frame>, val outgoing: SendChannel<Frame>){
+class WsConnection(
+        val userId: Int,
+        private val incoming: ReceiveChannel<Frame>,
+        private val outgoing: SendChannel<Frame>){
 
     private var log = LoggerFactory.getLogger(javaClass)
 

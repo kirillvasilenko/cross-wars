@@ -1,7 +1,8 @@
-package model
+package app
 
+import model.SignUpData
+import model.UsersStorage
 import org.slf4j.LoggerFactory
-import java.awt.desktop.UserSessionEvent
 import java.util.*
 
 val workSession: UUID = UUID.randomUUID()
@@ -17,7 +18,7 @@ open class AuthServiceInMemory{
         return UserSession(workSession, user.id)
     }
 
-    fun signUpNewUser(data: SignUpData): UserSession{
+    fun signUpNewUser(data: SignUpData): UserSession {
         val user = UsersStorage.makeUser(data.name, data.sideOfTheForce, data.swordColor)
         return UserSession(workSession, user.id)
     }
@@ -29,8 +30,6 @@ open class AuthServiceInMemory{
         log.debug("validation result: $result")
         return result
     }
-
-
 }
 
 object AuthService: AuthServiceInMemory()

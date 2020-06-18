@@ -6,7 +6,7 @@ import io.ktor.routing.Route
 import io.ktor.routing.get
 import io.ktor.routing.route
 import model.UserFaultException
-import model.UsersService
+import app.UsersService
 
 fun Route.getUser() {
     route("/users") {

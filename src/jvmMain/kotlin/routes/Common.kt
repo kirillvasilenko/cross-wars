@@ -19,10 +19,6 @@ fun PipelineContext<Unit, ApplicationCall>.getIntFromParams(name: String) : Int 
     call.parameters[name]?.toIntOrNull()
         ?: throw UserFaultException("Missing or malformed $name")
 
-fun PipelineContext<Unit, ApplicationCall>.getFromParams(name: String) : String =
-    call.parameters[name]
-        ?: throw UserFaultException("Missing param $name")
-
 suspend fun PipelineContext<Unit, ApplicationCall>.badRequest(e: Throwable){
     call.respondText(
         e.message!!,
@@ -35,11 +31,4 @@ suspend fun PipelineContext<Unit, ApplicationCall>.badRequest(e: Throwable){
 fun WebSocketServerSession.getUserId(): Int {
     val idAsString = (call.authentication.principal as UserIdPrincipal).name
     return idAsString.toInt()
-}
-
-suspend fun WebSocketServerSession.badRequest(e: Throwable){
-    call.respondText(
-        e.message!!,
-        status = HttpStatusCode.BadRequest
-    )
 }

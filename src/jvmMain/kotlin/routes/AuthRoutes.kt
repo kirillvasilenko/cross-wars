@@ -10,10 +10,10 @@ import io.ktor.routing.route
 import io.ktor.sessions.get
 import io.ktor.sessions.sessions
 import io.ktor.sessions.set
-import model.AuthService
+import app.AuthService
 import model.SignUpData
-import model.UserSession
-import model.UsersService
+import app.UserSession
+import app.UsersService
 
 fun Route.authRouting() {
     route("/auth/sign-up/anonymous") {

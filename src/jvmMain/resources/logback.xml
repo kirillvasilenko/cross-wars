@@ -9,9 +9,9 @@
     </root>
     <logger name="org.eclipse.jetty" level="INFO"/>
     <logger name="io.netty" level="INFO"/>
-    <logger name="default" level="trace"/>
 
-    <!--subscriptions-->
+    <logger name="default" level="trace"/>
     <logger name="model.WsConnection" level="info"/>
-    <logger name="model.AuthService" level="trace"/>
+    <logger name="app.AuthService" level="info"/>
+    <logger name="model.SubscriptionsHub" level="info"/>
 </configuration>

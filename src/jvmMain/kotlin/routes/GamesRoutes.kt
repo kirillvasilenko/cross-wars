@@ -3,7 +3,7 @@ package routes
 import io.ktor.application.call
 import io.ktor.response.respond
 import io.ktor.routing.*
-import model.GamesService
+import app.GamesService
 import model.UserFaultException
 
 

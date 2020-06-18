@@ -20,11 +20,9 @@ import io.ktor.serialization.json
 import io.ktor.sessions.Sessions
 import io.ktor.sessions.cookie
 import io.ktor.websocket.WebSockets
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
-import model.AuthService
-import model.UserSession
-import model.UsersStorage
+import app.AuthService
+import app.UserSession
 import routes.*
 import java.time.Duration
 

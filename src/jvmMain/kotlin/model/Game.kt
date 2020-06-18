@@ -13,14 +13,11 @@ class Game(val id: Int){
     var state: GameState = CREATED
         private set
 
-
     private val users = mutableListOf<UserInGame>()
 
     private var winningUser: UserInGame? = null
 
     private val board = GameBoard(users)
-
-
 
     private var lastUsedSymbol = -1
 
@@ -85,7 +82,7 @@ class Game(val id: Int){
 
     suspend fun unsubscribe(user: User) {
         mutex.withLock {
-            unsubscribeImpl(user)
+            SubscriptionsHub.unsubscribeFromGameEvents(user.id, id)
         }
     }
 
@@ -164,10 +161,6 @@ class Game(val id: Int){
         if(!users.any{ it.active }){
             archive()
         }
-    }
-
-    private fun unsubscribeImpl(user: User){
-        SubscriptionsHub.unsubscribeFromGameEvents(user.id, id)
     }
 
     private fun isUserInGame(userId: Int) = users.any { it.id == userId && it.active }

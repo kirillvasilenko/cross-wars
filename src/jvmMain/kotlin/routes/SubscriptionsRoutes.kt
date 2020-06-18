@@ -9,7 +9,7 @@ import io.ktor.routing.put
 import io.ktor.routing.route
 import io.ktor.websocket.webSocket
 import log
-import model.SubscriptionsService
+import app.SubscriptionsService
 import model.UserFaultException
 
 fun Route.webSocketConnection() {

@@ -5,7 +5,7 @@ import io.ktor.response.respond
 import io.ktor.routing.Route
 import io.ktor.routing.get
 import io.ktor.routing.route
-import model.UsersService
+import app.UsersService
 
 fun Route.accountRouting() {
     route("/account") {

@@ -5,7 +5,7 @@ import kotlin.math.min
 
 const val BOARD_SIZE = 10
 
-const val WIN_LINE_LENGTH = 6
+const val WIN_LINE_LENGTH = 7
 
 class GameBoard(private val users: List<UserInGame>){
 

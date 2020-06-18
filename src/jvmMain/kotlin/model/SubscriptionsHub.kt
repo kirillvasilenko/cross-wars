@@ -65,9 +65,9 @@ open class SubscriptionsHubInMemory{
 
     suspend fun handleGameEvent(event: GameEvent){
         when(event){
-            is GameStarted -> handleGameStarted(event)
-            is UserSubscribedOnGameEvents -> handleUserSubscribedOnGameEvents(event)
-            else -> handleGameEventImpl(event)
+            is GameStarted -> handle(event)
+            is UserSubscribedOnGameEvents -> handle(event)
+            else -> handle(event)
         }
     }
 
@@ -75,19 +75,19 @@ open class SubscriptionsHubInMemory{
         connectionsByUserId[userId]
             ?: throw ConnectionNotFoundException("ws connection for user $userId not found.")
 
-    private suspend fun handleUserSubscribedOnGameEvents(event: UserSubscribedOnGameEvents){
+    private suspend fun handle(event: UserSubscribedOnGameEvents){
         val connection = connectionsByUserId[event.userId]
             ?: return
         connection.send(event)
     }
 
-    private suspend fun handleGameStarted(event: GameStarted){
+    private suspend fun handle(event: GameStarted){
         for(connection in startedGamesSubscribers){
             connection.send(event)
         }
     }
 
-    private suspend fun handleGameEventImpl(event: GameEvent){
+    private suspend fun handle(event: GameEvent){
         val subscribers = gameEventsSubscribers[event.gameId]
             ?: return
 

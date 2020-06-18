@@ -1,8 +1,9 @@
-package model
+package app
 
 import io.ktor.http.cio.websocket.Frame
 import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.channels.SendChannel
+import model.UsersStorage
 
 open class SubscriptionsServiceInMemory{
 
@@ -32,6 +33,6 @@ open class SubscriptionsServiceInMemory{
     }
 }
 
-object SubscriptionsService:SubscriptionsServiceInMemory()
+object SubscriptionsService: SubscriptionsServiceInMemory()
 
 
