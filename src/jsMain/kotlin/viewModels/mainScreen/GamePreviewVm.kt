@@ -12,9 +12,9 @@ import viewModels.playGameScreen.UserInGameVm
 import kotlin.js.Date
 import kotlin.math.roundToLong
 
-class JoinedGame(source: ViewModel, val game:GameDto): VmEvent(source)
+class UserJoinedGame(source: ViewModel, val gameId:Int): VmEvent(source)
 
-class GamePreviewVm(private var game: GameDto): CommandVm() {
+class GamePreviewVm(private val currentUserId: Int, private var game: GameDto): CommandVm() {
 
     private var state: GameState = game.state
 
@@ -70,6 +70,9 @@ class GamePreviewVm(private var game: GameDto): CommandVm() {
     }
 
     private suspend fun onUserJoined(event: UserJoined){
+        if(event.user.id == currentUserId)
+            raiseEvent(UserJoinedGame(this, gameId))
+
         val user = users.firstOrNull { it.userId == event.user.id }
         if(user != null){
             if(user.active) return
@@ -122,9 +125,8 @@ class GamePreviewVm(private var game: GameDto): CommandVm() {
         return UserInGameVm(userDto, userInGame)
     }
 
-    override suspend fun executeImpl(): VmEvent {
-        val game = Api.games.joinGame(game.id)
-        return JoinedGame(this, game)
+    override suspend fun executeImpl() {
+        Api.games.joinGame(game.id)
     }
 
 }

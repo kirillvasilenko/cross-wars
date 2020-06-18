@@ -37,9 +37,9 @@ class LoginVm: CommandVm(){
             raiseStateChanged()
         }
 
-    override suspend fun executeImpl(): VmEvent {
+    override suspend fun executeImpl() {
         val user = Api.auth.signUp(SignUpData(name, sideOfTheForce, color))
-        return UserLogin(this, user)
+        raiseEvent(UserLogin(this, user))
     }
 
 }

@@ -9,6 +9,7 @@ import viewModels.mainScreen.GamePreviewVm
 import kotlinx.css.*
 import kotlinx.html.classes
 import kotlinx.html.js.onClickFunction
+import kotlinx.html.title
 import mainScope
 import react.*
 import react.dom.p
@@ -37,11 +38,12 @@ class GamePreview(props: VmProps<GamePreviewVm>): VMComponent<GamePreviewVm>(pro
         styledButton {
             css{
                 margin = GlobalStyle.margin
+                padding = GlobalStyle.margin
                 height = GlobalStyle.gamePreviewSize
                 width = GlobalStyle.gamePreviewSize
 
-                display = Display.flex
-                flexDirection = FlexDirection.column
+                display = Display.grid
+                gridTemplateRows = GridTemplateRows(1.fr, LinearDimension.minContent)
                 textAlign = TextAlign.left
 
                 if(!vm.visible){
@@ -58,21 +60,21 @@ class GamePreview(props: VmProps<GamePreviewVm>): VMComponent<GamePreviewVm>(pro
                 }
             }
 
-            styledP{
-                +"In game:"
-            }
-            vm.activeUsers.forEach { user ->
-                styledP{
-                    +"${user.userName}"
+            styledDiv{
+                vm.activeUsers.forEach { user ->
+                    styledP{
+                        +"${user.userName}"
+                    }
                 }
             }
-            styledP{
 
+            styledDiv{
+                lastMoveTime { pVm = vm.lastMoveTimeVm }
+                styledP{
+                    +"Filled: ${vm.boardFilled}%"
+                }
             }
-            styledP{
-                +"Filled: ${vm.boardFilled}%"
-            }
-            lastMoveTime { pVm = vm.lastMoveTimeVm }
+
         }
     }
 

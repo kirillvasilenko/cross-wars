@@ -10,6 +10,7 @@ import kotlinx.html.classes
 import kotlinx.html.js.onClickFunction
 import kotlinx.html.js.onMouseOutFunction
 import kotlinx.html.js.onMouseOverFunction
+import kotlinx.html.title
 import mainScope
 import org.w3c.dom.HTMLButtonElement
 import org.w3c.dom.HTMLInputElement

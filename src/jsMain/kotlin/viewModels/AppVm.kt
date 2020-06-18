@@ -3,18 +3,17 @@ package viewModels
 import Api
 import io.ktor.client.features.ClientRequestException
 import io.ktor.http.HttpStatusCode
-import model.GameDto
 import model.SideOfTheForce
 import model.UserDto
 import viewModels.common.ErrorHappened
 import viewModels.common.Unauthorized
 import viewModels.common.ViewModel
 import viewModels.common.VmEvent
-import viewModels.mainScreen.JoinedGame
+import viewModels.mainScreen.UserJoinedGame
 import viewModels.mainScreen.LoadScreenVm
 import viewModels.mainScreen.MainScreenVm
-import viewModels.mainScreen.NewGameStarted
-import viewModels.playGameScreen.LeavedGame
+import viewModels.mainScreen.UserStartedNewGame
+import viewModels.playGameScreen.UserLeavedCurrentGame
 import viewModels.playGameScreen.PlayGameVm
 
 class AppVm: ViewModel() {
@@ -39,9 +38,9 @@ class AppVm: ViewModel() {
     override suspend fun handleChildEvent(event: VmEvent) {
         when(event){
             is UserLogin -> userLogged(event.user)
-            is JoinedGame -> startPlaying(event.game)
-            is NewGameStarted -> startPlaying(event.game)
-            is LeavedGame -> openMainScreen()
+            is UserJoinedGame -> startPlaying(event.gameId)
+            is UserStartedNewGame -> startPlaying(event.gameId)
+            is UserLeavedCurrentGame -> openMainScreen()
             is ErrorHappened ->
                 when(event){
                     is Unauthorized -> openLoginForm()
@@ -56,8 +55,7 @@ class AppVm: ViewModel() {
     private suspend fun userLogged(currentUser: UserDto){
         user = currentUser
         if(user.currentGameId != null){
-            val game = Api.games.getGame(user.currentGameId!!)
-            startPlaying(game)
+            startPlaying(user.currentGameId!!)
         }
         else{
             openMainScreen()
@@ -68,8 +66,8 @@ class AppVm: ViewModel() {
         changeCurrentVm(LoginVm())
     }
 
-    private suspend fun startPlaying(game: GameDto){
-        changeCurrentVm(PlayGameVm(user, game.id))
+    private suspend fun startPlaying(gameId: Int){
+        changeCurrentVm(PlayGameVm(user, gameId))
     }
 
     private suspend fun openMainScreen(){

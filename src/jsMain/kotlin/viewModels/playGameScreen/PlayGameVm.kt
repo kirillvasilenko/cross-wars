@@ -5,6 +5,9 @@ import model.*
 import viewModels.GameEventHandler
 import viewModels.SubscriptionHub
 import viewModels.common.ViewModel
+import viewModels.common.VmEvent
+
+class UserLeavedCurrentGame(source: ViewModel): VmEvent(source)
 
 class PlayGameVm(val currentUser: UserDto, val gameId: Int): ViewModel(){
 
@@ -39,7 +42,7 @@ class PlayGameVm(val currentUser: UserDto, val gameId: Int): ViewModel(){
             is UserSubscribedOnGameEvents -> resetAll(event.game)
             is GameStateChanged -> gameBoardVm.state = event.actualState
             is UserJoined -> setUserActivity(event.user, true)
-            is UserLeaved -> setUserActivity(event.user, false)
+            is UserLeaved -> handleUserLeaved(event)
             is UserMoved -> gameBoardVm.userMoved(event)
             is UserWon -> Unit
             is Draw -> Unit
@@ -59,6 +62,12 @@ class PlayGameVm(val currentUser: UserDto, val gameId: Int): ViewModel(){
         gameBoardVm = child(GameBoardVm(currentUser, users, game.state, game.board))
 
         raiseStateChanged()
+    }
+
+    private suspend fun handleUserLeaved(event: UserLeaved){
+        if(event.user.id == currentUser.id)
+            raiseEvent(UserLeavedCurrentGame(this))
+        setUserActivity(event.user, false)
     }
 
     private suspend fun setUserActivity(userInGame: UserInGame, active: Boolean) {

@@ -20,7 +20,7 @@ sealed class GameEvent {
 }
 
 @Serializable
-data class GameStarted(override val gameId: Int):GameEvent()
+data class GameStarted(override val gameId: Int, val userId: Int):GameEvent()
 
 @Serializable
 data class GameStateChanged(override val gameId: Int, val actualState: GameState):GameEvent()

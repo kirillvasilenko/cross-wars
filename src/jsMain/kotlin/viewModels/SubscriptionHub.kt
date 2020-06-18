@@ -62,7 +62,6 @@ object SubscriptionHub{
         gameEventsHandlers[gameId] = eventHandler
         if(connection.connected){
             Api.subscriptions.subscribeOnGameEvents(gameId)
-            log("subscribed on game=$gameId events")
         }
     }
 
@@ -70,7 +69,6 @@ object SubscriptionHub{
         gameEventsHandlers.remove(gameId)
         if(connection.connected){
             Api.subscriptions.unsubscribeFromGameEvents(gameId)
-            log("unsubscribed from game=$gameId events")
         }
     }
 }

@@ -75,23 +75,27 @@ class BoardField(props: VmProps<BoardFieldVm>): VMComponent<BoardFieldVm>(props)
                 }
 
                 height = LinearDimension.available
-                width = LinearDimension.available;
+                width = LinearDimension.available
 
                 display = Display.flex
                 justifyContent = JustifyContent.center
                 alignItems = Align.center
                 overflow = Overflow.hidden
-            }
 
-            attrs{
-                onClickFunction = {
-                    mainScope.launch {
-                        vm.execute()
-                    }
+                if(vm.canExecuted){
+                    cursor = Cursor.pointer
                 }
             }
 
-            //userInGameSymbol { pVm = UserInGameSymbolVm(1, SideOfTheForce.Light,1) }
+            attrs{
+                if(vm.canExecuted){
+                    onClickFunction = {
+                        mainScope.launch {
+                            vm.execute()
+                        }
+                    }
+                }
+            }
 
             if (vm.currentState != null) {
                 userInGameSymbol { pVm = vm.currentState!! }

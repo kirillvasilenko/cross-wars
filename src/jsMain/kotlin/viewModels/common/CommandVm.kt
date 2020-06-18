@@ -17,8 +17,7 @@ abstract class CommandVm: ViewModel(){
         try {
             executing = true
             raiseStateChanged()
-            val result = executeImpl()
-            raiseEvent(result)
+            executeImpl()
         }
         catch(e: ClientRequestException){
             val event =
@@ -36,5 +35,5 @@ abstract class CommandVm: ViewModel(){
         }
     }
 
-    protected abstract suspend fun executeImpl() : VmEvent
+    protected abstract suspend fun executeImpl()
 }

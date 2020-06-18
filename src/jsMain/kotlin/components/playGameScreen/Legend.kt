@@ -57,7 +57,6 @@ class UserInLegend(props: VmProps<UserInGameVm>): VMComponent<UserInGameVm>(prop
             styledDiv {
                 css{
                     float = kotlinx.css.Float.right
-                    backgroundColor = Color.yellowGreen
                     height = GlobalStyle.userSymbolSize
                     width = GlobalStyle.userSymbolSize
                 }

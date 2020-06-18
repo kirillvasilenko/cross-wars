@@ -9,7 +9,7 @@ import viewModels.common.ViewModel
 import viewModels.common.VmEvent
 
 class GameBoardVm(
-        val user: UserDto,
+        val currentUser: UserDto,
         val users: MutableList<UserInGameVm>,
         state: GameState,
         board: List<MutableList<UserInGame?>>)
@@ -47,6 +47,8 @@ class GameBoardVm(
     }
 
     fun userMoved(ev: UserMoved){
+        setFieldsActive(ev.userId != currentUser.id)
+
         val field = board[ev.x][ev.y]
         val user = users.first { it.userId == ev.userId }
         field.currentState = UserInGameSymbolVm(
@@ -63,8 +65,6 @@ class GameBoardVm(
         }
     }
 }
-
-class MoveMade(source: ViewModel, val x: Int, val y: Int): VmEvent(source)
 
 class BoardFieldVm(val x: Int, val y: Int, currentState: UserInGameSymbolVm?, active: Boolean = true): CommandVm(){
 
@@ -84,9 +84,8 @@ class BoardFieldVm(val x: Int, val y: Int, currentState: UserInGameSymbolVm?, ac
     override val canExecuted: Boolean
         get() = super.canExecuted && currentState == null && active
 
-    override suspend fun executeImpl(): VmEvent {
+    override suspend fun executeImpl() {
         Api.games.makeMove(x, y)
-        return MoveMade(this, x, y)
     }
 
 }

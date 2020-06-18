@@ -44,7 +44,6 @@ class PlayGameScreen(props: VmProps<PlayGameVm>): VMComponent<PlayGameVm>(props)
             // center
             styledDiv{
                 css{
-                    backgroundColor = Color.blue
                     height = 100.vh;
                     width = 100.vh;
                 }
@@ -54,8 +53,7 @@ class PlayGameScreen(props: VmProps<PlayGameVm>): VMComponent<PlayGameVm>(props)
             // right
             styledDiv{
                 css{
-                    backgroundColor = Color.yellow
-                    margin = "auto 0px"
+                    margin = "auto ${GlobalStyle.margin}"
                 }
                 legend{ pVm = vm.legendVm }
                 leaveGameButton { pVm = vm.leaveGameVm }

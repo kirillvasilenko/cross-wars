@@ -5,11 +5,8 @@ import viewModels.common.CommandVm
 import viewModels.common.ViewModel
 import viewModels.common.VmEvent
 
-class LeavedGame(source: ViewModel): VmEvent(source)
-
 class LeaveGameVm: CommandVm(){
-    override suspend fun executeImpl(): VmEvent {
+    override suspend fun executeImpl() {
         Api.games.leaveCurrentGame()
-        return LeavedGame(this)
     }
 }

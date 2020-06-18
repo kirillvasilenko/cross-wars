@@ -6,8 +6,11 @@ import model.GameStarted
 import viewModels.GameEventHandler
 import viewModels.SubscriptionHub
 import viewModels.common.ViewModel
+import viewModels.common.VmEvent
 
-class GamesListVm: ViewModel(){
+class UserStartedNewGame(source: ViewModel, val gameId: Int): VmEvent(source)
+
+class GamesListVm(private val currentUserId: Int): ViewModel(){
 
     val startNewGameVm = child(StartNewGameVm())
 
@@ -25,7 +28,7 @@ class GamesListVm: ViewModel(){
         games.forEach{ removeChild(it) }
         games.clear()
         Api.games.getActiveGames()
-                .map { child(GamePreviewVm(it)) }
+                .map { child(GamePreviewVm(currentUserId, it)) }
                 .forEach { games.add(it) }
         onStateChanged()
         SubscriptionHub.subscribeOnGameStartedEvents(
@@ -38,12 +41,15 @@ class GamesListVm: ViewModel(){
     }
 
     private suspend fun handleGameStarted(event:GameStarted){
+        if(event.userId == currentUserId)
+            raiseEvent(UserStartedNewGame(this, event.gameId))
+
         if (games.any { it.gameId == event.gameId }) return
 
         val game = Api.games.getGame(event.gameId)
         if (!filter(game)) return
 
-        games.add(GamePreviewVm(game))
+        games.add(GamePreviewVm(currentUserId, game))
         raiseStateChanged()
     }
 }

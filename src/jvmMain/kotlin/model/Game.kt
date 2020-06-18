@@ -49,7 +49,7 @@ class Game(val id: Int){
             eventsListener = SubscriptionsHub::handleGameEvent
             joinImpl(user)
             raiseEvent(GameStateChanged(id, ACTIVE))
-            raiseEvent(GameStarted(id))
+            raiseEvent(GameStarted(id, user.id))
         }
     }
 
