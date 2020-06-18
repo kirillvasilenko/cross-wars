@@ -23,24 +23,23 @@ class Header: RComponent<HeaderProps, RState>() {
         styledDiv {
             css {
                 overflow = Overflow.hidden
+                margin = "8px 8px 0px 8px"
             }
             styledDiv{
                 css{
-                    float = kotlinx.css.Float.left
+                    float = Float.left
                     fontSize = GlobalStyle.headerFontSize
                     textAlign = TextAlign.center
-                    padding = "14px 16px"
                 }
                 +"Cross Wars"
             }
             styledDiv{
                 css{
-                    float = kotlinx.css.Float.right
+                    float = Float.right
                     textAlign = TextAlign.center
-                    padding = "14px 16px"
                     fontSize = GlobalStyle.headerFontSize
                 }
-                +"${props.userName}"
+                +props.userName
             }
 
         }

@@ -1,6 +1,6 @@
 package viewModels.mainScreen
 
-import Api
+import api.Api
 import model.GameDto
 import model.GameStarted
 import viewModels.GameEventHandler

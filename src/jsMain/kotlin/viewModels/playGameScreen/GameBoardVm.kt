@@ -1,5 +1,6 @@
 package viewModels.playGameScreen
 
+import api.Api
 import model.*
 import viewModels.common.CommandVm
 import viewModels.common.ViewModel
@@ -96,6 +97,10 @@ class BoardFieldVm(val x: Int, val y: Int, currentState: UserInGameSymbolVm?, ac
             raiseStateChanged()
         }
 
+    override suspend fun executeImpl() {
+        Api.games.makeMove(x, y)
+    }
+
     fun hide(){
         if(currentState != null){
             currentState!!.aLittleHidden = true
@@ -115,8 +120,5 @@ class BoardFieldVm(val x: Int, val y: Int, currentState: UserInGameSymbolVm?, ac
     override val canExecuted: Boolean
         get() = super.canExecuted && currentState == null && active
 
-    override suspend fun executeImpl() {
-        Api.games.makeMove(x, y)
-    }
 
 }

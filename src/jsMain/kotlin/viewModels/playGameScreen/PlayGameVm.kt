@@ -1,6 +1,6 @@
 package viewModels.playGameScreen
 
-import Api
+import api.Api
 import model.*
 import viewModels.GameEventHandler
 import viewModels.SubscriptionHub

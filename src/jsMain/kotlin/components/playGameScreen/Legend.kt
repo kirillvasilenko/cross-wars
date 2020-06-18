@@ -47,7 +47,7 @@ class UserInLegend(props: VmProps<UserInGameVm>): VMComponent<UserInGameVm>(prop
             }
             styledDiv{
                 css{
-                    float = kotlinx.css.Float.left
+                    float = Float.left
                     if(!vm.active) {
                         textDecoration = TextDecoration(setOf(TextDecorationLine.lineThrough))
                     }
@@ -56,7 +56,7 @@ class UserInLegend(props: VmProps<UserInGameVm>): VMComponent<UserInGameVm>(prop
             }
             styledDiv {
                 css{
-                    float = kotlinx.css.Float.right
+                    float = Float.right
                     height = GlobalStyle.userSymbolSize
                     width = GlobalStyle.userSymbolSize
                 }

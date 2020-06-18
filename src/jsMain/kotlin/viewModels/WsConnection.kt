@@ -1,11 +1,12 @@
 package viewModels
 
-import Api
+import api.Api
 import io.ktor.http.cio.websocket.Frame
 import io.ktor.http.cio.websocket.readText
 import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import log
 import mainScope
 import kotlin.math.max
 
@@ -37,7 +38,7 @@ class WsConnection{
                 delayToConnect = initialDelayToConnect
             }
             catch(e:Throwable) {
-                log("error during connecting to ws endpoint: ${e.message}")
+                log("error during connecting to ws api.getEndpoint: ${e.message}")
                 delayToConnect = max(delayToConnect * 2, maxDelayToConnect)
             }
             finally{
@@ -67,8 +68,8 @@ class WsConnection{
     private suspend fun onWsConnectionOpened(){
         connected = true
 
-        // If run server side and client side on the
-        // same PC, server side logic can not be executed yet (on my PC for example).
+        // If run backend and frontend on the
+        // same PC, backend logic may not be executed yet (on my PC for example).
         // So, we can wait a little and try again.
         repeat(2){
             try{

@@ -1,10 +1,12 @@
 package viewModels.mainScreen
 
-import Api
+import viewModels.GameEventHandler
+import viewModels.SubscriptionHub
+import api.Api
 import kotlinx.coroutines.*
+import log
 import mainScope
 import model.*
-import viewModels.*
 import viewModels.common.CommandVm
 import viewModels.common.ViewModel
 import viewModels.common.VmEvent
@@ -50,6 +52,11 @@ class GamePreviewVm(private val currentUserId: Int, private var game: GameDto): 
     override suspend fun disposeImpl() {
         SubscriptionHub.unsubscribeFromGameEvents(game.id)
     }
+
+    override suspend fun executeImpl() {
+        Api.games.joinGame(game.id)
+    }
+
 
     private suspend fun handleGameEvent(event: GameEvent){
         when(event){
@@ -123,10 +130,6 @@ class GamePreviewVm(private val currentUserId: Int, private var game: GameDto): 
     private suspend fun makeUserVm(userInGame:UserInGame): UserInGameVm{
         val userDto = Api.users.getUser(userInGame.id)
         return UserInGameVm(userDto, userInGame)
-    }
-
-    override suspend fun executeImpl() {
-        Api.games.joinGame(game.id)
     }
 
 }

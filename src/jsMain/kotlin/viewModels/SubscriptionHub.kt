@@ -1,6 +1,7 @@
 package viewModels
 
-import Api
+import api.Api
+import log
 import model.*
 
 object SubscriptionHub{
@@ -13,32 +14,8 @@ object SubscriptionHub{
 
     init{
         connection.textHandler = SubscriptionHub::handleText
-        connection.onConnectionOpened = ::onConnectionOpened
+        connection.onConnectionOpened = SubscriptionHub::onConnectionOpened
         connection.openWsConnectionInfinite()
-    }
-
-    private suspend fun onConnectionOpened(){
-        gameEventsHandlers.values.forEach {
-            it.connectionOpened()
-        }
-        gameStartedEventHandler.connectionOpened()
-    }
-
-    private suspend fun handleText(text: String){
-        val event = EventsSerializer.parse(text)
-        when(event){
-            is GameStarted -> gameStartedEventHandler.handle(event)
-            else -> handleGameEvent(event)
-        }
-    }
-
-    private suspend fun handleGameEvent(event: GameEvent){
-        val handler = gameEventsHandlers[event.gameId]
-        if(handler == null){
-            log("handler not found for $event")
-            return
-        }
-        handler.handle(event)
     }
 
     suspend fun subscribeOnGameStartedEvents(eventHandler: GameEventHandler<GameStarted>){
@@ -71,6 +48,31 @@ object SubscriptionHub{
             Api.subscriptions.unsubscribeFromGameEvents(gameId)
         }
     }
+
+
+    private suspend fun onConnectionOpened(){
+        gameEventsHandlers.values.forEach {
+            it.connectionOpened()
+        }
+        gameStartedEventHandler.connectionOpened()
+    }
+
+    private suspend fun handleText(text: String){
+        when(val event = EventsSerializer.parse(text)){
+            is GameStarted -> gameStartedEventHandler.handle(event)
+            else -> handleGameEvent(event)
+        }
+    }
+
+    private suspend fun handleGameEvent(event: GameEvent){
+        val handler = gameEventsHandlers[event.gameId]
+        if(handler == null){
+            log("handler not found for $event")
+            return
+        }
+        handler.handle(event)
+    }
+
 }
 
 class GameEventHandler<T>(

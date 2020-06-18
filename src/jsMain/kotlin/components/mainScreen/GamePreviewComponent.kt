@@ -3,13 +3,11 @@ package components.mainScreen
 import components.GlobalStyle
 import components.VMComponent
 import components.VmProps
-import components.VmState
 import kotlinx.coroutines.launch
 import viewModels.mainScreen.GamePreviewVm
 import kotlinx.css.*
 import kotlinx.html.classes
 import kotlinx.html.js.onClickFunction
-import kotlinx.html.title
 import mainScope
 import react.*
 import react.dom.p
@@ -17,7 +15,7 @@ import styled.css
 import styled.styledButton
 import styled.styledDiv
 import styled.styledP
-import viewModels.log
+import log
 
 import viewModels.mainScreen.LastMoveTimeVm
 
@@ -63,7 +61,7 @@ class GamePreview(props: VmProps<GamePreviewVm>): VMComponent<GamePreviewVm>(pro
             styledDiv{
                 vm.activeUsers.forEach { user ->
                     styledP{
-                        +"${user.userName}"
+                        +user.userName
                     }
                 }
             }

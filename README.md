@@ -1,1 +1,1 @@
-# game-of-crosses
+# cross-wars

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>components.Game of Crosses</title>
+    <title>Cross Wars</title>
     <style>
         @font-face { font-family: JetBrainsMono; src: url('JetBrainsMono-Regular.woff2'); }
         @font-face { font-family: JetBrainsMono; font-weight: bold; src: url('JetBrainsMono-Bold.woff2'); }
@@ -14,12 +14,6 @@
             user-select: none;
             font-family: "JetBrainsMono";
             font-size: 22px
-        }
-
-        .glowable{
-            animation-name: glow;
-            animation-duration: 4s;
-            animation-iteration-count: infinite;
         }
 
         .button {
@@ -42,15 +36,20 @@
             color: green;
         }
 
+        .glowable{
+            animation-name: glow;
+            animation-duration: 4s;
+            animation-iteration-count: infinite;
+        }
         @keyframes glow {
             0%   {opacity:100%;}
-            50%  {opacity:70%;}
+            50%  {opacity:75%;}
             100% {opacity:100%;}
         }
     </style>
 </head>
 <body style="background-color: black">
 <div id="root" class="root"></div>
-<script src="game-of-crosses.js"></script>
+<script src="cross-wars.js"></script>
 </body>
 </html>

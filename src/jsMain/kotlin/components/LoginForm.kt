@@ -1,10 +1,7 @@
 package components
 
-import components.mainScreen.mainScreen
 import kotlinx.coroutines.launch
 import kotlinx.css.*
-import kotlinx.css.properties.TextDecoration
-import kotlinx.css.properties.TextDecorationLine
 import kotlinx.html.InputType
 import kotlinx.html.classes
 import kotlinx.html.js.onChangeFunction
@@ -16,7 +13,6 @@ import org.w3c.dom.HTMLSelectElement
 import react.RBuilder
 import react.ReactElement
 import react.dom.option
-import react.dom.p
 import styled.*
 import viewModels.LoginVm
 
@@ -140,9 +136,6 @@ class LoginForm(props: VmProps<LoginVm>) : VMComponent<LoginVm>(props) {
                     css{
                         margin = GlobalStyle.margin
                         gridColumn = GridColumn("span 2")
-                        /*if(vm.canExecuted){
-                            cursor = Cursor.pointer
-                        }*/
                     }
                     attrs{
                         classes=setOf("button")

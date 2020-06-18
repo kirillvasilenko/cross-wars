@@ -15,7 +15,7 @@ class LoadingScreenComponent: RComponent<HeaderProps, RState>() {
 
         styledDiv {
             css {
-                fontSize = 100.px
+                fontSize = GlobalStyle.loadingScreenFontSize
                 height = LinearDimension.fillAvailable
                 width = LinearDimension.fillAvailable
 

@@ -8,7 +8,6 @@ import react.RBuilder
 import react.ReactElement
 import styled.css
 import styled.styledDiv
-import viewModels.log
 import viewModels.mainScreen.GamesListVm
 
 fun RBuilder.gamesList(handler: VmProps<GamesListVm>.() -> Unit): ReactElement {

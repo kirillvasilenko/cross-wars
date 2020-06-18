@@ -1,6 +1,7 @@
 package viewModels
 
-import Api
+import api.Api
+import log
 import model.SideOfTheForce
 import model.SignUpData
 import model.UserDto

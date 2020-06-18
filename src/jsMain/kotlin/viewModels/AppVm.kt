@@ -1,8 +1,9 @@
 package viewModels
 
-import Api
+import api.Api
 import io.ktor.client.features.ClientRequestException
 import io.ktor.http.HttpStatusCode
+import log
 import model.SideOfTheForce
 import model.UserDto
 import viewModels.common.ErrorHappened
@@ -46,7 +47,6 @@ class AppVm: ViewModel() {
                     is Unauthorized -> openLoginForm()
                     else -> log(event.cause.message)
                 }
-            else -> null // ignore
         }
     }
 
@@ -75,9 +75,6 @@ class AppVm: ViewModel() {
     }
 
     //endregion changing layout
-
-
-
 
 
     private suspend fun changeCurrentVm(newVm: ViewModel){
