@@ -23,6 +23,9 @@ class UserInGameSymbol(props: VmProps<UserInGameSymbolVm>): VMComponent<UserInGa
             css{
                 width = 100.pct
                 height = 100.pct
+                if(vm.aLittleHidden){
+                    opacity = 0.2
+                }
             }
             attrs["viewBox"] = "0 0 100 100"
 

@@ -7,14 +7,12 @@ import kotlinx.coroutines.launch
 import kotlinx.css.*
 import kotlinx.html.js.onClickFunction
 import mainScope
-import model.SideOfTheForce
 import react.RBuilder
 import react.ReactElement
 import styled.css
 import styled.styledDiv
 import viewModels.playGameScreen.BoardFieldVm
 import viewModels.playGameScreen.GameBoardVm
-import viewModels.playGameScreen.UserInGameSymbolVm
 
 fun RBuilder.gameBoard(handler: VmProps<GameBoardVm>.() -> Unit): ReactElement {
     return child(GameBoard::class) {
@@ -98,7 +96,9 @@ class BoardField(props: VmProps<BoardFieldVm>): VMComponent<BoardFieldVm>(props)
             }
 
             if (vm.currentState != null) {
-                userInGameSymbol { pVm = vm.currentState!! }
+                userInGameSymbol {
+                    pVm = vm.currentState!!
+                }
             }
         }
     }

@@ -15,6 +15,8 @@ class PlayGameVm(val currentUser: UserDto, val gameId: Int): ViewModel(){
 
     private val users = mutableListOf<UserInGameVm>()
 
+    val resultVm = GameResultsVm()
+
     lateinit var legendVm: LegendVm
         private set
 
@@ -44,10 +46,22 @@ class PlayGameVm(val currentUser: UserDto, val gameId: Int): ViewModel(){
             is UserJoined -> setUserActivity(event.user, true)
             is UserLeaved -> handleUserLeaved(event)
             is UserMoved -> gameBoardVm.userMoved(event)
-            is UserWon -> Unit
-            is Draw -> Unit
+            is UserWon -> handleUserWon(event)
+            is Draw -> handleDraw()
             else -> Unit // ignore
         }
+    }
+
+    private fun handleUserWon(event: UserWon){
+        gameBoardVm.userWon(event)
+        users.firstOrNull { it.userId == event.userId }?.let{
+            resultVm.userWin(it)
+        }
+    }
+
+    private fun handleDraw(){
+        gameBoardVm.draw()
+        resultVm.draw()
     }
 
     private suspend fun resetAll(game:GameDto){
@@ -76,14 +90,13 @@ class PlayGameVm(val currentUser: UserDto, val gameId: Int): ViewModel(){
             addUserVm(userInGame)
             legendVm.usersChanged()
         } else {
-            user.active = userInGame.active
+            user.active = active
         }
     }
 
     private suspend fun addUserVm(userInGame: UserInGame) {
         val userDto = Api.users.getUser(userInGame.id)
-        var userVm = child(UserInGameVm(userDto, userInGame))
-        users.add(userVm)
+        users.add(child(UserInGameVm(userDto, userInGame)))
     }
 
 }

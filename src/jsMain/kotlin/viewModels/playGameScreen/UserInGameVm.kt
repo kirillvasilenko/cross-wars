@@ -25,6 +25,6 @@ class UserInGameVm(user: UserDto, userInGame: UserInGame): ViewModel(){
     var swordColor: Int = user.swordColor
 
 
-    var userSymbolVm = UserInGameSymbolVm(userSymbol, sideOfTheForce, swordColor)
+    var userSymbolVm = UserInGameSymbolVm(userSymbol, sideOfTheForce, swordColor, false)
 
 }
