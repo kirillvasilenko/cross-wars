@@ -15,7 +15,6 @@ object SubscriptionHub{
     init{
         connection.textHandler = SubscriptionHub::handleText
         connection.onConnectionOpened = SubscriptionHub::onConnectionOpened
-        connection.openWsConnectionInfinite()
     }
 
     suspend fun subscribeOnGameStartedEvents(eventHandler: GameEventHandler<GameStarted>){
@@ -47,6 +46,14 @@ object SubscriptionHub{
         if(connection.connected){
             Api.subscriptions.unsubscribeFromGameEvents(gameId)
         }
+    }
+
+    fun startConnecting(){
+        connection.startWsConnecting()
+    }
+
+    suspend fun stopConnecting(){
+        connection.stopWsConnecting()
     }
 
 

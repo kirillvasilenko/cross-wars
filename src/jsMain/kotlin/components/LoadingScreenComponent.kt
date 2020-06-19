@@ -1,6 +1,5 @@
 package components
 
-import components.mainScreen.HeaderProps
 import kotlinx.css.*
 import react.*
 import styled.css
@@ -10,7 +9,7 @@ fun RBuilder.loadingScreen(): ReactElement {
     return child(LoadingScreenComponent::class) {}
 }
 
-class LoadingScreenComponent: RComponent<HeaderProps, RState>() {
+class LoadingScreenComponent: RComponent<RProps, RState>() {
     override fun RBuilder.render() {
 
         styledDiv {

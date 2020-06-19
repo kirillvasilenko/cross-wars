@@ -28,10 +28,6 @@ fun RBuilder.gamePreview(handler: VmProps<GamePreviewVm>.() -> Unit): ReactEleme
 
 class GamePreview(props: VmProps<GamePreviewVm>): VMComponent<GamePreviewVm>(props) {
 
-    init{
-        log("game component: create")
-    }
-
     override fun RBuilder.render() {
         styledButton {
             css{

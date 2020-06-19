@@ -17,4 +17,8 @@ class AuthApi{
             body = data
         }
     }
+
+    suspend fun logout() {
+        return client.post("$endpoint/api/auth/logout")
+    }
 }

@@ -40,8 +40,13 @@ class PlayGameVm(val currentUser: UserDto, val gameId: Int): ViewModel(){
     }
 
     private suspend fun handleGameEvent(event: GameEvent){
+        if(event is UserSubscribedOnGameEvents){
+            resetAll(event.game)
+            return
+        }
+        if(!this::gameBoardVm.isInitialized) return
+
         when(event){
-            is UserSubscribedOnGameEvents -> resetAll(event.game)
             is GameStateChanged -> gameBoardVm.state = event.actualState
             is UserJoined -> setUserActivity(event.user, true)
             is UserLeaved -> handleUserLeaved(event)

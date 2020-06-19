@@ -18,7 +18,7 @@ class MainScreen(props: VmProps<MainScreenVm>): VMComponent<MainScreenVm>(props)
     override fun RBuilder.render() {
         styledDiv {
             header{
-                userName = vm.currentUser.name
+                pVm = vm.headerVm
             }
             gamesList{
                 pVm = vm.gamesListVm

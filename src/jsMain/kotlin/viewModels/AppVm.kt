@@ -10,10 +10,7 @@ import viewModels.common.ErrorHappened
 import viewModels.common.Unauthorized
 import viewModels.common.ViewModel
 import viewModels.common.VmEvent
-import viewModels.mainScreen.UserJoinedGame
-import viewModels.mainScreen.LoadScreenVm
-import viewModels.mainScreen.MainScreenVm
-import viewModels.mainScreen.UserStartedNewGame
+import viewModels.mainScreen.*
 import viewModels.playGameScreen.UserLeavedCurrentGame
 import viewModels.playGameScreen.PlayGameVm
 
@@ -39,6 +36,7 @@ class AppVm: ViewModel() {
     override suspend fun handleChildEvent(event: VmEvent) {
         when(event){
             is UserLogin -> userLogged(event.user)
+            is Logout -> logout()
             is UserJoinedGame -> startPlaying(event.gameId)
             is UserStartedNewGame -> startPlaying(event.gameId)
             is UserLeavedCurrentGame -> openMainScreen()
@@ -54,6 +52,7 @@ class AppVm: ViewModel() {
 
     private suspend fun userLogged(currentUser: UserDto){
         user = currentUser
+        SubscriptionHub.startConnecting()
         if(user.currentGameId != null){
             startPlaying(user.currentGameId!!)
         }
@@ -74,6 +73,13 @@ class AppVm: ViewModel() {
         changeCurrentVm(MainScreenVm(user))
     }
 
+    private suspend fun logout(){
+        removeChild(currentVm)
+        SubscriptionHub.stopConnecting()
+        Api.auth.logout()
+        openLoginForm()
+    }
+
     //endregion changing layout
 
 
@@ -83,4 +89,6 @@ class AppVm: ViewModel() {
         child(newVm)
         raiseStateChanged()
     }
+
+
 }

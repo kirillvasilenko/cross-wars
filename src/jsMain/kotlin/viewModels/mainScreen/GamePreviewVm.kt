@@ -71,7 +71,6 @@ class GamePreviewVm(private val currentUserId: Int, private var game: GameDto): 
 
     private fun onGameStateChanged(event: GameStateChanged){
         if(state == event.actualState) return
-        log(event.toString())
         state = event.actualState
         raiseStateChanged()
     }

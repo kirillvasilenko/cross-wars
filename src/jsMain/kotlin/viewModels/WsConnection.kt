@@ -1,8 +1,7 @@
 package viewModels
 
 import api.Api
-import io.ktor.http.cio.websocket.Frame
-import io.ktor.http.cio.websocket.readText
+import io.ktor.http.cio.websocket.*
 import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -18,6 +17,9 @@ class WsConnection{
 
     private var delayToConnect = 1000
 
+    var connecting = false
+        private set
+
     var connected = false
         private set
 
@@ -25,28 +27,39 @@ class WsConnection{
 
     var onConnectionOpened: suspend () -> Unit = {}
 
-    private suspend fun handleText(text:String) = textHandler(text)
+    private var currentSession: WebSocketSession? = null
 
-    fun openWsConnectionInfinite(){
+    fun startWsConnecting(){
+        connecting = true
         mainScope.launch{
-            try {
-                Api.subscriptions.openWsConnection {
-                    log("ws connection is opened")
-                    onWsConnectionOpened()
-                    wsConnectionWork(incoming)
-                }
-                delayToConnect = initialDelayToConnect
+            while(connecting){
+                startWsConnectingImpl()
             }
-            catch(e:Throwable) {
-                log("error during connecting to ws api.getEndpoint: ${e.message}")
-                delayToConnect = max(delayToConnect * 2, maxDelayToConnect)
+        }
+    }
+
+    suspend fun stopWsConnecting(){
+        connecting = false
+        currentSession?.close()
+    }
+
+    private suspend fun startWsConnectingImpl() {
+        try {
+            Api.subscriptions.openWsConnection {
+                log("ws connection is opened")
+                currentSession = this
+                onWsConnectionOpened()
+                wsConnectionWork(incoming)
+                this.close()
             }
-            finally{
-                log("ws connection is closed")
-                connected = false
-                delay(delayToConnect.toLong())
-                openWsConnectionInfinite()
-            }
+            delayToConnect = initialDelayToConnect
+        } catch (e: Throwable) {
+            log("error during connecting to ws api.getEndpoint: ${e.message}")
+            delayToConnect = max(delayToConnect * 2, maxDelayToConnect)
+        } finally {
+            log("ws connection is closed")
+            connected = false
+            delay(delayToConnect.toLong())
         }
     }
 
@@ -62,6 +75,15 @@ class WsConnection{
         }
         catch(e:Throwable){
             log("some error in ws connection: ${e.message}")
+        }
+    }
+
+    private suspend fun handleText(text:String){
+        try{
+            textHandler(text)
+        }
+        catch(e: Throwable){
+            log("wsConnection: error in handling text ${e.message}")
         }
     }
 

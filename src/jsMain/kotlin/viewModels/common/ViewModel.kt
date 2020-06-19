@@ -1,5 +1,7 @@
 package viewModels.common
 
+import log
+
 open class VmEvent(val source: ViewModel){
     var handled: Boolean = false
 }
@@ -38,7 +40,12 @@ abstract class ViewModel: Disposable {
         children.toList().forEach {child ->
             removeChild(child)
         }
-        disposeImpl()
+        try {
+            disposeImpl()
+        }
+        catch(e: Throwable){
+            log(e.message)
+        }
         onStateChanged = {}
     }
 

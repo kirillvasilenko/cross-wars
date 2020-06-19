@@ -43,6 +43,18 @@ fun Route.authRouting() {
             }
         }
     }
+
+    route("/auth/logout") {
+        post{
+            try{
+                call.sessions.clear("USER_SESSION")
+                call.respond("Success")
+            }
+            catch(e:ContentTransformationException){
+                badRequest(e)
+            }
+        }
+    }
 }
 
 fun Route.registerAuthRoutes() {

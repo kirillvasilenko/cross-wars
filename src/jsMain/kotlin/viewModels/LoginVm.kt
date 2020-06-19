@@ -20,7 +20,6 @@ class LoginVm: CommandVm(){
         set(value) {
             if(field == value) return
             field = value
-            log(value)
             raiseStateChanged()
         }
 

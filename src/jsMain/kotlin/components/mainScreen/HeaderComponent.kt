@@ -1,30 +1,28 @@
 package components.mainScreen
 
 import components.GlobalStyle
+import components.VMComponent
+import components.VmProps
+import kotlinx.coroutines.launch
 import kotlinx.css.*
-import react.*
+import kotlinx.html.classes
+import kotlinx.html.js.onClickFunction
+import kotlinx.html.js.onMouseOutFunction
+import kotlinx.html.js.onMouseOverFunction
+import mainScope
+import react.RBuilder
+import react.ReactElement
 import styled.css
 import styled.styledDiv
-import viewModels.common.CommandVm
+import viewModels.mainScreen.HeaderVm
 
-external interface HeaderProps: RProps {
-    var userName: String
-}
-
-class LogoutVm: CommandVm(){
-    override suspend fun executeImpl() {
-        TODO("Not yet implemented")
-    }
-
-}
-
-fun RBuilder.header(handler: HeaderProps.() -> Unit): ReactElement {
+fun RBuilder.header(handler: VmProps<HeaderVm>.() -> Unit): ReactElement {
     return child(Header::class) {
         this.attrs(handler)
     }
 }
 
-class Header: RComponent<HeaderProps, RState>() {
+class Header(props: VmProps<HeaderVm>): VMComponent<HeaderVm>(props) {
     override fun RBuilder.render() {
 
         styledDiv {
@@ -45,8 +43,23 @@ class Header: RComponent<HeaderProps, RState>() {
                     float = Float.right
                     textAlign = TextAlign.center
                     fontSize = GlobalStyle.headerFontSize
+                    cursor = Cursor.pointer
                 }
-                +props.userName
+                attrs{
+                    classes = setOf("flatButton")
+                    onClickFunction = {
+                        mainScope.launch {
+                            vm.execute()
+                        }
+                    }
+                    onMouseOverFunction = {
+                        vm.mouseOver = true
+                    }
+                    onMouseOutFunction = {
+                        vm.mouseOver = false
+                    }
+                }
+                +vm.inscription
             }
 
         }
