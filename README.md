@@ -48,7 +48,7 @@
 
 Игра может находиться в следующих состояниях:
 
-![game_states](design/game_states.svg | height=700)
+<img src="design/game_states.svg" height="700"/>
 
 Пользователь по отношению к игре может находиться в следующих состояниях:
 
