@@ -18,7 +18,7 @@ class WsConnection(
     private var log = LoggerFactory.getLogger(javaClass)
 
     private var eventsChannel =
-        Channel<GameEvent>(Channel.UNLIMITED)
+        Channel<BackendEvent>(Channel.UNLIMITED)
 
     suspend fun listen(){
         try {
@@ -47,7 +47,7 @@ class WsConnection(
         }
     }
 
-    suspend fun send(event: GameEvent) {
+    suspend fun send(event: BackendEvent) {
         eventsChannel.send(event)
     }
 
@@ -63,8 +63,7 @@ class WsConnection(
         }
     }
 
-    private suspend fun sendEventImpl(event: GameEvent){
-        log.debug("sent $event")
+    private suspend fun sendEventImpl(event: BackendEvent){
         val message = EventsSerializer.stringify(event)
         outgoing.send(Frame.Text(message))
         log.debug("Sent $message")

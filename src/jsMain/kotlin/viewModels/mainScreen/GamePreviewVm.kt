@@ -1,36 +1,27 @@
 package viewModels.mainScreen
 
-import viewModels.GameEventHandler
+import viewModels.BackendEventsHandler
 import viewModels.SubscriptionHub
 import api.Api
 import kotlinx.coroutines.*
-import log
 import mainScope
 import model.*
 import viewModels.common.CommandVm
 import viewModels.common.ViewModel
-import viewModels.common.VmEvent
-import viewModels.playGameScreen.UserInGameVm
 import kotlin.js.Date
 import kotlin.math.roundToLong
 
-class UserJoinedGame(source: ViewModel, val gameId:Int): VmEvent(source)
 
-class GamePreviewVm(private val currentUserId: Int, private var game: GameDto): CommandVm() {
-
-    private var state: GameState = game.state
-
-    private val users = mutableListOf<UserInGameVm>()
-
+class GamePreviewVm(private var game: GameDto): CommandVm() {
 
     val gameId: Int
         get() = game.id
 
-    val activeUsers: List<UserInGameVm>
-        get() = users.filter{ it.active }
+    val activeUsers: List<UserInGame>
+        get() = game.users.filter{ it.active }
 
     val visible: Boolean
-        get() = state == GameState.ACTIVE
+        get() = game.state == GameState.ACTIVE
 
     /**
      * Count fields that are occupied.
@@ -38,18 +29,18 @@ class GamePreviewVm(private val currentUserId: Int, private var game: GameDto): 
     var boardFilled: Int = game.board.flatten().filterNotNull().size
         private set
 
-    val lastMoveTimeVm = child(LastMoveTimeVm(game.lastMovedDate))
+    val lastMoveTimeVm = LastMoveTimeVm(game.lastMovedDate)
 
 
     override suspend fun initImpl() {
-        resetUsers()
         SubscriptionHub.subscribeOnGameEvents(
                 game.id,
-                GameEventHandler(::handleGameEvent)
+                BackendEventsHandler(::handleGameEvent)
         )
     }
 
     override suspend fun disposeImpl() {
+        lastMoveTimeVm.dispose()
         SubscriptionHub.unsubscribeFromGameEvents(game.id)
     }
 
@@ -70,31 +61,28 @@ class GamePreviewVm(private val currentUserId: Int, private var game: GameDto): 
     }
 
     private fun onGameStateChanged(event: GameStateChanged){
-        if(state == event.actualState) return
-        state = event.actualState
+        if(game.state == event.actualState) return
+        game.state = event.actualState
         raiseStateChanged()
     }
 
-    private suspend fun onUserJoined(event: UserJoined){
-        if(event.user.id == currentUserId)
-            raiseEvent(UserJoinedGame(this, gameId))
-
-        val user = users.firstOrNull { it.userId == event.user.id }
+    private fun onUserJoined(event: UserJoined){
+        val user = game.users.firstOrNull { it.id == event.user.id }
         if(user != null){
             if(user.active) return
             user.active = true
         }
         else{
-            users.add(makeUserVm(event.user))
+            game.users.add(event.user)
         }
         raiseStateChanged()
     }
 
-    private suspend fun onUserLeaved(event: UserLeaved){
-        var user = users.firstOrNull { it.userId == event.user.id }
+    private fun onUserLeaved(event: UserLeaved){
+        var user = game.users.firstOrNull { it.id == event.user.id }
         if (user == null){
-            user = makeUserVm(event.user)
-            users.add(user)
+            game.users.add(event.user)
+            user = event.user
         }
 
         if(!user.active) return
@@ -109,26 +97,11 @@ class GamePreviewVm(private val currentUserId: Int, private var game: GameDto): 
         raiseStateChanged()
     }
 
-    private suspend fun resetAll(actualGame:GameDto){
+    private fun resetAll(actualGame:GameDto){
         game = actualGame
-        state = game.state
-        resetUsers()
         lastMoveTimeVm.setLastMoveDate(game.lastMovedDate)
         boardFilled = game.board.flatten().filterNotNull().size
         raiseStateChanged()
-    }
-
-    private suspend fun resetUsers(){
-        users.clear()
-        val defs = game.users.map{ userInGame ->
-            mainScope.async { makeUserVm(userInGame) }
-        }
-        users.addAll(defs.awaitAll())
-    }
-
-    private suspend fun makeUserVm(userInGame:UserInGame): UserInGameVm{
-        val userDto = Api.users.getUser(userInGame.id)
-        return UserInGameVm(userDto, userInGame)
     }
 
 }

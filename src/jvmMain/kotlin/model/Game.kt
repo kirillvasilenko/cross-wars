@@ -5,7 +5,6 @@ import kotlinx.coroutines.sync.withLock
 import model.GameState.*
 
 
-
 class Game(val id: Int){
 
     private val mutex = Mutex()
@@ -101,11 +100,11 @@ class Game(val id: Int){
 
         // make move
         val userInGame = users.first { it.id == user.id }
-        board.makeMove(x, y, userInGame)
+        board.makeMove(x, y, userInGame.id)
         raiseEvent(UserMoved(id, user.id, board.lastMovedTime, x, y))
 
         // may be win?
-        val winLine = board.findWinLine(userInGame, x, y)
+        val winLine = board.findWinLine(userInGame.id, x, y)
         // if not win and not draw - continue game
         if(winLine == null && !board.isDraw()) return
 
@@ -141,7 +140,14 @@ class Game(val id: Int){
 
         if(userInGame == null){
             lastUsedSymbol++
-            userInGame = UserInGame(user.id, lastUsedSymbol, true)
+            userInGame = UserInGame(
+                user.id,
+                lastUsedSymbol,
+                true,
+                user.name,
+                user.sideOfTheForce,
+                user.swordColor
+            )
             users.add(userInGame)
         }
         else{
@@ -175,7 +181,7 @@ class Game(val id: Int){
             GameDto(id,
                     state,
                     board.lastMovedTime,
-                    board.lastMovedUser,
+                    board.lastMovedUserId,
                     users.toMutableList(),
                     board.snapshot())
 

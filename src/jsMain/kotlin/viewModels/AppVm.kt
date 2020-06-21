@@ -4,21 +4,24 @@ import api.Api
 import io.ktor.client.features.ClientRequestException
 import io.ktor.http.HttpStatusCode
 import log
-import model.SideOfTheForce
-import model.UserDto
-import viewModels.common.ErrorHappened
-import viewModels.common.Unauthorized
-import viewModels.common.ViewModel
-import viewModels.common.VmEvent
+import model.*
+import viewModels.common.*
 import viewModels.mainScreen.*
-import viewModels.playGameScreen.UserLeavedCurrentGame
 import viewModels.playGameScreen.PlayGameVm
 
 class AppVm: ViewModel() {
 
     var user = UserDto(-1, "...", null, SideOfTheForce.Light, 0)
 
-    var currentVm: ViewModel = child(LoadScreenVm())
+    var currentVm: ViewModel = LoadScreenVm()
+
+    private val frontendEventsHandler = FrontendEventsHandler(::handleFrontendEvents)
+
+    private val userEventsHandler = BackendEventsHandler(::handleUserEvents, ::subscribeOnUserEvents)
+
+    init{
+        SubscriptionHub.subscribeOnFrontendEvents(frontendEventsHandler)
+    }
 
     override suspend fun initImpl(){
         try{
@@ -33,26 +36,13 @@ class AppVm: ViewModel() {
         }
     }
 
-    override suspend fun handleChildEvent(event: VmEvent) {
-        when(event){
-            is UserLogin -> userLogged(event.user)
-            is Logout -> logout()
-            is UserJoinedGame -> startPlaying(event.gameId)
-            is UserStartedNewGame -> startPlaying(event.gameId)
-            is UserLeavedCurrentGame -> openMainScreen()
-            is ErrorHappened ->
-                when(event){
-                    is Unauthorized -> openLoginForm()
-                    else -> log(event.cause.message)
-                }
-        }
-    }
-
     //region changing layout
 
     private suspend fun userLogged(currentUser: UserDto){
         user = currentUser
         SubscriptionHub.startConnecting()
+        subscribeOnUserEvents()
+
         if(user.currentGameId != null){
             startPlaying(user.currentGameId!!)
         }
@@ -74,19 +64,45 @@ class AppVm: ViewModel() {
     }
 
     private suspend fun logout(){
-        removeChild(currentVm)
+        currentVm.dispose()
         SubscriptionHub.stopConnecting()
-        Api.auth.logout()
+        try {
+            Api.auth.logout()
+        }
+        catch(e: Throwable){
+            log("error on logout: ${e.message}")
+        }
         openLoginForm()
     }
 
     //endregion changing layout
 
+    private suspend fun handleFrontendEvents(event: FrontendEvent){
+        when(event){
+            is UserLoggedIn -> userLogged(event.user)
+            is UserLoggedOut -> logout()
+            is ErrorHappened ->
+                when(event){
+                    is Unauthorized -> openLoginForm()
+                    else -> log(event.cause.message)
+                }
+        }
+    }
+
+    private suspend fun handleUserEvents(event: UserEvent) {
+        when(event){
+            is UserJoinedGame -> startPlaying(event.gameId)
+            is UserLeavedGame -> openMainScreen()
+        }
+    }
+
+    private suspend fun subscribeOnUserEvents(){
+        SubscriptionHub.subscribeOnUserEvents(userEventsHandler)
+    }
 
     private suspend fun changeCurrentVm(newVm: ViewModel){
-        removeChild(currentVm)
+        currentVm.dispose()
         currentVm = newVm
-        child(newVm)
         raiseStateChanged()
     }
 

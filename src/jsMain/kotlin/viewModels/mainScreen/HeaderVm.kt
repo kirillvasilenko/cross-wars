@@ -1,11 +1,8 @@
 package viewModels.mainScreen
 
-import api.Api
+import viewModels.SubscriptionHub
 import viewModels.common.CommandVm
-import viewModels.common.ViewModel
-import viewModels.common.VmEvent
-
-class Logout(source: ViewModel): VmEvent(source)
+import viewModels.common.UserLoggedOut
 
 class HeaderVm(val userName: String): CommandVm(){
 
@@ -20,7 +17,7 @@ class HeaderVm(val userName: String): CommandVm(){
         get() = if(mouseOver) "Leave" else userName
 
     override suspend fun executeImpl() {
-        raiseEvent(Logout(this))
+        SubscriptionHub.raiseEvent(UserLoggedOut(this))
     }
 
 }

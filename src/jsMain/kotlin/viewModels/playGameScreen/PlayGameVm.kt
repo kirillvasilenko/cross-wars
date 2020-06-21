@@ -1,17 +1,15 @@
 package viewModels.playGameScreen
 
-import api.Api
 import model.*
-import viewModels.GameEventHandler
+import viewModels.BackendEventsHandler
 import viewModels.SubscriptionHub
 import viewModels.common.ViewModel
-import viewModels.common.VmEvent
 
-class UserLeavedCurrentGame(source: ViewModel): VmEvent(source)
+class PlayGameVm(
+    private val currentUser: UserDto,
+    private val gameId: Int): ViewModel(){
 
-class PlayGameVm(val currentUser: UserDto, val gameId: Int): ViewModel(){
-
-    val leaveGameVm = child(LeaveGameVm())
+    val leaveGameVm = LeaveGameVm()
 
     private val users = mutableListOf<UserInGameVm>()
 
@@ -35,7 +33,7 @@ class PlayGameVm(val currentUser: UserDto, val gameId: Int): ViewModel(){
     private suspend fun subscribe(){
         SubscriptionHub.subscribeOnGameEvents(
                 gameId,
-                GameEventHandler(::handleGameEvent, ::subscribe)
+                BackendEventsHandler(::handleGameEvent, ::subscribe)
         )
     }
 
@@ -69,27 +67,21 @@ class PlayGameVm(val currentUser: UserDto, val gameId: Int): ViewModel(){
         resultVm.draw()
     }
 
-    private suspend fun resetAll(game:GameDto){
-        users.forEach { removeChild(it) }
+    private fun resetAll(game:GameDto){
         users.clear()
         game.users.forEach { addUserVm(it) }
 
-        if(this::legendVm.isInitialized) removeChild(legendVm)
-        legendVm = child(LegendVm(currentUser, users))
-
-        if(this::gameBoardVm.isInitialized) removeChild(gameBoardVm)
-        gameBoardVm = child(GameBoardVm(currentUser, users, game))
+        legendVm = LegendVm(users)
+        gameBoardVm = GameBoardVm(currentUser, users, game)
 
         raiseStateChanged()
     }
 
-    private suspend fun handleUserLeaved(event: UserLeaved){
-        if(event.user.id == currentUser.id)
-            raiseEvent(UserLeavedCurrentGame(this))
+    private fun handleUserLeaved(event: UserLeaved){
         setUserActivity(event.user, false)
     }
 
-    private suspend fun setUserActivity(userInGame: UserInGame, active: Boolean) {
+    private fun setUserActivity(userInGame: UserInGame, active: Boolean) {
         val user = users.firstOrNull { it.userId == userInGame.id }
         if (user == null) {
             addUserVm(userInGame)
@@ -99,9 +91,8 @@ class PlayGameVm(val currentUser: UserDto, val gameId: Int): ViewModel(){
         }
     }
 
-    private suspend fun addUserVm(userInGame: UserInGame) {
-        val userDto = Api.users.getUser(userInGame.id)
-        users.add(child(UserInGameVm(userDto, userInGame)))
+    private fun addUserVm(userInGame: UserInGame) {
+        users.add(UserInGameVm(userInGame))
     }
 
 }

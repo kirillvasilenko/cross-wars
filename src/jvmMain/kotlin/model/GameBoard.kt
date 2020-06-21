@@ -10,35 +10,38 @@ const val WIN_LINE_LENGTH = 7
 class GameBoard(private val users: List<UserInGame>){
 
 
-    var lastMovedUser = UserInGame(-1, 0, false)
+    var lastMovedUserId = -1
         private set
 
     var lastMovedTime: Long = 0
         private set
 
+    /*
+    * User id on field. Null, if not occupied.
+    * */
     private val board = List(BOARD_SIZE){
-        MutableList<UserInGame?>(BOARD_SIZE) { null }
+        MutableList<Int?>(BOARD_SIZE) { null }
     }
 
-    fun makeMove(x: Int, y:Int, user: UserInGame){
-        board[x][y] = user
-        lastMovedUser = user
+    fun makeMove(x: Int, y:Int, userId: Int){
+        board[x][y] = userId
+        lastMovedUserId = userId
         lastMovedTime = nowUtcMills()
     }
 
     fun checkIfCanMove(userId: Int, x: Int, y: Int){
-        if(lastMovedUser.id == userId) userFault("Trying to make move several times in a row. Wait your turn.")
+        if(lastMovedUserId == userId) userFault("Trying to make move several times in a row. Wait your turn.")
         if(x !in 0 until BOARD_SIZE || y !in 0 until BOARD_SIZE) userFault(
                 "x=$x or y=$y are out of board. Board size=$BOARD_SIZE."
         )
-        if(board[x][y] != null && board[x][y]!!.id != userId)
+        if(board[x][y] != null && board[x][y] != userId)
             userFault("Field ($x,$y) has already been occupied. Try to move to another field.")
     }
 
     fun isUserAlreadyOccupiedField(userId: Int, x: Int, y: Int) =
-            board[x][y]?.id == userId
+            board[x][y] == userId
 
-    fun snapshot() = board.map{it.toMutableList()}
+    fun snapshot() = board.map { it.toMutableList() }
 
     fun isDraw():Boolean{
 
@@ -95,24 +98,24 @@ class GameBoard(private val users: List<UserInGame>){
         return true
     }
 
-    private fun countNext(field: UserInGame?, counts: MutableList<Int>, userIds: List<Int>): Boolean{
+    private fun countNext(field: Int?, counts: MutableList<Int>, userIds: List<Int>): Boolean{
         if(field == null){
             counts.replaceAll { it+1 }
         }
         else{
             counts.forEachIndexed { i, count ->
-                counts[i] = if (field.id == userIds[i]) count + 1
+                counts[i] = if (field == userIds[i]) count + 1
                 else 0
             }
         }
         return counts.any { it >= WIN_LINE_LENGTH }
     }
 
-    fun findWinLine(userInGame: UserInGame, x: Int, y:Int): Collection<Field>?{
+    fun findWinLine(userId: Int, x: Int, y:Int): Collection<Field>?{
         // vertical
         val result = mutableListOf<Field>()
         for(i in 0 until BOARD_SIZE){
-            if(board[i][y] == userInGame)
+            if(board[i][y] == userId)
                 result.add(Field(i, y))
             else
                 result.clear()
@@ -123,7 +126,7 @@ class GameBoard(private val users: List<UserInGame>){
         // horizontal
         result.clear()
         for(j in 0 until BOARD_SIZE){
-            if(board[x][j] == userInGame)
+            if(board[x][j] == userId)
                 result.add(Field(x, j))
             else
                 result.clear()
@@ -137,7 +140,7 @@ class GameBoard(private val users: List<UserInGame>){
         var i = x - stepsToStartPosition
         var j = y - stepsToStartPosition
         while(i < BOARD_SIZE && j < BOARD_SIZE){
-            if(board[i][j] == userInGame)
+            if(board[i][j] == userId)
                 result.add(Field(i, j))
             else
                 result.clear()
@@ -152,7 +155,7 @@ class GameBoard(private val users: List<UserInGame>){
         i = x - stepsToStartPosition
         j = y + stepsToStartPosition
         while(i < BOARD_SIZE && j >= 0){
-            if(board[i][j] == userInGame)
+            if(board[i][j] == userId)
                 result.add(Field(i, j))
             else
                 result.clear()

@@ -14,8 +14,13 @@ import app.AuthService
 import model.SignUpData
 import app.UserSession
 import app.UsersService
+import log
+import org.slf4j.LoggerFactory
 
 fun Route.authRouting() {
+
+    val log = LoggerFactory.getLogger("AuthRoutes")
+
     route("/auth/sign-up/anonymous") {
         post{
             var session: UserSession? = call.sessions.get<UserSession>()
@@ -37,6 +42,7 @@ fun Route.authRouting() {
                 call.sessions.set(session)
                 val user = UsersService.getUser(session.userId)
                 call.respond(user)
+                log.debug("$signUpData")
             }
             catch(e:ContentTransformationException){
                 badRequest(e)

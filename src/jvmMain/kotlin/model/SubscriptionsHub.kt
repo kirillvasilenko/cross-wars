@@ -13,6 +13,9 @@ open class SubscriptionsHubInMemory{
     private val connectionsByUserId =
         ConcurrentHashMap<Int, WsConnection>()
 
+    private val userEventsSubscribers: MutableMap<Int, WsConnection> =
+        ConcurrentHashMap<Int, WsConnection>()
+
     private val gameEventsSubscribers: MutableMap<Int, MutableSet<WsConnection>> =
         ConcurrentHashMap<Int, MutableSet<WsConnection>>()
 
@@ -63,12 +66,27 @@ open class SubscriptionsHubInMemory{
         log.debug("user=$userId unsubscribed from game=$gameId events")
     }
 
+    fun subscribeOnUserEvents(userId: Int) {
+        val connection = getConnection(userId)
+        userEventsSubscribers[userId] = connection
+        log.debug("user=$userId subscribed on himself events")
+    }
+
+    fun unsubscribeFromUserEvents(userId: Int) {
+        userEventsSubscribers.remove(userId)
+        log.debug("user=$userId unsubscribed from himself events")
+    }
+
     suspend fun handleGameEvent(event: GameEvent){
         when(event){
             is GameStarted -> handle(event)
             is UserSubscribedOnGameEvents -> handle(event)
             else -> handle(event)
         }
+    }
+
+    suspend fun handleUserEvent(event: UserEvent){
+        userEventsSubscribers[event.userId]?.send(event)
     }
 
     private fun getConnection(userId: Int): WsConnection =

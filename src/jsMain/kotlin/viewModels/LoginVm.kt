@@ -1,15 +1,10 @@
 package viewModels
 
 import api.Api
-import log
 import model.SideOfTheForce
 import model.SignUpData
-import model.UserDto
 import viewModels.common.CommandVm
-import viewModels.common.ViewModel
-import viewModels.common.VmEvent
-
-class UserLogin(source: ViewModel, val user: UserDto): VmEvent(source)
+import viewModels.common.UserLoggedIn
 
 class LoginVm: CommandVm(){
 
@@ -39,7 +34,7 @@ class LoginVm: CommandVm(){
 
     override suspend fun executeImpl() {
         val user = Api.auth.signUp(SignUpData(name, sideOfTheForce, color))
-        raiseEvent(UserLogin(this, user))
+        SubscriptionHub.raiseEvent(UserLoggedIn(this, user))
     }
 
 }

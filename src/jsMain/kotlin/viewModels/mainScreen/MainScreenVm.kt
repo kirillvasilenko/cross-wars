@@ -3,9 +3,14 @@ package viewModels.mainScreen
 import model.UserDto
 import viewModels.common.ViewModel
 
-class MainScreenVm(val currentUser: UserDto): ViewModel(){
+class MainScreenVm(currentUser: UserDto): ViewModel(){
 
-    val gamesListVm = child(GamesListVm(currentUser.id))
+    val gamesListVm = GamesListVm()
 
-    val headerVm = child(HeaderVm(currentUser.name))
+    val headerVm = HeaderVm(currentUser.name)
+
+    override suspend fun disposeImpl() {
+        gamesListVm.dispose()
+        headerVm.dispose()
+    }
 }

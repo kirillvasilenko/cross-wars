@@ -2,6 +2,8 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import model.*
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import kotlin.random.Random
 
 suspend fun runTestPlayers() = coroutineScope{
@@ -25,6 +27,8 @@ suspend fun runTestPlayers() = coroutineScope{
 }
 
 class TestPlayer(val user: User, val allTestUsers: List<User>, val maxDelaySec:Int){
+
+    val log: Logger = LoggerFactory.getLogger(javaClass)
 
     suspend fun play(){
         while(true){
@@ -68,7 +72,7 @@ class TestPlayer(val user: User, val allTestUsers: List<User>, val maxDelaySec:I
         var currentGames = activeGames.filter{it.users.size == countUsers}
         while(currentGames.any()){
             if(Random.nextDouble() < probabilityToJoin){
-                val randomGame = activeGames[Random.nextInt(activeGames.size)]
+                val randomGame = currentGames[Random.nextInt(currentGames.size)]
                 return user.joinGame(randomGame.id)
             }
 
@@ -96,7 +100,7 @@ class TestPlayer(val user: User, val allTestUsers: List<User>, val maxDelaySec:I
             if(vacantFields.isEmpty()) break
 
             if(snapshot.users.size < 2
-                    || snapshot.lastMovedUser?.id == user.id){
+                    || snapshot.lastMovedUserId == user.id){
                 continue
             }
 

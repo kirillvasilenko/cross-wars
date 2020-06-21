@@ -8,14 +8,28 @@ object EventsSerializer{
 
     private val json = Json(JsonConfiguration.Stable)
 
-    fun stringify(event: GameEvent) = json.stringify(GameEvent.serializer(), event)
+    fun stringify(event: BackendEvent) = json.stringify(BackendEvent.serializer(), event)
 
-    fun parse(eventAsString: String) = json.parse(GameEvent.serializer(), eventAsString)
+    fun parse(eventAsString: String) = json.parse(BackendEvent.serializer(), eventAsString)
 }
+
+@Serializable
+sealed class BackendEvent
+
+@Serializable
+sealed class UserEvent: BackendEvent(){
+    abstract val userId: Int
+}
+
+@Serializable
+data class UserJoinedGame(override val userId: Int, val gameId: Int): UserEvent()
+
+@Serializable
+data class UserLeavedGame(override val userId: Int, val gameId: Int): UserEvent()
 
 
 @Serializable
-sealed class GameEvent {
+sealed class GameEvent: BackendEvent() {
     abstract val gameId: Int
 }
 

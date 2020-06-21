@@ -11,8 +11,10 @@ import io.ktor.websocket.webSocket
 import log
 import app.SubscriptionsService
 import model.UserFaultException
+import org.slf4j.LoggerFactory
 
 fun Route.webSocketConnection() {
+    val log = LoggerFactory.getLogger("SubscriptionsRoutes")
     webSocket("/ws") {
         try {
             log.debug("Open ws connection ${getUserId()}")
@@ -75,8 +77,32 @@ fun Route.subscribeOnGameEvents(){
     }
 }
 
+fun Route.subscribeOnUserEvents(){
+    route("/account/subscription"){
+        put{
+            try {
+                SubscriptionsService.subscribeOnUserEvents(getUserId())
+                call.respond("Success")
+            }
+            catch(e: UserFaultException){
+                badRequest(e)
+            }
+        }
+        delete{
+            try {
+                SubscriptionsService.unsubscribeFromUserEvents(getUserId())
+                call.respond("Success")
+            }
+            catch(e: UserFaultException){
+                badRequest(e)
+            }
+        }
+    }
+}
+
 fun Route.registerSubscriptions() {
     webSocketConnection()
     subscribeOnGameStartedEvents()
     subscribeOnGameEvents()
+    subscribeOnUserEvents()
 }

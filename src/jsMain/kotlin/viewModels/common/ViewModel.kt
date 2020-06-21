@@ -1,12 +1,7 @@
 package viewModels.common
 
 import log
-
-open class VmEvent(val source: ViewModel){
-    var handled: Boolean = false
-}
-
-open class ErrorHappened(source: ViewModel, val cause: Throwable): VmEvent(source)
+import model.UserDto
 
 interface Disposable{
     suspend fun dispose()
@@ -37,9 +32,6 @@ abstract class ViewModel: Disposable {
     override suspend fun dispose(){
         if(disposed) return
         disposed = true
-        children.toList().forEach {child ->
-            removeChild(child)
-        }
         try {
             disposeImpl()
         }
@@ -66,38 +58,5 @@ abstract class ViewModel: Disposable {
     }
 
     //endregion state
-
-    //region children
-
-    private val children = mutableSetOf<ViewModel>()
-
-    protected var eventRaised: suspend (VmEvent) -> Unit = {}
-
-    protected suspend fun raiseEvent(event: VmEvent){
-        eventRaised(event)
-    }
-
-    protected fun <T> child(child: T): T
-        where T: ViewModel {
-        children.add(child)
-        child.eventRaised = ::onChildEvent
-        return child
-    }
-
-    protected suspend fun removeChild(child: ViewModel){
-        children.remove(child)
-        child.eventRaised = {}
-        child.dispose()
-    }
-
-    private suspend fun onChildEvent(event: VmEvent){
-        handleChildEvent(event)
-        if(event.handled) return
-        raiseEvent(event)
-    }
-
-    protected open suspend fun handleChildEvent(event: VmEvent){}
-
-    //endregion children
 
 }

@@ -24,12 +24,15 @@ class User(
 
     private val subscribedOnGames = mutableSetOf<Int>()
 
+    var eventsListener: suspend (UserEvent) -> Unit = {}
+
     suspend fun startNewGame(): Game {
         mutex.withLock{
             checkCurrentGameIsNull("User must leave current game before starting new one.")
             val game = GamesStorage.makeGame()
             currentGame = game
             game.start(this)
+            raiseEvent(UserJoinedGame(id, game.id))
             return game
         }
     }
@@ -42,6 +45,7 @@ class User(
             val game = GamesStorage.getGame(gameId)
             game.join(this)
             currentGame = game
+            raiseEvent(UserJoinedGame(id, game.id))
             return game
         }
     }
@@ -49,8 +53,10 @@ class User(
     suspend fun leaveCurrentGame(){
         mutex.withLock{
             if(currentGame == null) return
+            val gameId = currentGame!!.id
             currentGame!!.leave(this)
             currentGame = null
+            raiseEvent(UserLeavedGame(id, gameId))
         }
     }
 
@@ -74,6 +80,7 @@ class User(
         mutex.withLock{
             unsubscribeFromGameStartedImpl()
             unsubscribeFromAllGames()
+            unsubscribeFromUserEventsImpl()
             SubscriptionsHub.deleteConnection(id)
             wsConnection = null
         }
@@ -112,6 +119,22 @@ class User(
         }
     }
 
+    suspend fun subscribeOnUserEvents() {
+        mutex.withLock {
+            if(wsConnection == null) userFault(
+                "Trying to subscribe without set ws connection. Set wsConnection and try again."
+            )
+            SubscriptionsHub.subscribeOnUserEvents(id)
+        }
+    }
+
+    suspend fun unsubscribeFromUserEvents() {
+        mutex.withLock {
+            if(wsConnection == null) return
+            unsubscribeFromUserEventsImpl()
+        }
+    }
+
     suspend fun snapshot(): UserDto{
         mutex.withLock{
             return UserDto(id, name, currentGame?.id, sideOfTheForce, swordColor)
@@ -130,6 +153,10 @@ class User(
         subscribedOnGames.remove(gameId)
     }
 
+    private fun unsubscribeFromUserEventsImpl(){
+        SubscriptionsHub.unsubscribeFromUserEvents(id)
+    }
+
     private suspend fun unsubscribeFromAllGames(){
         subscribedOnGames.toList().forEach {
             unsubscribeFromGameEventsImpl(it)
@@ -138,6 +165,10 @@ class User(
 
     private fun checkCurrentGameIsNull(errorMessage: String){
         if(currentGame != null) userFault(errorMessage)
+    }
+
+    private suspend fun raiseEvent(event: UserEvent){
+        eventsListener(event)
     }
 
 }

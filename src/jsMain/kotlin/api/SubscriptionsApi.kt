@@ -33,4 +33,12 @@ class SubscriptionsApi{
     suspend fun unsubscribeFromGameEvents(gameId: Int){
         client.delete<Unit>("$endpoint/api/games/$gameId/subscription")
     }
+
+    suspend fun subscribeOnUserEvents(){
+        client.put<Unit>("$endpoint/api/account/subscription")
+    }
+
+    suspend fun unsubscribeFromUserEvents(){
+        client.delete<Unit>("$endpoint/api/account/subscription")
+    }
 }

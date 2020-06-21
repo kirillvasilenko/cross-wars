@@ -1,9 +1,6 @@
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonConfiguration
-import model.GameEvent
-import model.GameState
-import model.GameStateChanged
-import model.UserJoined
+import model.*
 import org.junit.Test
 import kotlin.test.assertEquals
 
@@ -12,18 +9,20 @@ class SerializationTests {
     @Test
     fun smokeTest() {
 
-        val json = Json(JsonConfiguration.Stable)
-
         val stateChanged = GameStateChanged(1, GameState.ACTIVE)
-        val userJoined = UserJoined(2, 3)
+        val userJoined = UserJoined(2, UserInGame(3, 2, true, "Name", SideOfTheForce.Dark, 3))
+        val userJoinedGame = UserJoinedGame(1, 3)
 
-        val jsonStateChanged = json.stringify(GameEvent.serializer(), stateChanged)
-        val jsonUserJoined = json.stringify(GameEvent.serializer(), userJoined)
+        val jsonStateChanged = EventsSerializer.stringify(stateChanged)
+        val jsonUserJoined = EventsSerializer.stringify(userJoined)
+        val jsonUserJoinedGame = EventsSerializer.stringify(userJoinedGame)
 
-        val parsedStateChanged = json.parse(GameEvent.serializer(), jsonStateChanged)
-        val parsedUserJoined = json.parse(GameEvent.serializer(), jsonUserJoined)
+        val parsedStateChanged = EventsSerializer.parse(jsonStateChanged)
+        val parsedUserJoined = EventsSerializer.parse(jsonUserJoined)
+        val parsedUserJoinedGame = EventsSerializer.parse(jsonUserJoinedGame)
 
         assertEquals(stateChanged, parsedStateChanged)
         assertEquals(userJoined, parsedUserJoined)
+        assertEquals(userJoinedGame, parsedUserJoinedGame)
     }
 }

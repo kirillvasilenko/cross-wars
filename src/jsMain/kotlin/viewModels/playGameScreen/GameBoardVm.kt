@@ -25,11 +25,11 @@ class GameBoardVm(
 
     init {
         this.board = game.board.mapIndexed { x, row ->
-            row.mapIndexed { y, userInGame ->
-                if (userInGame == null)
+            row.mapIndexed { y, userIdOnField ->
+                if (userIdOnField == null)
                     BoardFieldVm(x, y, null, active)
                 else{
-                    val user = users.first { it.userId == userInGame.id }
+                    val user = users.first { it.userId == userIdOnField }
                     BoardFieldVm(
                             x, y,
                             UserInGameSymbolVm(
@@ -40,7 +40,7 @@ class GameBoardVm(
                 }
             }.toMutableList()
         }
-        if(currentUser.id == game.lastMovedUser?.id){
+        if(currentUser.id == game.lastMovedUserId){
             setFieldsActive(false)
         }
     }

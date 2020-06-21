@@ -1,6 +1,7 @@
 package app
 
 import model.SignUpData
+import model.SubscriptionsHub
 import model.UsersStorage
 import org.slf4j.LoggerFactory
 import java.util.*
@@ -20,6 +21,7 @@ open class AuthServiceInMemory{
 
     fun signUpNewUser(data: SignUpData): UserSession {
         val user = UsersStorage.makeUser(data.name, data.sideOfTheForce, data.swordColor)
+        user.eventsListener = SubscriptionsHub::handleUserEvent
         return UserSession(workSession, user.id)
     }
 

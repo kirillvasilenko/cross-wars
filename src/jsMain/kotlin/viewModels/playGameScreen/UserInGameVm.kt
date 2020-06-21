@@ -1,24 +1,23 @@
 package viewModels.playGameScreen
 
 import model.SideOfTheForce
-import model.UserDto
 import model.UserInGame
 import viewModels.common.ViewModel
 
-class UserInGameVm(user: UserDto, userInGame: UserInGame): ViewModel(){
+class UserInGameVm(user: UserInGame): ViewModel(){
 
     val userId = user.id
 
-    val userSymbol = userInGame.symbol
+    val userSymbol = user.symbol
 
-    var active = userInGame.active
+    var active = user.active
         set(value) {
             if(value == field) return
             field = value
             raiseStateChanged()
         }
 
-    var userName: String = user.name
+    var userName: String = user.userName
 
     var sideOfTheForce: SideOfTheForce = user.sideOfTheForce
 
