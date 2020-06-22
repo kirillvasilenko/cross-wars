@@ -83,10 +83,16 @@ class AppVm: ViewModel() {
             is UserLoggedOut -> logout()
             is ErrorHappened ->
                 when(event){
-                    is Unauthorized -> openLoginForm()
+                    is Unauthorized -> handleUnauthorized()
                     else -> log(event.cause.message)
                 }
         }
+    }
+
+    private suspend fun handleUnauthorized(){
+        currentVm.dispose()
+        SubscriptionHub.stopConnecting()
+        openLoginForm()
     }
 
     private suspend fun handleUserEvents(event: UserEvent) {

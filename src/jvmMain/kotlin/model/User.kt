@@ -20,8 +20,6 @@ class User(
     var currentGame: Game? = null
         private set
 
-    private var wsConnection: WsConnection? = null
-
     var eventsListener: suspend (UserEvent) -> Unit = {}
 
     suspend fun startNewGame(): Game {
@@ -68,16 +66,9 @@ class User(
     }
 
     suspend fun connect(incoming: ReceiveChannel<Frame>, outgoing: SendChannel<Frame>) {
-        mutex.withLock{
-            if(wsConnection != null) userFault("Trying open more than one ws connection. Only one ws connection is available for user.")
-            val connection = SubscriptionsHub.createConnection(id, incoming, outgoing)
-            wsConnection = connection
-        }
-        wsConnection!!.runSendingEvents(CoroutineScope(coroutineContext))
-        wsConnection!!.listen()
-        mutex.withLock{
-            wsConnection = null
-        }
+        val connection = SubscriptionsHub.createConnection(id, incoming, outgoing)
+        connection.runSendingEvents(CoroutineScope(coroutineContext))
+        connection.listen()
     }
 
     suspend fun snapshot(): UserDto{
