@@ -22,8 +22,6 @@ class User(
 
     private var wsConnection: WsConnection? = null
 
-    private val subscribedOnGames = mutableSetOf<Int>()
-
     var eventsListener: suspend (UserEvent) -> Unit = {}
 
     suspend fun startNewGame(): Game {
@@ -78,88 +76,13 @@ class User(
         wsConnection!!.runSendingEvents(CoroutineScope(coroutineContext))
         wsConnection!!.listen()
         mutex.withLock{
-            unsubscribeFromGameStartedImpl()
-            unsubscribeFromAllGames()
-            unsubscribeFromUserEventsImpl()
-            SubscriptionsHub.deleteConnection(id)
             wsConnection = null
-        }
-    }
-
-    suspend fun subscribeOnGameStartedEvents() {
-        mutex.withLock {
-            if(wsConnection == null) userFault(
-                "Trying to subscribe without set ws connection. Set wsConnection and try again."
-            )
-            SubscriptionsHub.subscribeOnGameStartedEvents(id)
-        }
-    }
-
-    suspend fun unsubscribeFromGameStartedEvents() {
-        mutex.withLock {
-            unsubscribeFromGameStartedImpl()
-        }
-    }
-
-    suspend fun subscribeOnGameEvents(gameId: Int) {
-        mutex.withLock {
-            if(wsConnection == null) userFault(
-                "Trying to subscribe without set ws connection. Set wsConnection and try again."
-            )
-            val game = GamesStorage.getGame(gameId)
-            game.subscribe(this)
-            subscribedOnGames.add(gameId)
-        }
-    }
-
-    suspend fun unsubscribeFromGameEvents(gameId: Int) {
-        mutex.withLock {
-            if(wsConnection == null) return
-            unsubscribeFromGameEventsImpl(gameId)
-        }
-    }
-
-    suspend fun subscribeOnUserEvents() {
-        mutex.withLock {
-            if(wsConnection == null) userFault(
-                "Trying to subscribe without set ws connection. Set wsConnection and try again."
-            )
-            SubscriptionsHub.subscribeOnUserEvents(id)
-        }
-    }
-
-    suspend fun unsubscribeFromUserEvents() {
-        mutex.withLock {
-            if(wsConnection == null) return
-            unsubscribeFromUserEventsImpl()
         }
     }
 
     suspend fun snapshot(): UserDto{
         mutex.withLock{
             return UserDto(id, name, currentGame?.id, sideOfTheForce, swordColor)
-        }
-    }
-
-    private fun unsubscribeFromGameStartedImpl(){
-        SubscriptionsHub.unsubscribeFromGameStartedEvents(id)
-    }
-
-    private suspend fun unsubscribeFromGameEventsImpl(gameId: Int){
-        if(!GamesStorage.contains(gameId)) return
-
-        val game = GamesStorage.getGame(gameId)
-        game.unsubscribe(this)
-        subscribedOnGames.remove(gameId)
-    }
-
-    private fun unsubscribeFromUserEventsImpl(){
-        SubscriptionsHub.unsubscribeFromUserEvents(id)
-    }
-
-    private suspend fun unsubscribeFromAllGames(){
-        subscribedOnGames.toList().forEach {
-            unsubscribeFromGameEventsImpl(it)
         }
     }
 

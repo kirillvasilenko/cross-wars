@@ -13,7 +13,7 @@ class GamesListVm: ViewModel(){
 
     val games = mutableListOf<GamePreviewVm>()
 
-    private var startedGameEventsListener = BackendEventsHandler(::handleGameStarted, ::resetGamesAndSubscribe)
+    private val startedGameEventsListener = BackendEventsHandler(::handleGameStarted, ::resetGamesAndSubscribe)
 
     override suspend fun initImpl() {
         resetGamesAndSubscribe()

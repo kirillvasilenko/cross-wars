@@ -25,8 +25,11 @@ abstract class VMComponent<T>(props: VmProps<T>): RComponent<VmProps<T>, VmState
         subscribeOnVmAndInit()
     }
 
+    override fun componentWillUnmount() {
+        unsubscribeFromVm()
+    }
+
     override fun componentDidUpdate(prevProps: VmProps<T>, prevState: VmState, snapshot: Any) {
-        unsubscribeFromVm(prevProps.pVm)
         subscribeOnVmAndInit()
     }
 
@@ -45,8 +48,8 @@ abstract class VMComponent<T>(props: VmProps<T>): RComponent<VmProps<T>, VmState
         }
     }
 
-    private fun unsubscribeFromVm(prevVm: T){
-        prevVm.onStateChanged = {}
+    private fun unsubscribeFromVm(){
+        vm.onStateChanged = {}
     }
 
 }

@@ -69,19 +69,9 @@ class Game(val id: Int){
         }
     }
 
-    suspend fun subscribe(user: User) {
+    suspend fun sendSnapshot(connection:WsConnection){
         mutex.withLock {
-            // can ignore it, cause there will no any events
-            if(state == ARCHIVED) return
-
-            SubscriptionsHub.subscribeOnGameEvents(user.id, id)
-            raiseEvent(UserSubscribedOnGameEvents(id, user.id, snapshotImpl()))
-        }
-    }
-
-    suspend fun unsubscribe(user: User) {
-        mutex.withLock {
-            SubscriptionsHub.unsubscribeFromGameEvents(user.id, id)
+            connection.send(GameSnapshot(id, snapshotImpl()))
         }
     }
 

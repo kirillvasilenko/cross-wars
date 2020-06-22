@@ -55,7 +55,7 @@ class GamePreviewVm(private var game: GameDto): CommandVm() {
             is UserJoined -> onUserJoined(event)
             is UserLeaved -> onUserLeaved(event)
             is UserMoved -> onUserMoved()
-            is UserSubscribedOnGameEvents -> resetAll(event.game)
+            is GameSnapshot -> resetAll(event.game)
             else -> Unit // ignore
         }
     }

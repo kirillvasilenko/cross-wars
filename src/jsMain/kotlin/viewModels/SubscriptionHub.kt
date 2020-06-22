@@ -1,6 +1,5 @@
 package viewModels
 
-import api.Api
 import log
 import model.*
 import viewModels.common.FrontendEvent
@@ -25,28 +24,28 @@ object SubscriptionHub{
     suspend fun subscribeOnGameStartedEvents(eventHandler: BackendEventsHandler<GameStarted>){
         gameStartedEventsHandlers.add(eventHandler)
         if(connection.connected){
-            Api.subscriptions.subscribeOnGameStartedEvents()
+            connection.sendCommand(SubscribeOnGameStartedEvents())
         }
     }
 
     suspend fun unsubscribeFromGameStartedEvents(eventHandler: BackendEventsHandler<GameStarted>){
         gameStartedEventsHandlers.remove(eventHandler)
         if(connection.connected){
-            Api.subscriptions.unsubscribeFromGameStartedEvents()
+            connection.sendCommand(UnsubscribeFromGameStartedEvents())
         }
     }
 
     suspend fun subscribeOnUserEvents(eventHandler: BackendEventsHandler<UserEvent>){
         userEventsHandlers.add(eventHandler)
         if(connection.connected){
-            Api.subscriptions.subscribeOnUserEvents()
+            connection.sendCommand(SubscribeOnUserEvents())
         }
     }
 
     suspend fun unsubscribeFromUserEvents(eventHandler: BackendEventsHandler<UserEvent>){
         userEventsHandlers.remove(eventHandler)
         if(connection.connected){
-            Api.subscriptions.unsubscribeFromUserEvents()
+            connection.sendCommand(UnsubscribeFromUserEvents())
         }
     }
 
@@ -56,14 +55,14 @@ object SubscriptionHub{
 
         gameEventsHandlers[gameId] = eventHandler
         if(connection.connected){
-            Api.subscriptions.subscribeOnGameEvents(gameId)
+            connection.sendCommand(SubscribeOnGameEvents(gameId))
         }
     }
 
     suspend fun unsubscribeFromGameEvents(gameId: Int){
         gameEventsHandlers.remove(gameId)
         if(connection.connected){
-            Api.subscriptions.unsubscribeFromGameEvents(gameId)
+            connection.sendCommand(UnsubscribeFromGameEvents(gameId))
         }
     }
 
@@ -115,7 +114,6 @@ object SubscriptionHub{
     }
 
     private suspend fun handle(event: UserEvent){
-        log("received UserEvent: $event")
         userEventsHandlers.forEach {
             try {
                 it.handle(event)

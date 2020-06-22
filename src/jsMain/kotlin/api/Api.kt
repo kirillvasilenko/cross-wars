@@ -19,7 +19,7 @@ object Api{
     val auth = AuthApi()
     val account = AccountApi()
     val users = UsersApi()
-    val subscriptions = SubscriptionsApi()
+    val ws = WsConnectionsApi()
     val games = GamesApi()
 }
 

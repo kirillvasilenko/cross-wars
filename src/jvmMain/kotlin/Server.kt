@@ -75,7 +75,7 @@ fun Application.module() {
 
             authenticate{
                 registerAccountRoutes()
-                registerSubscriptions()
+                registerWsConnections()
                 registerGamesRoutes()
                 registerUsersRoutes()
             }

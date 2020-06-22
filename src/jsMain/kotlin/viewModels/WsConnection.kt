@@ -7,6 +7,8 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import log
 import mainScope
+import model.WsCommand
+import model.WsCommandsSerializer
 import kotlin.math.max
 
 class WsConnection{
@@ -43,13 +45,23 @@ class WsConnection{
         currentSession?.close()
     }
 
+    suspend fun sendCommand(command: WsCommand){
+        try {
+            val commandAsText = WsCommandsSerializer.stringify(command)
+            currentSession?.outgoing?.send(Frame.Text(commandAsText))
+        }
+        catch(e: Throwable){
+            log("error on sending command: $e.message")
+        }
+    }
+
     private suspend fun startWsConnectingImpl() {
         try {
-            Api.subscriptions.openWsConnection {
+            Api.ws.openWsConnection {
                 log("ws connection is opened")
                 currentSession = this
                 onWsConnectionOpened()
-                wsConnectionWork(incoming)
+                receiving(incoming)
                 this.close()
             }
             delayToConnect = initialDelayToConnect
@@ -63,8 +75,7 @@ class WsConnection{
         }
     }
 
-    private suspend fun wsConnectionWork(incoming: ReceiveChannel<Frame>){
-
+    private suspend fun receiving(incoming: ReceiveChannel<Frame>){
         try {
             for (frame in incoming) {
                 when (frame) {

@@ -6,112 +6,97 @@ import kotlinx.coroutines.channels.SendChannel
 import org.slf4j.LoggerFactory
 import java.util.concurrent.ConcurrentHashMap
 
+
 open class SubscriptionsHubInMemory{
 
     private val log = LoggerFactory.getLogger(javaClass)
 
-    private val connectionsByUserId =
-        ConcurrentHashMap<Int, WsConnection>()
 
-    private val userEventsSubscribers: MutableMap<Int, WsConnection> =
-        ConcurrentHashMap<Int, WsConnection>()
-
-    private val gameEventsSubscribers: MutableMap<Int, MutableSet<WsConnection>> =
+    /**
+     * User id to subscribers
+     * */
+    private val userEventsSubscribers =
         ConcurrentHashMap<Int, MutableSet<WsConnection>>()
 
-    private val startedGamesSubscribers: MutableSet<WsConnection> = ConcurrentHashMap.newKeySet()
+    /**
+     * User id to subscribers
+     * */
+    private val gamesStartedSubscribers =
+        ConcurrentHashMap<Int, MutableSet<WsConnection>>()
+
+    /**
+     * Game id to map from user id to subscribers
+     * */
+    private val gameEventsSubscribers =
+        ConcurrentHashMap<Int, ConcurrentHashMap<Int, MutableSet<WsConnection>>>()
+
 
     fun createConnection(userId: Int, incoming: ReceiveChannel<Frame>, outgoing: SendChannel<Frame>) : WsConnection {
-        val connection = WsConnection(userId, incoming, outgoing)
-        connectionsByUserId[userId] = connection
-        return connection
+        return WsConnection(userId, incoming, outgoing)
     }
 
-    fun deleteConnection(userId: Int) {
-        connectionsByUserId.remove(userId)
-    }
-
-    fun subscribeOnGameStartedEvents(userId: Int) {
-        val connection = getConnection(userId)
-        startedGamesSubscribers.add(connection)
+    fun subscribeOnGameStartedEvents(userId: Int, connection: WsConnection) {
+        gamesStartedSubscribers
+            .getOrPut(userId, { ConcurrentHashMap.newKeySet() })
+            .add(connection)
         log.debug("user=$userId subscribed on game started events")
     }
 
-    fun unsubscribeFromGameStartedEvents(userId: Int) {
-        val connection = connectionsByUserId[userId]
-            ?: return
-        startedGamesSubscribers.remove(connection)
+    fun unsubscribeFromGameStartedEvents(userId: Int, connection: WsConnection) {
+        gamesStartedSubscribers[userId]
+            ?.remove(connection)
         log.debug("user=$userId unsubscribed from game started events")
     }
 
-    fun subscribeOnGameEvents(userId: Int, gameId: Int) {
-        val connection = getConnection(userId)
+    fun subscribeOnGameEvents(userId: Int, gameId: Int, connection: WsConnection) {
+        gameEventsSubscribers
+            .getOrPut(gameId, { ConcurrentHashMap<Int, MutableSet<WsConnection>>() })
+            .getOrPut(userId, { ConcurrentHashMap.newKeySet() })
+            .add(connection)
 
-        var gameSubscribers = gameEventsSubscribers[gameId]
-        if(gameSubscribers == null){
-            gameSubscribers = ConcurrentHashMap.newKeySet()
-            gameEventsSubscribers[gameId] = gameSubscribers
-        }
-
-        gameSubscribers!!.add(connection)
         log.debug("user=$userId subscribed on game=$gameId events")
     }
 
-    fun unsubscribeFromGameEvents(userId: Int, gameId: Int) {
-        val connection = connectionsByUserId[userId]
-            ?: return
-        val gameSubscribers = gameEventsSubscribers[gameId]
-            ?: return
-        gameSubscribers.remove(connection)
+    fun unsubscribeFromGameEvents(userId: Int, gameId: Int, connection: WsConnection) {
+        gameEventsSubscribers[gameId]
+            ?.get(userId)
+            ?.remove(connection)
+
         log.debug("user=$userId unsubscribed from game=$gameId events")
     }
 
-    fun subscribeOnUserEvents(userId: Int) {
-        val connection = getConnection(userId)
-        userEventsSubscribers[userId] = connection
-        log.debug("user=$userId subscribed on himself events")
+    fun subscribeOnUserEvents(userId: Int, connection: WsConnection) {
+        userEventsSubscribers
+            .getOrPut(userId, { ConcurrentHashMap.newKeySet() })
+            .add(connection)
     }
 
-    fun unsubscribeFromUserEvents(userId: Int) {
-        userEventsSubscribers.remove(userId)
-        log.debug("user=$userId unsubscribed from himself events")
+    fun unsubscribeFromUserEvents(userId: Int, connection: WsConnection) {
+        userEventsSubscribers[userId]
+            ?.remove(connection)
     }
 
     suspend fun handleGameEvent(event: GameEvent){
         when(event){
             is GameStarted -> handle(event)
-            is UserSubscribedOnGameEvents -> handle(event)
             else -> handle(event)
         }
     }
 
     suspend fun handleUserEvent(event: UserEvent){
-        userEventsSubscribers[event.userId]?.send(event)
-    }
-
-    private fun getConnection(userId: Int): WsConnection =
-        connectionsByUserId[userId]
-            ?: throw ConnectionNotFoundException("ws connection for user $userId not found.")
-
-    private suspend fun handle(event: UserSubscribedOnGameEvents){
-        val connection = connectionsByUserId[event.userId]
-            ?: return
-        connection.send(event)
+        userEventsSubscribers[event.userId]?.forEach { it.send(event) }
     }
 
     private suspend fun handle(event: GameStarted){
-        for(connection in startedGamesSubscribers){
-            connection.send(event)
-        }
+        gamesStartedSubscribers.values
+            .flatten()
+            .forEach{ it.send(event) }
     }
 
     private suspend fun handle(event: GameEvent){
-        val subscribers = gameEventsSubscribers[event.gameId]
-            ?: return
-
-        for(connection in subscribers){
-            connection.send(event)
-        }
+        gameEventsSubscribers[event.gameId]
+            ?.flatMap { it.value }
+            ?.forEach { it.send(event) }
 
         if(event is GameStateChanged
                 && event.actualState == GameState.ARCHIVED){
@@ -125,5 +110,3 @@ open class SubscriptionsHubInMemory{
 }
 
 object SubscriptionsHub:SubscriptionsHubInMemory()
-
-open class ConnectionNotFoundException(message: String):Throwable(message)

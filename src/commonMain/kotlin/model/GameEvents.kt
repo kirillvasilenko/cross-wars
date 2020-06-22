@@ -13,6 +13,37 @@ object EventsSerializer{
     fun parse(eventAsString: String) = json.parse(BackendEvent.serializer(), eventAsString)
 }
 
+object WsCommandsSerializer{
+
+    private val json = Json(JsonConfiguration.Stable)
+
+    fun stringify(command: WsCommand) = json.stringify(WsCommand.serializer(), command)
+
+    fun parse(commandAsString: String) = json.parse(WsCommand.serializer(), commandAsString)
+}
+
+@Serializable
+sealed class WsCommand
+
+@Serializable
+class SubscribeOnUserEvents : WsCommand()
+
+@Serializable
+class UnsubscribeFromUserEvents :WsCommand()
+
+@Serializable
+class SubscribeOnGameStartedEvents: WsCommand()
+
+@Serializable
+class UnsubscribeFromGameStartedEvents: WsCommand()
+
+@Serializable
+class SubscribeOnGameEvents(val gameId: Int): WsCommand()
+
+@Serializable
+class UnsubscribeFromGameEvents(val gameId: Int): WsCommand()
+
+
 @Serializable
 sealed class BackendEvent
 
@@ -26,6 +57,7 @@ data class UserJoinedGame(override val userId: Int, val gameId: Int): UserEvent(
 
 @Serializable
 data class UserLeavedGame(override val userId: Int, val gameId: Int): UserEvent()
+
 
 
 @Serializable
@@ -59,4 +91,4 @@ data class UserWon(override val gameId: Int, val userId: Int, val winLine: Colle
 data class Draw(override val gameId: Int): GameEvent()
 
 @Serializable
-data class UserSubscribedOnGameEvents(override val gameId: Int, val userId: Int, val game: GameDto):GameEvent()
+data class GameSnapshot(override val gameId: Int, val game: GameDto):GameEvent()

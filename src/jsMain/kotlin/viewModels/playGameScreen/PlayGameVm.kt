@@ -38,7 +38,7 @@ class PlayGameVm(
     }
 
     private suspend fun handleGameEvent(event: GameEvent){
-        if(event is UserSubscribedOnGameEvents){
+        if(event is GameSnapshot){
             resetAll(event.game)
             return
         }
