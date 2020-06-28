@@ -9,7 +9,7 @@
         <file>logs/logFile.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!-- daily rollover -->
-            <fileNamePattern>logFile.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <fileNamePattern>logs/logFile.%d{yyyy-MM-dd}.log</fileNamePattern>
 
             <!-- keep 30 days' worth of history capped at 3GB total size -->
             <maxHistory>30</maxHistory>
@@ -30,7 +30,7 @@
     <logger name="io.netty" level="INFO"/>
 
     <logger name="default" level="trace"/>
-    <logger name="model.WsConnection" level="debug"/>
+    <logger name="model.WsConnection" level="info"/>
     <logger name="app.AuthService" level="info"/>
     <logger name="model.SubscriptionsHub" level="info"/>
     <logger name="SubscriptionsRoutes" level="info"/>

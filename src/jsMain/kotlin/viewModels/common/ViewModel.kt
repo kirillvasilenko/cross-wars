@@ -1,7 +1,6 @@
 package viewModels.common
 
 import log
-import model.UserDto
 
 interface Disposable{
     suspend fun dispose()
