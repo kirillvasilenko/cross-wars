@@ -3,10 +3,10 @@ package model
 import io.ktor.http.cio.websocket.Frame
 import io.ktor.http.cio.websocket.readText
 import kotlinx.coroutines.CancellationException
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.channels.SendChannel
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import org.slf4j.LoggerFactory
 
@@ -20,7 +20,21 @@ class WsConnection(
     private var eventsChannel =
         Channel<BackendEvent>(Channel.UNLIMITED)
 
-    suspend fun listen(){
+    suspend fun listenAndSend(): Unit = coroutineScope {
+        launch{
+            sendEvents()
+        }
+        launch{
+            listenMessages()
+        }
+        Unit
+    }
+
+    suspend fun send(event: BackendEvent) {
+        eventsChannel.send(event)
+    }
+
+    private suspend fun listenMessages(){
         try {
             log.debug("start listening messages")
             listenImpl()
@@ -32,24 +46,17 @@ class WsConnection(
         log.debug("stop listening messages")
     }
 
-    fun runSendingEvents(scope: CoroutineScope){
-        scope.launch {
-            log.debug("start sending messages")
-            try {
-                for (event in eventsChannel) {
-                    sendEventImpl(event)
-                }
+    private suspend fun sendEvents() {
+        log.debug("start sending messages")
+        try {
+            for (event in eventsChannel) {
+                sendEventImpl(event)
             }
-            catch(ignore: CancellationException){}
-            catch (e: Throwable) {
-                log.warn("error in sending messages: ${e.message}")
-            }
-            log.debug("stop sending messages")
+        } catch (ignore: CancellationException) {
+        } catch (e: Throwable) {
+            log.warn("error in sending messages: ${e.message}")
         }
-    }
-
-    suspend fun send(event: BackendEvent) {
-        eventsChannel.send(event)
+        log.debug("stop sending messages")
     }
 
     private suspend fun listenImpl(){

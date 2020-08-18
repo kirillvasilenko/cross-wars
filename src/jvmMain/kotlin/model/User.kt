@@ -1,12 +1,11 @@
 package model
 
 import io.ktor.http.cio.websocket.Frame
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.channels.SendChannel
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
-import kotlin.coroutines.coroutineContext
 
 class User(
         val id: Int,
@@ -38,6 +37,7 @@ class User(
             if(currentGame?.id == gameId) return currentGame!!
             checkCurrentGameIsNull("User must leave current game before join another one.")
 
+
             val game = GamesStorage.getGame(gameId)
             game.join(this)
             currentGame = game
@@ -67,8 +67,7 @@ class User(
 
     suspend fun connect(incoming: ReceiveChannel<Frame>, outgoing: SendChannel<Frame>) {
         val connection = SubscriptionsHub.createConnection(id, incoming, outgoing)
-        connection.runSendingEvents(CoroutineScope(coroutineContext))
-        connection.listen()
+        connection.listenAndSend()
     }
 
     suspend fun snapshot(): UserDto{
