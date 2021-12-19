@@ -1,4 +1,4 @@
-rootProject.name = "cross-wars-compose3"
+rootProject.name = "cross-wars"
 
 plugins {
     id("de.fayard.refreshVersions") version "0.23.0"
