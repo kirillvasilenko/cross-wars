@@ -1,0 +1,420 @@
+2021-12-19 11:09:04.766 [KtorShutdownHook] INFO  Application - Application stopping: io.ktor.application.Application@27ead29e
+2021-12-19 11:09:04.788 [KtorShutdownHook] INFO  Application - Application stopped: io.ktor.application.Application@27ead29e
+2021-12-19 11:09:16.070 [main] TRACE Application - {
+    # application.conf @ file:/Users/kir/dev/student/cross-wars-compose3/serverKtor/build/resources/main/application.conf: 7
+    "application" : {
+        # application.conf @ file:/Users/kir/dev/student/cross-wars-compose3/serverKtor/build/resources/main/application.conf: 8
+        "modules" : [
+            # application.conf @ file:/Users/kir/dev/student/cross-wars-compose3/serverKtor/build/resources/main/application.conf: 8
+            "com.vkir.ServerKt.module"
+        ]
+    },
+    # application.conf @ file:/Users/kir/dev/student/cross-wars-compose3/serverKtor/build/resources/main/application.conf: 2
+    "deployment" : {
+        # application.conf @ file:/Users/kir/dev/student/cross-wars-compose3/serverKtor/build/resources/main/application.conf: 3
+        "host" : "trista.bu",
+        # application.conf @ file:/Users/kir/dev/student/cross-wars-compose3/serverKtor/build/resources/main/application.conf: 4
+        "port" : 8080
+    },
+    # Content hidden
+    "security" : "***"
+}
+
+2021-12-19 11:09:16.192 [main] INFO  Application - Autoreload is disabled because the development mode is off.
+2021-12-19 11:09:16.659 [main] INFO  com.vkir.routes.AuthRoutes - registerAuthRoutes
+2021-12-19 11:09:16.704 [main] INFO  Application - Responding at http://trista.bu:8080
+2021-12-19 11:09:16.707 [main] INFO  Application - Application started in 0.538 seconds.
+2021-12-19 11:09:16.707 [main] INFO  Application - Application started: io.ktor.application.Application@27ead29e
+2021-12-19 11:09:57.128 [KtorShutdownHook] INFO  Application - Application stopping: io.ktor.application.Application@27ead29e
+2021-12-19 11:09:57.131 [KtorShutdownHook] INFO  Application - Application stopped: io.ktor.application.Application@27ead29e
+2021-12-19 11:09:58.416 [main] TRACE Application - {
+    # application.conf @ file:/Users/kir/dev/student/cross-wars-compose3/serverKtor/build/resources/main/application.conf: 6
+    "application" : {
+        # application.conf @ file:/Users/kir/dev/student/cross-wars-compose3/serverKtor/build/resources/main/application.conf: 7
+        "modules" : [
+            # application.conf @ file:/Users/kir/dev/student/cross-wars-compose3/serverKtor/build/resources/main/application.conf: 7
+            "com.vkir.ServerKt.module"
+        ]
+    },
+    # application.conf @ file:/Users/kir/dev/student/cross-wars-compose3/serverKtor/build/resources/main/application.conf: 2
+    "deployment" : {
+        # application.conf @ file:/Users/kir/dev/student/cross-wars-compose3/serverKtor/build/resources/main/application.conf: 3
+        "port" : 8080
+    },
+    # Content hidden
+    "security" : "***"
+}
+
+2021-12-19 11:09:58.479 [main] INFO  Application - Autoreload is disabled because the development mode is off.
+2021-12-19 11:09:58.904 [main] INFO  com.vkir.routes.AuthRoutes - registerAuthRoutes
+2021-12-19 11:09:58.952 [main] INFO  Application - Responding at http://0.0.0.0:8080
+2021-12-19 11:09:58.955 [main] INFO  Application - Application started in 0.484 seconds.
+2021-12-19 11:09:58.955 [main] INFO  Application - Application started: io.ktor.application.Application@27cbfddf
+2021-12-19 11:10:07.299 [KtorShutdownHook] INFO  Application - Application stopping: io.ktor.application.Application@27cbfddf
+2021-12-19 11:10:07.302 [KtorShutdownHook] INFO  Application - Application stopped: io.ktor.application.Application@27cbfddf
+2021-12-19 11:10:43.812 [main] TRACE Application - {
+    # application.conf @ file:/Users/kir/dev/student/cross-wars-compose3/serverKtor/build/resources/main/application.conf: 6
+    "application" : {
+        # application.conf @ file:/Users/kir/dev/student/cross-wars-compose3/serverKtor/build/resources/main/application.conf: 7
+        "modules" : [
+            # application.conf @ file:/Users/kir/dev/student/cross-wars-compose3/serverKtor/build/resources/main/application.conf: 7
+            "com.vkir.ServerKt.module"
+        ]
+    },
+    # application.conf @ file:/Users/kir/dev/student/cross-wars-compose3/serverKtor/build/resources/main/application.conf: 2
+    "deployment" : {
+        # application.conf @ file:/Users/kir/dev/student/cross-wars-compose3/serverKtor/build/resources/main/application.conf: 3
+        "port" : 8080
+    },
+    # Content hidden
+    "security" : "***"
+}
+
+2021-12-19 11:10:43.878 [main] INFO  Application - Autoreload is disabled because the development mode is off.
+2021-12-19 11:10:44.311 [main] INFO  com.vkir.routes.AuthRoutes - registerAuthRoutes
+2021-12-19 11:10:44.390 [main] INFO  Application - Responding at http://0.0.0.0:8080
+2021-12-19 11:10:44.392 [main] INFO  Application - Application started in 0.524 seconds.
+2021-12-19 11:10:44.393 [main] INFO  Application - Application started: io.ktor.application.Application@27cbfddf
+2021-12-19 11:10:46.829 [eventLoopGroupProxy-4-1] INFO  Application - Status: 404 Not Found, HTTP method: GET, Headers:
+Host: localhost:8080
+Connection: Upgrade
+Pragma: no-cache
+Cache-Control: no-cache
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36
+Upgrade: websocket
+Origin: http://localhost:8080
+Sec-WebSocket-Version: 13
+Accept-Encoding: gzip, deflate, br
+Accept-Language: en-US,en;q=0.9,ru;q=0.8
+Cookie: USER_SESSION=userId%3D%2523i1%26workSession%3D%2523s5bd5c4a9%2De44d%2D410b%2D8db2%2Dfd69adb475f6
+Sec-WebSocket-Key: emn13AdBrPcDEdumoczxiw==
+Sec-WebSocket-Extensions: permessage-deflate; client_max_window_bits
+
+2021-12-19 11:10:55.516 [eventLoopGroupProxy-4-2] INFO  Application - Status: 404 Not Found, HTTP method: GET, Headers:
+Host: localhost:8080
+Connection: Upgrade
+Pragma: no-cache
+Cache-Control: no-cache
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36
+Upgrade: websocket
+Origin: http://localhost:8080
+Sec-WebSocket-Version: 13
+Accept-Encoding: gzip, deflate, br
+Accept-Language: en-US,en;q=0.9,ru;q=0.8
+Cookie: USER_SESSION=userId%3D%2523i1%26workSession%3D%2523s5bd5c4a9%2De44d%2D410b%2D8db2%2Dfd69adb475f6
+Sec-WebSocket-Key: mgUCxuAmh/9g+RsOvhbzfw==
+Sec-WebSocket-Extensions: permessage-deflate; client_max_window_bits
+
+2021-12-19 11:11:11.120 [eventLoopGroupProxy-4-3] INFO  com.vkir.Server - trying to validate userSession
+2021-12-19 11:11:11.122 [eventLoopGroupProxy-4-3] DEBUG com.vkir.app.AuthService - validating session: UserSession(workSession=5bd5c4a9-e44d-410b-8db2-fd69adb475f6, userId=1)
+2021-12-19 11:11:11.131 [eventLoopGroupProxy-4-3] DEBUG com.vkir.app.AuthService - validation result: false
+2021-12-19 11:11:11.135 [eventLoopGroupProxy-4-3] INFO  com.vkir.Server - in the challenge section
+2021-12-19 11:11:11.138 [eventLoopGroupProxy-4-3] INFO  Application - Status: 401 Unauthorized, HTTP method: GET, Headers:
+cookie: USER_SESSION=userId%3D%2523i1%26workSession%3D%2523s5bd5c4a9%2De44d%2D410b%2D8db2%2Dfd69adb475f6
+accept-language: en-US,en;q=0.9,ru;q=0.8
+accept-encoding: gzip, deflate, br
+referer: http://localhost:8081/
+sec-fetch-dest: empty
+sec-fetch-mode: cors
+sec-fetch-site: same-origin
+sec-ch-ua-platform: "macOS"
+user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36
+sec-ch-ua-mobile: ?0
+accept: application/json
+sec-ch-ua: " Not A;Brand";v="99", "Chromium";v="96", "Google Chrome";v="96"
+connection: close
+host: localhost:8080
+
+2021-12-19 11:11:12.661 [eventLoopGroupProxy-4-4] INFO  Application - Status: 404 Not Found, HTTP method: GET, Headers:
+Host: localhost:8080
+Connection: Upgrade
+Pragma: no-cache
+Cache-Control: no-cache
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36
+Upgrade: websocket
+Origin: http://localhost:8080
+Sec-WebSocket-Version: 13
+Accept-Encoding: gzip, deflate, br
+Accept-Language: en-US,en;q=0.9,ru;q=0.8
+Cookie: USER_SESSION=userId%3D%2523i1%26workSession%3D%2523s5bd5c4a9%2De44d%2D410b%2D8db2%2Dfd69adb475f6
+Sec-WebSocket-Key: rm0mFlAYfuXvdkn8lfcr0A==
+Sec-WebSocket-Extensions: permessage-deflate; client_max_window_bits
+
+2021-12-19 11:11:45.523 [eventLoopGroupProxy-4-5] INFO  Application - Status: 404 Not Found, HTTP method: GET, Headers:
+Host: localhost:8080
+Connection: Upgrade
+Pragma: no-cache
+Cache-Control: no-cache
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36
+Upgrade: websocket
+Origin: http://localhost:8080
+Sec-WebSocket-Version: 13
+Accept-Encoding: gzip, deflate, br
+Accept-Language: en-US,en;q=0.9,ru;q=0.8
+Cookie: USER_SESSION=userId%3D%2523i1%26workSession%3D%2523s5bd5c4a9%2De44d%2D410b%2D8db2%2Dfd69adb475f6
+Sec-WebSocket-Key: GkwLCS3c8LBfAYZ7ubswUQ==
+Sec-WebSocket-Extensions: permessage-deflate; client_max_window_bits
+
+2021-12-19 11:12:09.071 [eventLoopGroupProxy-4-6] INFO  Application - Status: 403 Forbidden, HTTP method: POST, Headers:
+cookie: USER_SESSION=userId%3D%2523i1%26workSession%3D%2523s5bd5c4a9%2De44d%2D410b%2D8db2%2Dfd69adb475f6
+accept-language: en-US,en;q=0.9,ru;q=0.8
+accept-encoding: gzip, deflate, br
+referer: http://localhost:8081/
+sec-fetch-dest: empty
+sec-fetch-mode: cors
+sec-fetch-site: same-origin
+origin: http://localhost:8081
+sec-ch-ua-platform: "macOS"
+user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36
+sec-ch-ua-mobile: ?0
+content-type: application/json
+accept: application/json
+sec-ch-ua: " Not A;Brand";v="99", "Chromium";v="96", "Google Chrome";v="96"
+connection: close
+host: localhost:8080
+content-length: 56
+
+2021-12-19 11:12:50.549 [eventLoopGroupProxy-4-7] INFO  Application - Status: 404 Not Found, HTTP method: GET, Headers:
+Host: localhost:8080
+Connection: Upgrade
+Pragma: no-cache
+Cache-Control: no-cache
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36
+Upgrade: websocket
+Origin: http://localhost:8080
+Sec-WebSocket-Version: 13
+Accept-Encoding: gzip, deflate, br
+Accept-Language: en-US,en;q=0.9,ru;q=0.8
+Cookie: USER_SESSION=userId%3D%2523i1%26workSession%3D%2523s5bd5c4a9%2De44d%2D410b%2D8db2%2Dfd69adb475f6
+Sec-WebSocket-Key: hcf67BIBdtLBfQqXI5VbbQ==
+Sec-WebSocket-Extensions: permessage-deflate; client_max_window_bits
+
+2021-12-19 11:14:59.230 [eventLoopGroupProxy-4-8] INFO  Application - Status: 404 Not Found, HTTP method: GET, Headers:
+Host: localhost:8080
+Connection: Upgrade
+Pragma: no-cache
+Cache-Control: no-cache
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36
+Upgrade: websocket
+Origin: http://localhost:8080
+Sec-WebSocket-Version: 13
+Accept-Encoding: gzip, deflate, br
+Accept-Language: en-US,en;q=0.9,ru;q=0.8
+Cookie: USER_SESSION=userId%3D%2523i1%26workSession%3D%2523s5bd5c4a9%2De44d%2D410b%2D8db2%2Dfd69adb475f6
+Sec-WebSocket-Key: ChvBVcTLzN2yKAh+tRVITQ==
+Sec-WebSocket-Extensions: permessage-deflate; client_max_window_bits
+
+2021-12-19 11:15:14.445 [eventLoopGroupProxy-4-9] INFO  com.vkir.Server - trying to validate userSession
+2021-12-19 11:15:14.445 [eventLoopGroupProxy-4-9] DEBUG com.vkir.app.AuthService - validating session: UserSession(workSession=5bd5c4a9-e44d-410b-8db2-fd69adb475f6, userId=1)
+2021-12-19 11:15:14.445 [eventLoopGroupProxy-4-9] DEBUG com.vkir.app.AuthService - validation result: false
+2021-12-19 11:15:14.447 [eventLoopGroupProxy-4-9] INFO  com.vkir.Server - in the challenge section
+2021-12-19 11:15:14.453 [eventLoopGroupProxy-4-9] INFO  Application - Status: 401 Unauthorized, HTTP method: GET, Headers:
+cookie: USER_SESSION=userId%3D%2523i1%26workSession%3D%2523s5bd5c4a9%2De44d%2D410b%2D8db2%2Dfd69adb475f6
+accept-language: en-US,en;q=0.9,ru;q=0.8
+accept-encoding: gzip, deflate, br
+referer: http://localhost:8081/
+sec-fetch-dest: empty
+sec-fetch-mode: cors
+sec-fetch-site: same-origin
+sec-ch-ua-platform: "macOS"
+user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36
+sec-ch-ua-mobile: ?0
+accept: application/json
+sec-ch-ua: " Not A;Brand";v="99", "Chromium";v="96", "Google Chrome";v="96"
+connection: close
+host: localhost:8080
+
+2021-12-19 11:15:19.048 [eventLoopGroupProxy-4-10] INFO  Application - Status: 403 Forbidden, HTTP method: POST, Headers:
+cookie: USER_SESSION=userId%3D%2523i1%26workSession%3D%2523s5bd5c4a9%2De44d%2D410b%2D8db2%2Dfd69adb475f6
+accept-language: en-US,en;q=0.9,ru;q=0.8
+accept-encoding: gzip, deflate, br
+referer: http://localhost:8081/
+sec-fetch-dest: empty
+sec-fetch-mode: cors
+sec-fetch-site: same-origin
+origin: http://localhost:8081
+sec-ch-ua-platform: "macOS"
+user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36
+sec-ch-ua-mobile: ?0
+content-type: application/json
+accept: application/json
+sec-ch-ua: " Not A;Brand";v="99", "Chromium";v="96", "Google Chrome";v="96"
+connection: close
+host: localhost:8080
+content-length: 56
+
+2021-12-19 11:15:23.875 [eventLoopGroupProxy-4-11] INFO  Application - Status: 403 Forbidden, HTTP method: POST, Headers:
+cookie: USER_SESSION=userId%3D%2523i1%26workSession%3D%2523s5bd5c4a9%2De44d%2D410b%2D8db2%2Dfd69adb475f6
+accept-language: en-US,en;q=0.9,ru;q=0.8
+accept-encoding: gzip, deflate, br
+referer: http://localhost:8081/
+sec-fetch-dest: empty
+sec-fetch-mode: cors
+sec-fetch-site: same-origin
+origin: http://localhost:8081
+sec-ch-ua-platform: "macOS"
+user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36
+sec-ch-ua-mobile: ?0
+content-type: application/json
+accept: application/json
+sec-ch-ua: " Not A;Brand";v="99", "Chromium";v="96", "Google Chrome";v="96"
+connection: close
+host: localhost:8080
+content-length: 56
+
+2021-12-19 11:16:28.283 [main] INFO  Application - Application stopping: io.ktor.application.Application@27cbfddf
+2021-12-19 11:16:28.287 [main] INFO  Application - Application stopped: io.ktor.application.Application@27cbfddf
+2021-12-19 11:16:31.907 [main] TRACE Application - {
+    # application.conf @ file:/Users/kir/dev/student/cross-wars-compose3/serverKtor/build/resources/main/application.conf: 6
+    "application" : {
+        # application.conf @ file:/Users/kir/dev/student/cross-wars-compose3/serverKtor/build/resources/main/application.conf: 7
+        "modules" : [
+            # application.conf @ file:/Users/kir/dev/student/cross-wars-compose3/serverKtor/build/resources/main/application.conf: 7
+            "com.vkir.ServerKt.module"
+        ]
+    },
+    # application.conf @ file:/Users/kir/dev/student/cross-wars-compose3/serverKtor/build/resources/main/application.conf: 2
+    "deployment" : {
+        # application.conf @ file:/Users/kir/dev/student/cross-wars-compose3/serverKtor/build/resources/main/application.conf: 3
+        "port" : 8080
+    },
+    # Content hidden
+    "security" : "***"
+}
+
+2021-12-19 11:16:31.972 [main] INFO  Application - Autoreload is disabled because the development mode is off.
+2021-12-19 11:16:32.348 [main] INFO  com.vkir.routes.AuthRoutes - registerAuthRoutes
+2021-12-19 11:16:32.387 [main] INFO  Application - Responding at http://0.0.0.0:8080
+2021-12-19 11:16:32.390 [main] INFO  Application - Application started in 0.429 seconds.
+2021-12-19 11:16:32.390 [main] INFO  Application - Application started: io.ktor.application.Application@5767b2af
+2021-12-19 11:16:44.781 [eventLoopGroupProxy-4-1] INFO  com.vkir.routes.AuthRoutes - we are in the sing-up method
+2021-12-19 11:16:44.865 [eventLoopGroupProxy-4-1] DEBUG com.vkir.routes.AuthRoutes - SignUpData(name=Tolya, sideOfTheForce=Light, swordColor=0)
+2021-12-19 11:16:44.867 [eventLoopGroupProxy-4-1] INFO  Application - Status: 200 OK, HTTP method: POST, Headers:
+cookie: USER_SESSION=userId%3D%2523i1%26workSession%3D%2523s5bd5c4a9%2De44d%2D410b%2D8db2%2Dfd69adb475f6
+accept-language: en-US,en;q=0.9,ru;q=0.8
+accept-encoding: gzip, deflate, br
+referer: http://localhost:8081/
+sec-fetch-dest: empty
+sec-fetch-mode: cors
+sec-fetch-site: same-origin
+origin: http://localhost:8081
+sec-ch-ua-platform: "macOS"
+user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36
+sec-ch-ua-mobile: ?0
+content-type: application/json
+accept: application/json
+sec-ch-ua: " Not A;Brand";v="99", "Chromium";v="96", "Google Chrome";v="96"
+connection: close
+host: localhost:8080
+content-length: 56
+
+2021-12-19 11:16:44.950 [eventLoopGroupProxy-4-2] INFO  com.vkir.Server - trying to validate userSession
+2021-12-19 11:16:44.950 [eventLoopGroupProxy-4-2] DEBUG com.vkir.app.AuthService - validating session: UserSession(workSession=aae87afe-2447-4827-9dad-9562a1715078, userId=1)
+2021-12-19 11:16:44.950 [eventLoopGroupProxy-4-2] DEBUG com.vkir.app.AuthService - validation result: true
+2021-12-19 11:16:44.964 [eventLoopGroupProxy-4-2] INFO  Application - Status: 200 OK, HTTP method: GET, Headers:
+cookie: USER_SESSION=userId%3D%2523i1%26workSession%3D%2523saae87afe%2D2447%2D4827%2D9dad%2D9562a1715078
+accept-language: en-US,en;q=0.9,ru;q=0.8
+accept-encoding: gzip, deflate, br
+referer: http://localhost:8081/
+sec-fetch-dest: empty
+sec-fetch-mode: cors
+sec-fetch-site: same-origin
+sec-ch-ua-platform: "macOS"
+user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36
+sec-ch-ua-mobile: ?0
+accept: application/json
+sec-ch-ua: " Not A;Brand";v="99", "Chromium";v="96", "Google Chrome";v="96"
+connection: close
+host: localhost:8080
+
+2021-12-19 11:19:29.450 [eventLoopGroupProxy-4-3] INFO  Application - Status: 404 Not Found, HTTP method: GET, Headers:
+Host: localhost:8080
+Connection: Upgrade
+Pragma: no-cache
+Cache-Control: no-cache
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36
+Upgrade: websocket
+Origin: http://localhost:8080
+Sec-WebSocket-Version: 13
+Accept-Encoding: gzip, deflate, br
+Accept-Language: en-US,en;q=0.9,ru;q=0.8
+Cookie: USER_SESSION=userId%3D%2523i1%26workSession%3D%2523saae87afe%2D2447%2D4827%2D9dad%2D9562a1715078
+Sec-WebSocket-Key: 4WmDYzZ11CnFqEp1bekFFQ==
+Sec-WebSocket-Extensions: permessage-deflate; client_max_window_bits
+
+2021-12-19 11:28:02.231 [eventLoopGroupProxy-4-4] INFO  Application - Status: 404 Not Found, HTTP method: GET, Headers:
+Host: localhost:8080
+Connection: Upgrade
+Pragma: no-cache
+Cache-Control: no-cache
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36
+Upgrade: websocket
+Origin: http://localhost:8080
+Sec-WebSocket-Version: 13
+Accept-Encoding: gzip, deflate, br
+Accept-Language: en-US,en;q=0.9,ru;q=0.8
+Cookie: USER_SESSION=userId%3D%2523i1%26workSession%3D%2523saae87afe%2D2447%2D4827%2D9dad%2D9562a1715078
+Sec-WebSocket-Key: 8b0Q/m10V5EsjQMEdvEgfg==
+Sec-WebSocket-Extensions: permessage-deflate; client_max_window_bits
+
+2021-12-19 12:15:09.125 [KtorShutdownHook] INFO  Application - Application stopping: io.ktor.application.Application@5767b2af
+2021-12-19 12:15:09.130 [KtorShutdownHook] INFO  Application - Application stopped: io.ktor.application.Application@5767b2af
+2021-12-19 12:35:07.277 [main] TRACE Application - {
+    # application.conf @ file:/Users/kir/dev/interview/cross-wars/serverKtor/build/resources/main/application.conf: 6
+    "application" : {
+        # application.conf @ file:/Users/kir/dev/interview/cross-wars/serverKtor/build/resources/main/application.conf: 7
+        "modules" : [
+            # application.conf @ file:/Users/kir/dev/interview/cross-wars/serverKtor/build/resources/main/application.conf: 7
+            "com.vkir.ServerKt.module"
+        ]
+    },
+    # application.conf @ file:/Users/kir/dev/interview/cross-wars/serverKtor/build/resources/main/application.conf: 2
+    "deployment" : {
+        # application.conf @ file:/Users/kir/dev/interview/cross-wars/serverKtor/build/resources/main/application.conf: 3
+        "port" : 8080
+    },
+    # Content hidden
+    "security" : "***"
+}
+
+2021-12-19 12:35:07.361 [main] INFO  Application - Autoreload is disabled because the development mode is off.
+2021-12-19 12:35:07.925 [main] INFO  com.vkir.routes.AuthRoutes - registerAuthRoutes
+2021-12-19 12:35:07.977 [main] INFO  Application - Responding at http://0.0.0.0:8080
+2021-12-19 12:35:07.979 [main] INFO  Application - Application started in 0.63 seconds.
+2021-12-19 12:35:07.980 [main] INFO  Application - Application started: io.ktor.application.Application@26a529dc
+2021-12-19 12:36:36.840 [eventLoopGroupProxy-4-1] INFO  com.vkir.Server - trying to validate userSession
+2021-12-19 12:36:36.843 [eventLoopGroupProxy-4-1] DEBUG com.vkir.app.AuthService - validating session: UserSession(workSession=aae87afe-2447-4827-9dad-9562a1715078, userId=1)
+2021-12-19 12:36:36.856 [eventLoopGroupProxy-4-1] DEBUG com.vkir.app.AuthService - validation result: false
+2021-12-19 12:36:36.861 [eventLoopGroupProxy-4-1] INFO  com.vkir.Server - in the challenge section
+2021-12-19 12:36:37.099 [eventLoopGroupProxy-4-1] INFO  Application - [31m401 Unauthorized[m: [36mGET[m - /api/account
+2021-12-19 12:37:00.591 [eventLoopGroupProxy-4-2] INFO  com.vkir.routes.AuthRoutes - we are in the sing-up method
+2021-12-19 12:37:00.663 [eventLoopGroupProxy-4-2] DEBUG com.vkir.routes.AuthRoutes - SignUpData(name=hello, sideOfTheForce=Light, swordColor=0)
+2021-12-19 12:37:00.664 [eventLoopGroupProxy-4-2] INFO  Application - [32m200 OK[m: [36mPOST[m - /api/auth/sign-up
+2021-12-19 12:37:00.739 [eventLoopGroupProxy-4-3] INFO  com.vkir.Server - trying to validate userSession
+2021-12-19 12:37:00.739 [eventLoopGroupProxy-4-3] DEBUG com.vkir.app.AuthService - validating session: UserSession(workSession=4842e04c-36aa-4d45-a1b7-ee7dc974d939, userId=1)
+2021-12-19 12:37:00.739 [eventLoopGroupProxy-4-3] DEBUG com.vkir.app.AuthService - validation result: true
+2021-12-19 12:37:00.763 [eventLoopGroupProxy-4-3] INFO  Application - [32m200 OK[m: [36mGET[m - /api/games
+2021-12-19 12:37:03.087 [eventLoopGroupProxy-4-4] INFO  com.vkir.Server - trying to validate userSession
+2021-12-19 12:37:03.087 [eventLoopGroupProxy-4-4] DEBUG com.vkir.app.AuthService - validating session: UserSession(workSession=4842e04c-36aa-4d45-a1b7-ee7dc974d939, userId=1)
+2021-12-19 12:37:03.087 [eventLoopGroupProxy-4-4] DEBUG com.vkir.app.AuthService - validation result: true
+2021-12-19 12:37:03.134 [eventLoopGroupProxy-4-4] INFO  Application - [32m200 OK[m: [36mPOST[m - /api/games/start-new
+2021-12-19 12:37:05.260 [eventLoopGroupProxy-4-5] INFO  com.vkir.Server - trying to validate userSession
+2021-12-19 12:37:05.260 [eventLoopGroupProxy-4-5] DEBUG com.vkir.app.AuthService - validating session: UserSession(workSession=4842e04c-36aa-4d45-a1b7-ee7dc974d939, userId=1)
+2021-12-19 12:37:05.260 [eventLoopGroupProxy-4-5] DEBUG com.vkir.app.AuthService - validation result: true
+2021-12-19 12:37:05.263 [eventLoopGroupProxy-4-5] INFO  Application - [31m400 Bad Request[m: [36mPOST[m - /api/games/start-new
+2021-12-19 12:37:09.832 [eventLoopGroupProxy-4-6] INFO  com.vkir.Server - trying to validate userSession
+2021-12-19 12:37:09.832 [eventLoopGroupProxy-4-6] DEBUG com.vkir.app.AuthService - validating session: UserSession(workSession=4842e04c-36aa-4d45-a1b7-ee7dc974d939, userId=1)
+2021-12-19 12:37:09.832 [eventLoopGroupProxy-4-6] DEBUG com.vkir.app.AuthService - validation result: true
+2021-12-19 12:37:09.833 [eventLoopGroupProxy-4-6] INFO  Application - [31m400 Bad Request[m: [36mPOST[m - /api/games/start-new
+2021-12-19 12:40:29.582 [eventLoopGroupProxy-4-7] INFO  com.vkir.Server - trying to validate userSession
+2021-12-19 12:40:29.583 [eventLoopGroupProxy-4-7] DEBUG com.vkir.app.AuthService - validating session: UserSession(workSession=4842e04c-36aa-4d45-a1b7-ee7dc974d939, userId=1)
+2021-12-19 12:40:29.584 [eventLoopGroupProxy-4-7] DEBUG com.vkir.app.AuthService - validation result: true
+2021-12-19 12:40:29.590 [eventLoopGroupProxy-4-7] INFO  Application - [32m200 OK[m: [36mGET[m - /api/account
+2021-12-19 12:48:15.784 [eventLoopGroupProxy-4-8] INFO  com.vkir.Server - trying to validate userSession
+2021-12-19 12:48:15.788 [eventLoopGroupProxy-4-8] DEBUG com.vkir.app.AuthService - validating session: UserSession(workSession=4842e04c-36aa-4d45-a1b7-ee7dc974d939, userId=1)
+2021-12-19 12:48:15.789 [eventLoopGroupProxy-4-8] DEBUG com.vkir.app.AuthService - validation result: true
+2021-12-19 12:48:15.805 [eventLoopGroupProxy-4-8] INFO  Application - [32m200 OK[m: [36mGET[m - /api/account
+2021-12-19 12:48:15.919 [eventLoopGroupProxy-4-9] INFO  com.vkir.Server - trying to validate userSession
+2021-12-19 12:48:15.919 [eventLoopGroupProxy-4-9] DEBUG com.vkir.app.AuthService - validating session: UserSession(workSession=4842e04c-36aa-4d45-a1b7-ee7dc974d939, userId=1)
+2021-12-19 12:48:15.919 [eventLoopGroupProxy-4-9] DEBUG com.vkir.app.AuthService - validation result: true
+2021-12-19 12:48:15.922 [eventLoopGroupProxy-4-9] INFO  Application - [32m200 OK[m: [36mGET[m - /api/account

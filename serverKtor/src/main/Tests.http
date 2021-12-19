@@ -1,0 +1,7 @@
+PUT http://localhost:8080/api/hello
+X-Forwarded-Host: http://localhost:8082
+X-Forwarded-For: http://localhost:8081
+origin: http://localhost:8082
+host: localhost:8082
+content-type: application/json
+accept: application/json

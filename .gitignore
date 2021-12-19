@@ -1,9 +1,23 @@
 # Project exclude paths
-/.gradle/
-/build/
-/build/classes/kotlin/jvm/main/
-/build/js/packages/vollstapel/kotlin/
-/.idea/
+.idea/*
+**/.idea/*
+*.iml
+.gradle
+local.properties
+
+*~
+
+build
+src/jsMain/web
+
+!.idea/runConfigurations
+!.idea/runConfigurations/*
+
+node_modules
+package.json
 
 # Terraform
 .terraform/
+
+
+

@@ -1,11 +1,10 @@
-pluginManagement {
-    repositories {
-        maven { setUrl("https://dl.bintray.com/kotlin/kotlin-eap") }
+rootProject.name = "cross-wars-compose3"
 
-        mavenCentral()
-
-        maven { setUrl("https://plugins.gradle.org/m2/") }
-    }
+plugins {
+    id("de.fayard.refreshVersions") version "0.23.0"
 }
-rootProject.name = "cross-wars"
 
+include("common")
+include("jsReact")
+include("jsCompose")
+include("serverKtor")
