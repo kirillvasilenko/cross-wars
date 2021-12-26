@@ -81,8 +81,11 @@ fun Application.module() {
             }
         }
     }
-    launch {
-        runTestPlayers()
+    val testPlayersEnabled = environment.config.propertyOrNull("testPlayers.enabled")?.getString()?.toBoolean() ?: false
+    if (testPlayersEnabled) {
+        launch {
+            runTestPlayers()
+        }
     }
 }
 
