@@ -10,7 +10,6 @@ import io.ktor.auth.session
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.cio.websocket.pingPeriod
 import io.ktor.http.cio.websocket.timeout
-import io.ktor.response.respond
 import io.ktor.serialization.json
 import io.ktor.sessions.Sessions
 import io.ktor.sessions.cookie
@@ -20,6 +19,7 @@ import com.vkir.app.AuthService
 import com.vkir.app.UserSession
 import com.vkir.routes.*
 import io.ktor.features.*
+import io.ktor.response.*
 import io.ktor.routing.*
 import mu.KotlinLogging
 import java.time.Duration
@@ -47,7 +47,6 @@ fun Application.module() {
     install(Sessions) {
         cookie<UserSession>("USER_SESSION")
     }
-    install(XForwardedHeaderSupport)
     install(Authentication) {
         session<UserSession> {
             validate { userSession ->
@@ -83,7 +82,7 @@ fun Application.module() {
         }
     }
     launch {
-        //runTestPlayers()
+        runTestPlayers()
     }
 }
 

@@ -12,9 +12,9 @@ repositories {
 dependencies {
     implementation(kotlin("stdlib-js"))
 
-    implementation("org.jetbrains.kotlin-wrappers:kotlin-react:17.0.2-pre.240-kotlin-1.5.30")
-    implementation("org.jetbrains.kotlin-wrappers:kotlin-react-dom:17.0.2-pre.240-kotlin-1.5.30")
-    implementation("org.jetbrains.kotlin-wrappers:kotlin-styled:5.3.1-pre.240-kotlin-1.5.30")
+    implementation("org.jetbrains.kotlin-wrappers:kotlin-react:_")
+    implementation("org.jetbrains.kotlin-wrappers:kotlin-react-dom:_")
+    implementation("org.jetbrains.kotlin-wrappers:kotlin-styled:_")
 
     implementation(Ktor.client.core)
     implementation("io.ktor:ktor-client-js:_")

@@ -30,10 +30,10 @@
     <logger name="io.netty" level="INFO"/>
 
     <logger name="default" level="trace"/>
-    <logger name="model.WsConnection" level="info"/>
-    <logger name="app.AuthService" level="info"/>
-    <logger name="model.SubscriptionsHub" level="info"/>
-    <logger name="SubscriptionsRoutes" level="info"/>
+    <logger name="WsConnection" level="debug"/>
+    <logger name="AuthService" level="debug"/>
+    <logger name="SubscriptionsHub" level="debug"/>
+    <logger name="SubscriptionsRoutes" level="debug"/>
     <logger name="AuthRoutes" level="debug"/>
     <logger name="TestPlayer" level="info"/>
 
