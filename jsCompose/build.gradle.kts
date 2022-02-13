@@ -1,17 +1,10 @@
 plugins {
-    id("org.jetbrains.kotlin.js")
+    kotlin("multiplatform")
+    id("org.jetbrains.compose")
 }
 
 group = "com.vkir"
 version = "1.0-SNAPSHOT"
-
-repositories {
-    mavenCentral()
-}
-
-dependencies {
-    implementation(kotlin("stdlib-js"))
-}
 
 kotlin {
     js {
@@ -32,5 +25,14 @@ kotlin {
             }
         }
         binaries.executable()
+    }
+    sourceSets {
+        val jsMain by getting {
+            dependencies {
+                implementation(kotlin("stdlib-js"))
+                implementation(compose.web.core)
+                implementation(compose.runtime)
+            }
+        }
     }
 }
