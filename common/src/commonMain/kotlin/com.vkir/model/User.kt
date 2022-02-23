@@ -3,8 +3,8 @@ package com.vkir.model
 import kotlinx.serialization.Serializable
 
 @Serializable
-enum class SideOfTheForce{
-    Light, Dark
+enum class SideOfTheForce {
+        Light, Dark
 }
 
 @Serializable
@@ -13,7 +13,8 @@ data class UserDto(
         val name: String,
         val currentGameId: Int?,
         val sideOfTheForce: SideOfTheForce,
-        val swordColor: Int)
+        val swordColor: Int
+)
 
 @Serializable
 data class SignUpData(

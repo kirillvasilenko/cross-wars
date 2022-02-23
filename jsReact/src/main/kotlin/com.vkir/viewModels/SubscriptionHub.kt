@@ -6,7 +6,7 @@ import mu.KotlinLogging
 
 private val log = KotlinLogging.logger {}
 
-object SubscriptionHub{
+object SubscriptionHub {
 
     private val connection = WsConnection()
 

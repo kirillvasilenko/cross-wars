@@ -1,6 +1,6 @@
 package com.vkir.viewModels
 
-import com.vkir.api.Api
+import com.vkir.api.http.Api
 import com.vkir.model.WsCommand
 import com.vkir.model.WsCommandsSerializer
 import io.ktor.http.cio.websocket.*
@@ -9,11 +9,15 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import com.vkir.mainScope
 import mu.KotlinLogging
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.get
 import kotlin.math.max
 
 private val log = KotlinLogging.logger {}
 
-class WsConnection{
+class WsConnection: KoinComponent {
+
+    private val api: Api = get()
 
     private val initialDelayToConnect = 1000
 
@@ -59,7 +63,7 @@ class WsConnection{
 
     private suspend fun startWsConnectingImpl() {
         try {
-            Api.ws.openWsConnection {
+            api.ws.openWsConnection {
                 log.info { "ws connection is opened" }
                 currentSession = this
                 onWsConnectionOpened()

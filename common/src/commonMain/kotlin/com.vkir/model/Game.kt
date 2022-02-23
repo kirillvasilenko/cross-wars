@@ -27,4 +27,5 @@ data class GameDto(
         val lastMovedDate: Long,
         val lastMovedUserId: Int,
         val users: MutableList<UserInGame>,
-        val board: List<MutableList<Int?>>)
+        val board: List<MutableList<Int?>>
+)

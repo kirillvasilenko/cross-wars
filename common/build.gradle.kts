@@ -6,10 +6,6 @@ plugins {
 group = "com.vkir"
 version = "1.0-SNAPSHOT"
 
-repositories {
-    mavenCentral()
-}
-
 kotlin {
     jvm {
         compilations.all {
@@ -30,10 +26,20 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                implementation(kotlin("stdlib-common"))
+                implementation(Kotlin.stdlib.common)
 
                 implementation(KotlinX.serialization.core)
                 implementation(KotlinX.serialization.json)
+
+                implementation(Ktor.client.core)
+                implementation(Ktor.client.json)
+                implementation(Ktor.client.logging)
+                implementation(Ktor.client.serialization)
+
+                api(Koin.core)
+                api(KotlinX.datetime)
+
+                api("io.github.microutils:kotlin-logging:_")
             }
         }
         val commonTest by getting {

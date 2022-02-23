@@ -32,6 +32,8 @@ kotlin {
                 implementation(kotlin("stdlib-js"))
                 implementation(compose.web.core)
                 implementation(compose.runtime)
+
+                implementation(project(":common"))
             }
         }
     }
