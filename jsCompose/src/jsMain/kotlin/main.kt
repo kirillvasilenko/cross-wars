@@ -1,11 +1,10 @@
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import com.vkir.svc.AuthSvc
 import kotlinx.browser.window
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import mu.KotlinLogging
 import org.jetbrains.compose.web.dom.Button
 import org.jetbrains.compose.web.dom.Text
@@ -13,18 +12,34 @@ import org.jetbrains.compose.web.renderComposable
 
 private val log = KotlinLogging.logger {}
 
-enum class Screen {
-    Login,
-    Dashboards
+sealed class Screen {
+    object Login: Screen()
+    object Dashboard: Screen()
+    data class Game(val gameId: String): Screen()
 }
 
 class Navigator {
 
-    private var _screen = mutableStateOf(Screen.Login)
+    private var _screen = mutableStateOf<Screen>(Screen.Login)
     val screen: Screen by _screen
 
     fun navigateTo(newScreen: Screen) {
         _screen.value = newScreen
+    }
+
+    fun back() {
+
+    }
+}
+
+class App {
+    val authSvc = AuthSvc()
+
+    val scope = CoroutineScope(SupervisorJob() + CoroutineName("hello") + CoroutineExceptionHandler { _,_ -> Unit })
+
+    init {
+
+        //authSvc.authenticated.collect
     }
 }
 
@@ -35,7 +50,11 @@ fun main() {
     var count: Int by mutableStateOf(0)
     val nav = Navigator()
 
-    CoroutineScope(Dispatchers.Main).launch {
+    val app = App()
+
+
+
+    /*CoroutineScope(Dispatchers.Main).launch {
         for (i in 1..5) {
             delay(2000)
             window.history.pushState("page$i", "page$i", "/path$i")
@@ -45,19 +64,20 @@ fun main() {
             delay(2000)
             window.history.back()
         }
-    }
+    }*/
     renderComposable(rootElementId = "root") {
+        val authenticated = app.authSvc.authenticated.collectAsState()
         when (nav.screen) {
             Screen.Login -> {
                 Text("Auth screen")
                 Button(attrs = {
-                    onClick { nav.navigateTo(Screen.Dashboards) }
+                    onClick { nav.navigateTo(Screen.Dashboard) }
                 }) {
                     Text("To Dashboard")
                 }
             }
 
-            Screen.Dashboards -> {
+            Screen.Dashboard -> {
                 Text("Dashboard screen")
                 Button(attrs = {
                     onClick { nav.navigateTo(Screen.Login) }
