@@ -1,13 +1,13 @@
 package com.vkir.viewModels
 
 import com.vkir.api.http.Api
+import com.vkir.mainScope
 import com.vkir.model.WsCommand
 import com.vkir.model.WsCommandsSerializer
-import io.ktor.http.cio.websocket.*
+import io.ktor.websocket.*
 import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import com.vkir.mainScope
 import mu.KotlinLogging
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get

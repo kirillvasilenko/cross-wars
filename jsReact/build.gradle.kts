@@ -19,11 +19,7 @@ dependencies {
     implementation(Ktor.client.core)
     implementation("io.ktor:ktor-client-js:_")
 
-    implementation(Ktor.client.json)
     implementation(Ktor.client.logging)
-    implementation(Ktor.client.serialization)
-
-    implementation(KotlinX.serialization.core)
 
     implementation("io.github.microutils:kotlin-logging-js:_")
 

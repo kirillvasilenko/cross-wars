@@ -6,7 +6,7 @@ import com.vkir.viewModels.common.*
 import com.vkir.viewModels.mainScreen.LoadScreenVm
 import com.vkir.viewModels.mainScreen.MainScreenVm
 import com.vkir.viewModels.playGameScreen.PlayGameVm
-import io.ktor.client.features.ClientRequestException
+import io.ktor.client.plugins.ClientRequestException
 import io.ktor.http.HttpStatusCode
 import mu.KotlinLogging
 

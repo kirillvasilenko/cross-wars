@@ -1,7 +1,7 @@
 package com.vkir.viewModels.common
 
 import com.vkir.viewModels.SubscriptionHub
-import io.ktor.client.features.ClientRequestException
+import io.ktor.client.plugins.*
 import io.ktor.http.HttpStatusCode
 
 abstract class CommandVm: ViewModel(){

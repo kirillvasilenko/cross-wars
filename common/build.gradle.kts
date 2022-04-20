@@ -32,9 +32,9 @@ kotlin {
                 implementation(KotlinX.serialization.json)
 
                 implementation(Ktor.client.core)
-                implementation(Ktor.client.json)
                 implementation(Ktor.client.logging)
-                implementation(Ktor.client.serialization)
+                implementation("io.ktor:ktor-client-content-negotiation:_")
+                implementation("io.ktor:ktor-serialization-kotlinx-json:_")
 
                 api(Koin.core)
                 api(KotlinX.datetime)

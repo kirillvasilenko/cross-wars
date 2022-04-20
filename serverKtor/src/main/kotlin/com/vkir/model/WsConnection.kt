@@ -1,6 +1,6 @@
 package com.vkir.model
 
-import io.ktor.http.cio.websocket.*
+import io.ktor.websocket.*
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.ReceiveChannel
@@ -12,18 +12,19 @@ import mu.KotlinLogging
 private val log = KotlinLogging.logger {}
 
 class WsConnection(
-        val userId: Int,
-        private val incoming: ReceiveChannel<Frame>,
-        private val outgoing: SendChannel<Frame>){
+    val userId: Int,
+    private val incoming: ReceiveChannel<Frame>,
+    private val outgoing: SendChannel<Frame>
+) {
 
     private var eventsChannel =
         Channel<BackendEvent>(Channel.UNLIMITED)
 
     suspend fun listenAndSend(): Unit = coroutineScope {
-        launch{
+        launch {
             sendEvents()
         }
-        launch{
+        launch {
             listenMessages()
         }
         Unit
@@ -33,12 +34,11 @@ class WsConnection(
         eventsChannel.send(event)
     }
 
-    private suspend fun listenMessages(){
+    private suspend fun listenMessages() {
         try {
             log.debug("start listening messages")
             listenImpl()
-        }
-        catch(e: Throwable){
+        } catch (e: Throwable) {
             log.warn("error in listening messages: ${e.message}")
         }
         unsubscribeAll()
@@ -58,7 +58,7 @@ class WsConnection(
         log.debug("stop sending messages")
     }
 
-    private suspend fun listenImpl(){
+    private suspend fun listenImpl() {
         for (frame in incoming) {
             when (frame) {
                 is Frame.Text -> handleText(frame.readText())
@@ -67,11 +67,11 @@ class WsConnection(
         }
     }
 
-    private suspend fun handleText(text: String){
+    private suspend fun handleText(text: String) {
         try {
             val command = WsCommandsSerializer.parse(text)
             log.debug("Received command: $command")
-            when(command){
+            when (command) {
                 is SubscribeOnUserEvents -> SubscriptionsHub.subscribeOnUserEvents(userId, this)
                 is UnsubscribeFromUserEvents -> SubscriptionsHub.unsubscribeFromUserEvents(userId, this)
                 is SubscribeOnGameStartedEvents -> SubscriptionsHub.subscribeOnGameStartedEvents(userId, this)
@@ -79,33 +79,32 @@ class WsConnection(
                 is SubscribeOnGameEvents -> subscribeOnGameEvents(command.gameId)
                 is UnsubscribeFromGameEvents -> unsubscribeFromGameEvents(command.gameId)
             }
-        }
-        catch(e: Throwable){
+        } catch (e: Throwable) {
             log.warn("error on parsing text command: ${e.message}")
         }
     }
 
     private val subscribedGames = mutableSetOf<Int>()
 
-    private suspend fun subscribeOnGameEvents(gameId: Int){
+    private suspend fun subscribeOnGameEvents(gameId: Int) {
         SubscriptionsHub.subscribeOnGameEvents(userId, gameId, this)
         subscribedGames.add(gameId)
         val game = GamesStorage.getGame(gameId)
         game.sendSnapshot(this)
     }
 
-    private fun unsubscribeFromGameEvents(gameId: Int){
+    private fun unsubscribeFromGameEvents(gameId: Int) {
         SubscriptionsHub.unsubscribeFromGameEvents(userId, gameId, this)
         subscribedGames.remove(gameId)
     }
 
-    private suspend fun sendEventImpl(event: BackendEvent){
+    private suspend fun sendEventImpl(event: BackendEvent) {
         val message = EventsSerializer.stringify(event)
         outgoing.send(Frame.Text(message))
         log.debug("Sent $message")
     }
 
-    private fun unsubscribeAll(){
+    private fun unsubscribeAll() {
         try {
             SubscriptionsHub.unsubscribeFromUserEvents(userId, this)
             SubscriptionsHub.unsubscribeFromGameStartedEvents(userId, this)
@@ -113,8 +112,7 @@ class WsConnection(
                 SubscriptionsHub.unsubscribeFromGameEvents(userId, gameId, this)
             }
             subscribedGames.clear()
-        }
-        catch(e:Throwable){
+        } catch (e: Throwable) {
             log.error("error on unsubscribeAll: ${e.message}")
         }
     }

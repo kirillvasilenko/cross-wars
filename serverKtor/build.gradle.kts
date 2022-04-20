@@ -19,10 +19,16 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
 dependencies {
     implementation(Ktor.server.core)
     implementation(Ktor.server.netty)
-    implementation(Ktor.features.serialization)
-    implementation("io.ktor:ktor-websockets:_")
-    implementation(Ktor.features.auth)
-    implementation(Ktor.features.authJwt)
+
+    implementation("io.ktor:ktor-server-content-negotiation:_")
+    implementation("io.ktor:ktor-serialization-kotlinx-json:_")
+
+    implementation("io.ktor:ktor-server-auth:_")
+    implementation("io.ktor:ktor-server-auth-jwt:_")
+
+    implementation("io.ktor:ktor-server-websockets:_")
+    implementation("io.ktor:ktor-server-call-logging:_")
+    implementation("io.ktor:ktor-server-compression:_")
 
     implementation("io.insert-koin:koin-ktor:_")
     implementation("io.insert-koin:koin-logger-slf4j:_")

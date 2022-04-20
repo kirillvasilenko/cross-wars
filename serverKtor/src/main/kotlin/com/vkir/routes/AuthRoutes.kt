@@ -1,15 +1,15 @@
 package com.vkir.routes
 
-import io.ktor.application.call
-import io.ktor.request.ContentTransformationException
-import io.ktor.request.receive
-import io.ktor.response.respond
-import io.ktor.routing.Route
-import io.ktor.routing.post
-import io.ktor.routing.route
-import io.ktor.sessions.get
-import io.ktor.sessions.sessions
-import io.ktor.sessions.set
+import io.ktor.server.application.call
+import io.ktor.server.request.ContentTransformationException
+import io.ktor.server.request.receive
+import io.ktor.server.response.respond
+import io.ktor.server.routing.Route
+import io.ktor.server.routing.post
+import io.ktor.server.routing.route
+import io.ktor.server.sessions.get
+import io.ktor.server.sessions.sessions
+import io.ktor.server.sessions.set
 import com.vkir.app.AuthService
 import com.vkir.app.UserSession
 import com.vkir.app.UsersService

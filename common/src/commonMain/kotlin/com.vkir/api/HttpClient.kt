@@ -3,13 +3,13 @@ package com.vkir.api
 import com.vkir.utils.generateGuid
 import io.ktor.client.*
 import io.ktor.client.call.*
-import io.ktor.client.features.*
-import io.ktor.client.features.json.*
-import io.ktor.client.features.json.serializer.*
-import io.ktor.client.features.logging.*
-import io.ktor.client.features.websocket.*
+import io.ktor.client.plugins.*
+import io.ktor.serialization.kotlinx.json.*
+import io.ktor.client.plugins.logging.*
+import io.ktor.client.plugins.websocket.*
 import io.ktor.client.request.*
 import io.ktor.http.*
+import io.ktor.client.plugins.contentnegotiation.*
 import kotlinx.serialization.json.Json
 import mu.KotlinLogging
 
@@ -32,8 +32,8 @@ fun createHttpClient(
     install(WebSockets) {
         // Configure WebSockets
     }
-    install(JsonFeature) {
-        serializer = KotlinxSerializer(json)
+    install(ContentNegotiation) {
+        json()
     }
     defaultRequest {
         this.url {
@@ -51,16 +51,16 @@ fun createHttpClient(
             when (response.status) {
                 HttpStatusCode.OK -> Unit
                 HttpStatusCode.BadRequest -> {
-                    val error = response.receive<ApiErrorDto>()
+                    val error = response.body<ApiErrorDto>()
                     error.raise()
                 }
                 HttpStatusCode.InternalServerError -> {
-                    val error = response.receive<ApiErrorDto>()
+                    val error = response.body<ApiErrorDto>()
                     error.raise()
                 }
                 else -> {
                     throw AppFaultException(
-                        message = response.receive(),
+                        message = response.body(),
                         errorCode = response.status.value
                     )
                 }

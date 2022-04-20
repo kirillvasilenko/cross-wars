@@ -1,6 +1,6 @@
 package com.vkir.model
 
-import io.ktor.http.cio.websocket.*
+import io.ktor.websocket.*
 import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.channels.SendChannel
 import mu.KotlinLogging
@@ -8,7 +8,7 @@ import java.util.concurrent.ConcurrentHashMap
 
 private val log = KotlinLogging.logger {}
 
-open class SubscriptionsHubInMemory{
+open class SubscriptionsHubInMemory {
 
     /**
      * User id to subscribers
@@ -29,7 +29,7 @@ open class SubscriptionsHubInMemory{
         ConcurrentHashMap<Int, ConcurrentHashMap<Int, MutableSet<WsConnection>>>()
 
 
-    fun createConnection(userId: Int, incoming: ReceiveChannel<Frame>, outgoing: SendChannel<Frame>) : WsConnection {
+    fun createConnection(userId: Int, incoming: ReceiveChannel<Frame>, outgoing: SendChannel<Frame>): WsConnection {
         return WsConnection(userId, incoming, outgoing)
     }
 
@@ -74,37 +74,38 @@ open class SubscriptionsHubInMemory{
             ?.remove(connection)
     }
 
-    suspend fun handleGameEvent(event: GameEvent){
-        when(event){
+    suspend fun handleGameEvent(event: GameEvent) {
+        when (event) {
             is GameStarted -> handle(event)
             else -> handle(event)
         }
     }
 
-    suspend fun handleUserEvent(event: UserEvent){
+    suspend fun handleUserEvent(event: UserEvent) {
         userEventsSubscribers[event.userId]?.forEach { it.send(event) }
     }
 
-    private suspend fun handle(event: GameStarted){
+    private suspend fun handle(event: GameStarted) {
         gamesStartedSubscribers.values
             .flatten()
-            .forEach{ it.send(event) }
+            .forEach { it.send(event) }
     }
 
-    private suspend fun handle(event: GameEvent){
+    private suspend fun handle(event: GameEvent) {
         gameEventsSubscribers[event.gameId]
             ?.flatMap { it.value }
             ?.forEach { it.send(event) }
 
-        if(event is GameStateChanged
-                && event.actualState == GameState.ARCHIVED){
+        if (event is GameStateChanged
+            && event.actualState == GameState.ARCHIVED
+        ) {
             handleGameArchived(event.gameId)
         }
     }
 
-    private fun handleGameArchived(gameId: Int){
+    private fun handleGameArchived(gameId: Int) {
         gameEventsSubscribers.remove(gameId)
     }
 }
 
-object SubscriptionsHub:SubscriptionsHubInMemory()
+object SubscriptionsHub : SubscriptionsHubInMemory()
